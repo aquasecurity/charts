@@ -11,18 +11,18 @@
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ template "fullname" . }}-hpa
+  name: {{ template "ibm-websphere-traditional.fullname" . }}-hpa
   labels:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    app: {{ template "fullname" . }}
+    app: {{ template "ibm-websphere-traditional.fullname" . }}
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"    
 spec:
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   scaleTargetRef:
-    apiVersion: extensions/v1beta1
+    apiVersion: apps/v1
     kind: Deployment
-    name: {{ template "fullname" . }}
+    name: {{ template "ibm-websphere-traditional.fullname" . }}
   targetCPUUtilizationPercentage: {{ .Values.autoscaling.targetCPUUtilizationPercentage }}
 {{- end }}

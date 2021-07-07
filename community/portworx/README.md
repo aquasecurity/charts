@@ -16,8 +16,12 @@ Container Image Security is enabled by default in ICP 3.1 and above. Hence add t
 * docker.io/openstorage/*
 * gcr.io/google-containers/*
 * docker.io/lachlanevenson/*
-* docker.io/hrishi/*
 * quay.io/k8scsi/*
+
+
+### PodSecurityPolicy Requirements
+
+This chart requires a `PodSecurityPolicy` role to be bound to the target namespace prior to installation.  On IBM Cloud Private, choose the following Custom PodSecurityPolicy definition: [ibm-anyuid-hostaccess-psp](https://github.com/IBM/cloud-pak/blob/master/spec/security/psp/ibm-anyuid-hostaccess-psp.yaml).
 
 ## Limitations
 * The portworx helm chart can only be deployed in the kube-system namespace. Hence use "kube-system" in the "Target namespace" during configuration.
@@ -44,7 +48,7 @@ The command removes all the Kubernetes components associated with the chart and 
 To install the chart with the release name `my-release` run the following commands substituting relevant values for your setup:
 
 ##### NOTE:
-`etcdEndPoint` is a required field. The chart installation would not proceed unless this option is provided.
+`kvdb` is a required field. The chart installation would not proceed unless this option is provided.
 If the etcdcluster being used is a secured ETCD (SSL/TLS) then please follow instructions to create a kubernetes secret with the certs. https://docs.portworx.com/scheduler/kubernetes/etcd-certs-using-secrets.html#create-kubernetes-secret
 
 
@@ -52,7 +56,7 @@ If the etcdcluster being used is a secured ETCD (SSL/TLS) then please follow ins
 
 Example of using the helm CLI to install the chart:
 ```
-helm install --debug --name my-release --set etcdEndPoint=etcd:http://192.168.70.90:2379,clusterName=$(uuidgen) ./helm/charts/portworx/
+helm install --debug --name my-release --set kvdb=etcd:http://192.168.70.90:2379,clusterName=$(uuidgen) ./helm/charts/portworx/
 ```
 
 ## Basic troubleshooting
@@ -60,7 +64,7 @@ helm install --debug --name my-release --set etcdEndPoint=etcd:http://192.168.70
 #### Helm install errors with "no available release name found"
 
 ```
-helm install --dry-run --debug --set etcdEndPoint=etcd:http://192.168.70.90:2379,clusterName=$(uuidgen) ./helm/charts/px/
+helm install --dry-run --debug --set kvdb=etcd:http://192.168.70.90:2379,clusterName=$(uuidgen) ./helm/charts/px/
 [debug] Created tunnel using local port: '37304'
 [debug] SERVER: "127.0.0.1:37304"
 [debug] Original chart version: ""
@@ -80,7 +84,7 @@ You can verify the tiller logs
 #### Helm install errors with  "Job failed: BackoffLimitExceeded"
 
 ```
-helm install --debug --set dataInterface=eth1,managementInterface=eth1,etcdEndPoint=etcd:http://192.168.70.179:2379,clusterName=$(uuidgen) ./helm/charts/px/
+helm install --debug --set dataInterface=eth1,managementInterface=eth1,kvdb=etcd:http://192.168.70.179:2379,clusterName=$(uuidgen) ./helm/charts/px/
 [debug] Created tunnel using local port: '36389'
 
 [debug] SERVER: "127.0.0.1:36389"
@@ -110,7 +114,7 @@ Ensure the correct etcd URL is set as a parameter to the `helm install` command.
 #### Helm install errors with "Job failed: Deadline exceeded"
 
 ```
-helm install --debug --set dataInterface=eth1,managementInterface=eth1,etcdEndPoint=etcd:http://192.168.20.290:2379,clusterName=$(uuidgen) ./charts/px/
+helm install --debug --set dataInterface=eth1,managementInterface=eth1,kvdb=etcd:http://192.168.20.290:2379,clusterName=$(uuidgen) ./charts/px/
 [debug] Created tunnel using local port: '39771'
 
 [debug] SERVER: "127.0.0.1:39771"
@@ -137,3 +141,10 @@ Response Code: 000
 Incorrect ETCD URL provided. It is either not reachable or is incorrect...
 ```
 Ensure the correct etcd URL is set as a parameter to the `helm install` command.
+
+
+## Support
+
+If you have an enterprise license, please contact us at support@portworx.com with your license key and logs.
+
+We are always available on Slack. Join us on [Slack](http://slack.portworx.com)

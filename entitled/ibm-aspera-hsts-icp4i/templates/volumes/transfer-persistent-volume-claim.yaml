@@ -1,0 +1,18 @@
+{{- include "sch.config.init" (list . "hsts.sch.chart.config.values") -}}
+{{- range $i, $p := .Values.persistence }}
+{{- if $p.useDynamicProvisioning -}}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ include "hsts.transfer.pvc" (list $ $p $i) }}
+  labels:
+{{ include "sch.metadata.labels.standard" (list $ $.sch.chart.volumes.transfer) | indent 4 }}
+spec:
+  storageClassName: {{ $p.storageClassName }}
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: {{ $p.size }}
+{{- end -}}
+{{- end -}}

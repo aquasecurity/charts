@@ -1,0 +1,154 @@
+{{- include "sch.config.init" (list . "isampostgresql.sch.chart.config.values") -}}
+{{- $pvcName := "dataPVC" -}}
+
+{{- if .Values.container.enabled }}
+
+#
+# This file contains the main deployment definition used by the helm chart 
+# installation.
+#
+
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: {{ template "postgresql.name" . }}
+  labels:
+{{ include "sch.metadata.labels.standard" (list . "") | indent 4 }}
+
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "postgresql.name" . }}
+      chart: {{ .Chart.Name }}
+      release: {{ .Release.Name }}
+      heritage: {{ .Release.Service }}
+
+  template:
+    metadata:
+      labels:
+        # XXX: For some reason the 'app' label needs to be the fully qualified
+        #      application name else the helm_test command fails because we
+        #      can't resolve the application name.  This should be revisited
+        #      at some point in the future so that we can make use of the 
+        #      sch.metadata.labels.standard tag.
+        app: {{ template "postgresql.name" . }}
+        chart: {{ .Chart.Name }}
+        release: {{ .Release.Name }}
+        heritage: {{ .Release.Service }}
+
+      annotations:
+{{- include "sch.metadata.annotations.metering" (list . .sch.chart.metering) | indent 8 }}
+
+    spec:
+
+      hostNetwork:    false
+      hostPID:        false
+      hostIPC:        false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser:    70
+        runAsGroup:   70
+        fsGroup:      70
+
+      affinity:
+{{- include "sch.affinity.nodeAffinity" (list .) | indent 8 }}
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - {{ template "postgresql.name" . }}
+            topologyKey: "kubernetes.io/hostname"
+
+      imagePullSecrets:
+        - name: {{ template "docker.credentials.secret" . }}
+
+      containers:
+      - name:  {{ template "postgresql.name" . }}
+
+        securityContext:
+          privileged:               false
+          readOnlyRootFilesystem:   false
+          allowPrivilegeEscalation: false
+          runAsNonRoot:             true
+          runAsUser:                70
+          capabilities:
+            drop:
+            - ALL
+            add:
+            - CHOWN
+            - SETUID
+            - SETGID
+
+        image: "{{ .Values.global.image.dbrepository }}:{{ .Values.global.image.tag }}"
+        imagePullPolicy: {{ default "IfNotPresent" .Values.global.image.pullPolicy | quote }}
+        env:
+        - name: POSTGRES_USER
+          value: {{ template "postgresql.dbuser" . | quote }}
+        - name: PGUSER
+          value: {{ template "postgresql.dbuser" . | quote }}
+        - name: POSTGRES_DB
+          value: {{ template "postgresql.dbname" . | quote }}
+        - name: POSTGRES_INITDB_ARGS
+          value: ""
+        {{- if .Values.container.keySecret }}
+        - name: POSTGRES_SSL_KEYDB
+          value: /var/local/keys/server.pem
+        {{- else }}
+        - name: POSTGRES_SSL_CN
+          value: ""
+        - name: POSTGRES_UNSECURE
+          value: "true"
+        {{- end }}
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "admin.secret" . }}
+              key: {{ template "admin.secret.key" . }}
+
+        livenessProbe:
+          tcpSocket:
+            port: {{ template "postgresql.port" . }}
+          initialDelaySeconds: 15
+          periodSeconds: 20 
+
+        readinessProbe:
+          tcpSocket:
+            port:  {{ template "postgresql.port" . }}
+          initialDelaySeconds: 5
+          periodSeconds: 10
+
+        ports:
+        - name: {{ .sch.chart.config.servicename }}
+          containerPort: {{ template "postgresql.port" . }}
+
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+
+        volumeMounts:
+        - name: {{ template "postgresql.pvc.name" . }}
+          mountPath: /var/lib/postgresql/data
+          subPath:   postgresql.data
+        {{- if .Values.container.keySecret }}
+        - name: {{ .Release.Name }}-postgresql-keys
+          mountPath: /var/local/keys
+        {{- end}}
+
+      volumes:
+        - name: {{ template "postgresql.pvc.name" . }}
+        {{- if .Values.global.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ template "postgresql.pvc.name" . }}
+        {{- else }}
+          emptyDir: {}
+        {{- end }}
+        {{- if .Values.container.keySecret }}
+        - name: {{ .Release.Name }}-postgresql-keys
+          secret:
+            secretName: {{ .Values.container.keySecret }}
+        {{- end }}
+{{- end }}
+

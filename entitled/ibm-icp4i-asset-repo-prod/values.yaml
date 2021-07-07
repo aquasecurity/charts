@@ -1,0 +1,56 @@
+###############################################################################
+#  Licensed Materials - Property of IBM
+#
+# 5737-I89
+# © Copyright IBM Corp. 2019 All Rights Reserved
+# US Government Users Restricted Rights - Use, duplication or
+# disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+###############################################################################
+
+# Default values for ibm-icp4i-asset-repo-prod.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+global:
+  images:
+    pullSecret:
+    registry: cp.icr.io/cp/icp4i/
+    pullPolicy: IfNotPresent
+    redis: wdp-redis:0.0.4-icp4i
+    couchdb: couchdb:3.0.0-864c4c6d8b62
+    assetSync: cp4i-asset-repo-api:3.1.0-2020-07-01-1234-0bc45f8e-service-v2020.1.1
+    assetUI: icp4i-asset-repo-ui:3.1.0-2020-07-01-1241-65995753-service-v2020.1.1
+    configurator: icip-configurator:3.1.0-2020-04-16-1324-73aeb994-service-v2020.1.1
+  initVolumeAsRoot: true
+  icp4iNamespace: integration
+
+arch: amd64
+
+prereqs:
+  redis-ha:
+    enabled: true
+    replicas:
+      servers: 3
+      sentinels: 3
+
+assetSync:
+  storageClassName:
+  storage: 2Gi
+  replicas: 3
+
+assetUI:
+  replicas: 3
+
+couchdb:
+  replicas: 3
+  persistentVolume:
+    size: 1Gi
+    storageClass:
+  resources:
+    requests:
+      cpu: 500m
+      memory: 512Mi
+    limits:
+      cpu: 1000m
+      memory: 1024Mi
+  dns:
+    clusterDomainSuffix: cluster.local

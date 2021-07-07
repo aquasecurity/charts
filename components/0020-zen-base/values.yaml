@@ -1,0 +1,164 @@
+global:
+  cockroachdb: true
+  databaseUser: 'zen_user'
+  databaseName: 'zen'
+  databaseHost: 'zen-metastoredb-public'
+  databasePort: 26257
+  databaseEnableSSL: true
+  databaseSSLMode: 'require'
+  databaseClientCert: 'client.zen_user.crt'
+  databaseClientKey: 'client.zen_user.key'
+  databaseRootCert: 'ca.crt'
+  persistence:
+    enabled: true
+    storageClassName: ''
+    useDynamicProvisioning: true
+  userHomePVC:
+    persistence:
+      storageClassName: ''
+      existingClaimName: ''
+  architecture: amd64
+  icp4dVersion: 3.5.0.0
+  icp4dEdition: Enterprise
+  ibmProduct: zen
+  image:
+    tag: 3.5.2
+  editor:
+    sa: cpd-editor-sa
+  viewer:
+    sa: cpd-viewer-sa
+  admin:
+    sa: cpd-admin-sa
+  docker_registry_prefix: "docker-registry.default.svc:5000/icpd-lite"
+  standaloneProduct: false
+  nav:
+    deployment_target: icp4data
+image:
+  pullPolicy: IfNotPresent
+usermgmt:
+  usermgmt_enable_localrepo: true
+zenWatcher:
+  image:
+    repository: zen-watcher
+  replicas: 1
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 2048Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
+zenCore:
+  image:
+    repository: zen-core
+  replicas: 2
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
+zenCoreApi:
+  tillerNamespace: kube-system
+  tillerPort: 44134
+  noTls: false
+  database:
+    name: zen
+    metasvc: zen-metastoredb-public:26257
+    user: zen_user
+  image:
+    repository: zen-core-api
+  replicas: 2
+  resources:
+    limits:
+      cpu: 500m
+      memory: 1024Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
+  initContainer:
+    resources:
+      limits:
+        cpu: '2'
+        memory: 2Gi
+      requests:
+        cpu: 100m
+        memory: 256Mi
+zenRequisite:
+  image:
+    repository: icpd-requisite
+  nginxRoute: true
+  resources:
+    limits:
+      cpu: 500m
+      memory: 256Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+zenMigrateUserRoles:
+  image:
+    repository: privatecloud-usermgmt
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 512Mi
+    requests:
+      cpu: 200m
+      memory: 256Mi
+zenUsermgmtLDAPSync:
+  image:
+    repository: privatecloud-usermgmt
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 200m
+      memory: 256Mi
+zenWatchdog:
+  image:
+    repository: zen-watchdog
+  replicas: 1
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  initContainer:
+    resources:
+      limits:
+        cpu: '2'
+        memory: 2Gi
+      requests:
+        cpu: 100m
+        memory: 256Mi
+zenDataSorcerer:
+  image:
+    repository: zen-data-sorcerer
+  replicas: 1
+  resources:
+    limits:
+      cpu: 100m
+      memory: 256Mi
+    requests:
+      cpu: 30m
+      memory: 128Mi
+
+zenAudit:
+  image:
+    repository: zen-audit
+  replicas: 1
+  resources:
+    limits:
+      cpu: 200m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
+
+podLabels:
+  icpdsupport/addOnId: 'zen-lite'
+  icpdsupport/app: 'framework'

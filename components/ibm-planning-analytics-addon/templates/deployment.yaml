@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "addon-sample.fullname" . }}
+  labels:
+    app: {{ template "addon-sample.name" . }}
+    chart: {{ template "addon-sample.chart" . }}
+    release: 3.5.2
+    heritage: {{ .Release.Service }}
+    icpdata_addon: "true"
+    icpdata_addon_version: 3.5.2-1951
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "addon-sample.name" . }}
+      release: 3.5.2
+  template:
+    metadata:
+      annotations:
+        cloudpakName: "IBM Planning Analytics Extension for IBM Cloud Pak for Data"
+        cloudpakId: "27646a3a52bb43408a3156180def3775"
+        productCloudpakRatio: "1:1"
+        productID: "27646a3a52bb43408a3156180def3775"
+        productName: "IBM Planning Analytics Local TM1 Server"
+        productMetric: "VIRTUAL_PROCESSOR_CORE"
+        productVersion: 3.5.1
+        productChargedContainers: "All"
+      labels:
+        app: {{ template "addon-sample.name" . }}
+        release: 3.5.2
+        icpdsupport/addOnId: pa
+        icpdsupport/app: "pa-addon"
+        icpdata_addon: "true"
+        icpdata_addon_version: 3.5.2-1951
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.global.dockerRegistryPrefix }}/pa-cp4d-addon:3.5.2-1951"
+        imagePullPolicy: Always
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        - name: https
+          containerPort: 8443
+          protocol: TCP            
+        livenessProbe:
+          httpGet:
+            path: /static
+            port: http
+            scheme: HTTP
+        readinessProbe:
+          httpGet:
+            path: /static
+            port: http
+            scheme: HTTP
+        resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+      
+      

@@ -1,0 +1,39 @@
+{{- include "sch.config.init" (list . "sch.chart.zeno.config.values") -}}
+{{- $compName := "cm-pre-upgrade-addon-cleanup" -}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: cm-pre-upgrade-addon-cleanup
+  namespace: {{ .Values.global.zenControlPlaneNamespace }}
+  labels:
+{{ include "sch.metadata.labels.standard" (list . $compName ) | trim | indent 4 }}
+  annotations:
+    "helm.sh/hook": "pre-upgrade"
+    "helm.sh/hook-weight": "1"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  template:
+    metadata:
+      labels:
+{{ include "sch.metadata.labels.standard" (list . $compName) | trim | indent 8 }}
+      name: cm-pre-upgrade-addon-cleanup
+    spec:
+      serviceAccountName: {{ .Values.global.existingServiceAccount }}
+{{ include "sch.security.securityContext" (list . .sch.chart.specSecurityContext) | trim | indent 6 }}
+      restartPolicy: Never
+      containers:
+      - name: cm-pre-upgrade-addon-cleanup
+        image: {{ include "zeno.imageName" (dict "root" . "service" .Values.creds) }}
+        resources:
+{{ toYaml .Values.creds.resources | trim | indent 10 }}
+{{ include "sch.security.securityContext" (list . .sch.chart.podSecurityContext) | trim | indent 8 }}
+        command:
+        - "/bin/bash"
+        - -c
+        - |
+          kubectl delete -n {{ .Values.global.zenControlPlaneNamespace }} --ignore-not-found=true configmap {{ .Release.Name }}-wcn-aiops-gw-cm
+
+          kubectl delete -n {{ .Values.global.zenControlPlaneNamespace }} --ignore-not-found=true configmap aiops
+
+      affinity:
+{{ include "zeno.nodeAffinity" . | trim | indent 8 }}

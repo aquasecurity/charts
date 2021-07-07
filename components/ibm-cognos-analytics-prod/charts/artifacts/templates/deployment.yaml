@@ -1,0 +1,109 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "name" . }}
+  labels:
+    {{- include "cognos-analytics.labels" . | indent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  progressDeadlineSeconds: {{ .Values.global.deployment.progressDeadlineSeconds }}
+  selector:
+    matchLabels:
+      {{- include "cognos-analytics.matchlabels" . | indent 6 }}
+  strategy:
+{{ toYaml .Values.strategy | indent 4 }}
+  template:
+    metadata:
+      labels:
+        {{- include "cognos-analytics.labels" . | indent 8 }}
+      annotations:
+        {{- include "metering.annotations" . | indent 8 }}
+    spec:
+{{ toYaml .Values.global.pod.hostOptions | indent 6 }}
+      affinity:
+      {{- include "deploymentNodeAffinity" . | indent 6 }}
+
+      {{- if .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        - name: {{ toYaml .Values.global.imagePullSecrets }}
+      {{- end }}
+      securityContext:
+            {{- include "podSecurityContext" . | indent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          {{ include "imageSpec" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+           - name: TLS_ENABLED
+             value: {{ .Values.global.tls.enabled | quote }}
+           - name: EXTERNAL_SIGNAL_ENABLED
+             value: {{ .Values.external_signal.enabled | quote }}
+          livenessProbe:
+            httpGet:
+              path: "/v1/health/liveness"
+              port: {{ .Values.service.internalPort }}
+              {{- if .Values.global.tls.enabled }}
+              scheme: "HTTPS"
+              {{- else }}
+              scheme: "HTTP"
+              {{- end }}
+            initialDelaySeconds: 20
+            timeoutSeconds: 1
+            periodSeconds: 30
+
+          readinessProbe:
+            httpGet:
+              path: "/v1/health/readiness"
+              port: {{ .Values.service.internalPort }}
+              {{- if .Values.global.tls.enabled }}
+              scheme: "HTTPS"
+              {{- else }}
+              scheme: "HTTP"
+              {{- end }}
+
+            initialDelaySeconds: 10
+            timeoutSeconds: 1
+            periodSeconds: 30
+
+          volumeMounts:
+            - name: artifact-volume
+              mountPath: /artifacts-data
+              subPath: artifacts-data
+            - name: artifact-config-data-volume
+              mountPath: /config-data
+              subPath: config-data
+            - name: artifact-config-volume
+              mountPath: /config
+              subPath: config
+
+          resources:
+{{ toYaml .Values.artifacts.resources | indent 12 }}
+          securityContext:
+{{ toYaml .Values.global.container.ibmuser.securityContext | indent 12 }}
+      hostname: {{ .Chart.Name }}
+      volumes:
+      - name: artifact-volume
+      {{- if .Values.global.pvc.artifacts.enabled }}
+        persistentVolumeClaim:
+          claimName: {{ template "artifacts-pvc.name" . }}-pvc
+      {{- else }}
+        emptyDir: {}
+      {{- end }}
+      - name: artifact-config-data-volume
+      {{- if .Values.global.pvc.artifacts.enabled }}
+        persistentVolumeClaim:
+          claimName: {{ template "artifacts-config-data-pvc.name" . }}-pvc
+      {{- else }}
+        emptyDir: {}
+      {{- end }}
+      - name: artifact-config-volume
+      {{- if .Values.global.pvc.artifacts.enabled }}
+        persistentVolumeClaim:
+          claimName: {{ template "artifacts-config-pvc.name" . }}-pvc
+      {{- else }}
+        emptyDir: {}
+      {{- end }}
+    {{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+    {{- end }}

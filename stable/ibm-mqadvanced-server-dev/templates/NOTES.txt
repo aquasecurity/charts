@@ -1,10 +1,18 @@
-MQ can be accessed via port 1414 on the following DNS name from within your cluster:
-{{ include "sch.names.fullName" (list .) }}.{{ .Release.Namespace }}.svc.cluster.local
+{{- include "sch.config.init" (list . "ibm-mq.sch.chart.config.values") }}
+{{- if .Capabilities.APIVersions.Has "route.openshift.io/v1" -}}
+Get the MQ Console URL by running these commands:
+  export CONSOLE_ROUTE=$(kubectl get route {{ include "sch.names.fullName" (list .) }}-web -n {{ .Release.Namespace }} -o jsonpath="{.spec.host}")
+  echo https://$CONSOLE_ROUTE/ibmmq/console
 
-To get your admin password run:
+{{ end -}}
+The MQ connection information for clients inside the cluster is as follows:
+  {{ include "sch.names.fullName" (list .) }}.{{ .Release.Namespace }}.svc:1414
 
-    MQ_ADMIN_PASSWORD=$(kubectl get secret --namespace {{ .Release.Namespace }} {{ include "sch.names.fullName" (list .) }} -o jsonpath="{.data.adminPassword}" | base64 --decode; echo)
+To get your 'admin' user password run:
+    MQ_ADMIN_PASSWORD=$(kubectl get secret --namespace {{ .Release.Namespace }} {{ .Values.queueManager.dev.secret.name }} -o jsonpath="{.data.{{ .Values.queueManager.dev.secret.adminPasswordKey }}}" | base64 --decode; echo)
 
-If you set an app password, you can retrieve it by running the following:
+{{- if .Values.queueManager.dev.secret.appPasswordKey }}
 
-    MQ_APP_PASSWORD=$(kubectl get secret --namespace {{ .Release.Namespace }} {{ include "sch.names.fullName" (list .) }} -o jsonpath="{.data.appPassword}" | base64 --decode; echo)
+To get your 'app' user password run:
+    MQ_APP_PASSWORD=$(kubectl get secret --namespace {{ .Release.Namespace }} {{ .Values.queueManager.dev.secret.name }} -o jsonpath="{.data.{{ .Values.queueManager.dev.secret.appPasswordKey }}}" | base64 --decode; echo)
+{{ end -}}

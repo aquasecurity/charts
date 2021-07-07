@@ -1,0 +1,156 @@
+# Change license to true to indicate you have read and agree to license agreements
+license: false
+global:
+  architecture: amd64
+  runAsUser: "1000320999"
+  runAsUserPreUpgrade: "1000321000"
+  viewer:
+    sa: "cpd-viewer-sa"
+  editor:
+    sa: "cpd-editor-sa"
+runtimes:
+  workerNodes: 40
+  preloadRuntimes: true
+image:
+  pullPolicy: IfNotPresent
+replicas: 1
+updateSecrets: true
+wdpShaper:
+  image:
+    name: wdp-shaper
+    tag: 3.2.183-amd64
+shaperPreinstall:
+  image:
+    name: shaper-preinstall
+    tag: 3.5.750-amd64
+wdpDataprep:
+  image:
+    name: wdp-dataprep
+    tag: 3.2.56-amd64
+shaperServer:
+  image:
+    name: shaper-server
+    tag: 3.5.750-amd64
+resources:
+  limits:
+    cpu: 1000m
+    memory: 4Gi
+  requests:
+    cpu: 500m
+    memory: 2Gi
+ports:
+  targetPort: 8443
+  externalPort: 443
+livenessProbe:
+  initialDelaySeconds: 20
+  timeoutSeconds: 5
+  periodSeconds: 120
+  successThreshold: 1
+  failureThreshold: 10
+readinessProbe:
+  initialDelaySeconds: 20
+  timeoutSeconds: 5
+  periodSeconds: 60
+  successThreshold: 1
+  failureThreshold: 10
+environment:
+  wdpShaper:
+    bmAppName: "wdp-shaper"
+    bmAppHost: "wdp-shaper"
+    bmAppVersionEndPoint: "shaper/version"
+    serviceInstanceGuid: "wdp-shaper"
+    jvmArgs: "-Djava.security.properties=/opt/ibm/wlp/usr/servers/defaultServer/apps/expanded/wdp-shaper.war/resources/keystore.properties"
+    componentId: "wdp-shaper"
+    entry: "wdp-shaper"
+  wdpDataprep:
+    bmAppName: "wdp-dataprep"
+    bmAppHost: "wdp-dataprep"
+    bmAppVersionEndPoint: "refinery/version"
+    serviceInstanceGuid: "wdp-dataprep"
+    jvmArgs: "-Djava.security.properties=/opt/ibm/wlp/usr/servers/defaultServer/apps/expanded/wdp-dataprep.war/resources/keystore.properties"
+    componentId: "wdp-dataprep"
+    entry: "wdp-dataprep"
+  bmDomain: "ng.bluemix.net"
+  wdpHostDomain:
+    name: WDP_HOST_DOMAIN
+    configMapName: wdp-config
+    hostKey: host
+    icp4dHostKey: icp4d-host
+  icp4dUrl: "https://$(ICP4D_HOST)"
+  gatewayUrl: "https://$(GATEWAY_HOST)"
+  iamUrl: "https://$(ICP4D_HOST)"
+  dataCenter: "dallas"
+  productName: "zen"
+  containerMemory: "2Gi"
+  enableSudo: "true"
+  enableNewRelic: "false"
+  wdpUiProxyUrl: "$(GATEWAY_HOST)"
+  environmentName: "ypprod"
+  environmentType: "yp"
+  deployTarget: "icp4data"
+  deploymentTarget: "icp4data"
+  wdpShaperUrl: "$(GATEWAY_HOST)"
+  domain: "ng.bluemix.net"
+  cfDomain: "ng.bluemix.net"
+  stage: "prod"
+  nodeEnv: "production"
+  nodeModulesCache: false
+  enableMonitoring: false
+  configEntitlements: true
+  configOcpuEnvOverride: true
+  configShaperRoutesEnabled: false
+  configOpencpuEnv: "staging"
+  configOpencpuEnvsUgiUrl: ""
+  cfStagingTimeout: 30
+  production: "true"
+  wdpDataprepUrl: "$(GATEWAY_HOST)"
+  hbSparkUrl: "https://$(GATEWAY_HOST)"
+  envApiUrl: "https://$(GATEWAY_HOST)"
+  notificationApiUrl: "https://$(GATEWAY_HOST)"
+  usageApiUrl: "https://$(GATEWAY_HOST)"
+  authIamIdClientId:
+    name: auth__iamId__clientId
+    value: dc_refinery
+  authIamIdClientSecret:
+    name: auth__iamId__clientSecret
+    secret: secret-wdp-shaper
+    key: SHAPER_CLIENT_SECRET                                      
+  configSessionKey:
+    name: config__session__key
+    secret: secret-wdp-shaper
+    key: SHAPER_SESSION_KEY
+  configSessionSecret:
+    name: config__session__secret
+    secret: secret-wdp-shaper
+    key: SHAPER_SESSION_SECRET
+  configIcdRedisUrl:
+    name: config__icdRedis__url
+    secret: redis-ha
+    key: redis-url-ssl
+  configIcdRedisTlsServer:
+    name: config__icdRedis__tlsServer 
+    value: redis-ha-master-svc
+  configIcdRedisCertificate:
+    name: config__icdRedis__certificate
+    secret: redis-ha-cert
+    key: cacertb64.pem
+  configIcdRedisCryptoPassword:
+    name: config__icdRedis__cryptoPassword
+    secret: secret-wdp-shaper
+    key: SHAPER_REDIS_CRYPTO_PASSWORD
+  configSegmentWriteKey:
+    name: config__segmentWriteKey
+    secret: secret-wdp-shaper
+    key: REFINERY_SEGMENT_WRITE_KEY
+  configDataprepServiceId:
+    name: config__dataprep__serviceid
+    secret: secret-wdp-shaper
+    key: DATAPREP_SERVICE_ID
+  configDataprepApiKey:
+    name: config__dataprep__apikey
+    secret: secret-wdp-shaper
+    key: DATAPREP_SERVICE_APIKEY
+  wdpServiceIdCredential:
+    name: WDP_SERVICE_ID_CREDENTIAL
+    secret: wdp-service-id
+    key: service-id-credentials

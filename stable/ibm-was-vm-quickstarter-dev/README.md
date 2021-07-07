@@ -25,7 +25,7 @@ The Helm chart deploys the following components:
 ## Prerequisites
 The following prerequisites apply only to deploying the Helm chart. For a detailed list of system installation prerequisites, see [WAS VM Quickstarter Prerequisites](https://www.ibm.com/support/knowledgecenter/SSTF9X/install-prerequisites.html).
 
-You must be a cluster administrator to install the Helm chart. The `wasaas-devops` container requires additional permissions to access a secret in the `services` namespace and to discover the ip address of the proxy node.
+A cluster administrator is required for OIDC registration for UI components and for creating custom cluster security policies.
 
 ### PodSecurityPolicy Requirements
 
@@ -94,18 +94,23 @@ To set up a custom PodSecurityPolicy, the cluster administrator can either manua
     - use
   ```
 
-##### Configuration scripts for custom PodSecurityPolicy
+  ##### Configuration scripts can be used to create the required resources
 
-As an alternative to manually creating the custom PodSecurityPolicy resource, the cluster administrator can use the following scripts to create and delete the required PodSecurityPolicy resources. Download the scripts from the [prereqs](https://github.com/IBM/charts/tree/master/stable/ibm-was-vm-quickstarter-dev/ibm_cloud_pak/pak_extensions/prereqs) directory.
+  Download the following scripts located at [/ibm_cloud_pak/pak_extensions/pre-install](https://github.com/IBM/charts/tree/master/stable/ibm-was-vm-quickstarter-dev/ibm_cloud_pak/pak_extensions/pre-install) directory.
 
-  - `createSecurityClusterPrereqs.sh`: Creates the PodSecurityPolicy and ClusterRole for all releases of this chart.
-  - `createSecurityNamespacePrereqs.sh`: Creates the RoleBinding for the namespace. This script takes one argument, the name of a pre-existing namespace where the chart will be installed.
-       
-       Example usage: `./createSecurityNamespacePrereqs.sh myNamespace`
-  - `deleteSecurityClusterPrereqs.sh`: Deletes the PodSecurityPolicy and ClusterRole for all releases of this chart.
-  - `deleteSecurityNamespacePrereqs.sh`: Deletes the RoleBinding for the namespace. This script takes one argument, the name of the namespace where the chart was installed.
-       
-       Example usage: `./deleteSecurityNamespacePrereqs.sh myNamespace`
+  * The pre-install instructions are located at `clusterAdministration/createSecurityClusterPrereqs.sh` for cluster administrators to create the PodSecurityPolicy and ClusterRole for all releases of this chart.
+
+  * The namespace scoped instructions are located at `namespaceAdministration/createSecurityNamespacePrereqs.sh` for team administrators/operators to create the RoleBinding for the namespace. This script takes one argument; the name of a pre-existing namespace where the chart will be installed.
+    * Example usage: `./createSecurityNamespacePrereqs.sh myNamespace`
+
+  ##### Configuration scripts can be used to clean up resources created
+
+  Download the following scripts located at [/ibm_cloud_pak/pak_extensions/post-delete](https://github.com/IBM/charts/tree/master/stable/ibm-was-vm-quickstarter-dev/ibm_cloud_pak/pak_extensions/post-delete) directory.
+
+  * The post-delete instructions are located at `clusterAdministration/deleteSecurityClusterPrereqs.sh` for cluster administrators to delete the PodSecurityPolicy and ClusterRole for all releases of this chart.
+
+  * The namespace scoped instructions are located at `namespaceAdministration/deleteSecurityNamespacePrereqs.sh` for team administrators/operators to delete the RoleBinding for the namespace. This script takes one argument; the name of the namespace where the chart was installed.
+    * Example usage: `./deleteSecurityNamespacePrereqs.sh myNamespace`
 
 ### Persistent Volumes
 
@@ -144,11 +149,38 @@ spec:
 
 Run the following command to create the volume:
 
-  ```bash
+```bash
 kubectl create -f pv.yaml
-  ```
+```
 
-Setting up the migration volume requires additional steps. For more information, see [Migrating applications to WAS VM Quickstarter](https://www.ibm.com/support/knowledgecenter/SSTF9X/migrate-apps.html).
+Optional: If you want to enable migration, create an additional persistent volume `pv-migration.yaml` file and use the values in the following example, replacing the items in <brackets\>. This persistent volume will be used by the migration feature.
+
+```yaml
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: data-<release-name>-ibm-was-vm-quickstarter-migration
+  labels:
+    component: "migration"
+    release: "<release-name>"
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+  - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: /nfs/wasaas/<environment-name>/<release-name>/migration
+    server: <nfs-server-address>
+```
+
+Run the following command to create the migration volume:
+
+```bash
+kubectl create -f pv-migration.yaml
+```
+
+For more information about performing a migration, see [Migrating applications to WAS VM Quickstarter](https://www.ibm.com/support/knowledgecenter/SSTF9X/migrate-apps.html).
 
 #### Use the UI
 
@@ -156,7 +188,9 @@ For information about creating persistent volumes by using the user interface, s
 
 ### Secrets
 
-The WAS VM Quickstarter service requires a secret to be created that contains CAM administrator user name and password.
+#### Cloud Automation Manager
+
+The WAS VM Quickstarter service also requires a secret to be created that contains CAM administrator user name and password.
 
 You can either define the secret using the `kubectl` command or in the IBM Cloud Private user interface.
 
@@ -186,7 +220,7 @@ The command deploys `ibm-was-vm-quickstarter-dev` on the Kubernetes cluster in t
 
 ### Verifying the Chart
 
-Verify that your Kubernetes pods were deployed successfully.
+Verify that your Kubernetes pods were deployed successfully. See the instruction after the Helm installation completes. The instruction can also be displayed by viewing the installed Helm release under Menu -> Workloads -> Helm Releases or by running the command: `helm status <release> --tls`.
 
 ### Uninstalling the Chart
 
@@ -225,21 +259,21 @@ The following tables lists the configurable parameters of the `ibm-was-vm-quicks
 | `vsphere.dnsSuffxies`           | The DNS domain suffix to use for host name and URLs for WAS deployments | |
 | `vsphere.ipv4Gateway`           | The IP address of the IPv4 gateway to use for WAS deployments | |
 | `vsphere.ipv4PrefixLength`      | The length of your IPv4 prefix | |
-| `vsphere.ipPool`                | comma separated list of IP addresses to be used as host IPs for WAS virtual machine deployments. See [Prerequisites](https://www.ibm.com/support/knowledgecenter/SSTF9X/install-prerequisites.html) for details | |
+| `vsphere.ipPool`                | A comma separated list of IP addresses to be used as host IPs for WAS virtual machine deployments. See [Prerequisites](https://www.ibm.com/support/knowledgecenter/SSTF9X/install-prerequisites.html) for details | |
 | `console.image.repository`      | WAS VM Quickstarter console Docker image repository | `ibmcom/wasaas-console`  |
-| `console.image.tag`             | WAS VM Quickstarter console Docker image tag  |  `2.0.2` |
+| `console.image.tag`             | WAS VM Quickstarter console Docker image tag  |  `3.0.0` |
 | `console.ingress.path`          | WAS VM Quickstarter console ingress path  | `/wasaas-console/`  |
 | `broker.image.repository`       | WAS VM Quickstarter broker Docker image repository | `ibmcom/wasaas-wasdevaas`  |
-| `broker.image.tag`              | WAS VM Quickstarter broker Docker image tag  |  `2.0.2` |
+| `broker.image.tag`              | WAS VM Quickstarter broker Docker image tag  |  `3.0.0` |
 | `broker.ingress.path`           | WAS VM Quickstarter broker ingress path  | `/wasaas-broker/`  |
 | `cloudsm.image.repository`      | WAS VM Quickstarter service management Docker image repository | `ibmcom/wasaas-cloudsm`  |
-| `cloudsm.image.tag`             | WAS VM Quickstarter service management Docker image tag  |  `2.0.2` |
+| `cloudsm.image.tag`             | WAS VM Quickstarter service management Docker image tag  |  `3.0.0` |
 | `cloudsm.capacity`              | Resource capacity in [service blocks](https://www.ibm.com/support/knowledgecenter/SSTF9X/about-resource-management.html) | `10` |
-| `dashboard.image.repository`    | WAS VM Quickstarter dashboard Docker image repository | `ibmcom/wasaas-console`  |
-| `dashboard.image.tag`           | WAS VM Quickstarter dashboard Docker image tag  |  `2.0.2` |
+| `dashboard.image.repository`    | WAS VM Quickstarter dashboard Docker image repository | `ibmcom/wasaas-dashboard`  |
+| `dashboard.image.tag`           | WAS VM Quickstarter dashboard Docker image tag  |  `3.0.0` |
 | `dashboard.ingress.path`        | WAS VM Quickstarter dashboard ingress path  | `/wasaas-dashboard/`  |
 | `devops.image.repository`       | WAS VM Quickstarter devOps Docker image repository | `ibmcom/wasaas-devops`  |
-| `devops.image.tag`              | WAS VM Quickstarter devOps Docker image tag  |  `2.0.2` |
+| `devops.image.tag`              | WAS VM Quickstarter devOps Docker image tag  |  `3.0.0` |
 | `couchdb.image.repository`      | WAS VM Quickstarter CouchDB Docker image repository | `couchdb`  |
 | `couchdb.image.tag`             | WAS VM Quickstarter CouchDB Docker image tag  |  `2.1.1` |
 | `couchdb.persistentVolume.useDynamicProvisioning` | Indicates whether to use dynamic provisioning  |  `false` |
@@ -249,8 +283,11 @@ The following tables lists the configurable parameters of the `ibm-was-vm-quicks
 | `migration.enabled`             | Enabled is true if the migration feature is enabled | `false` |
 | `migration.mountPoint`          | The directory path of the migration store on the NFS server  | |
 | `migration.serverAddress`       | The IP address or host name of the NFS server |  |
-| `image.pullPolicy`              | The pull policy for the WAS VM Quickstarter Docker images  | `Always` |
-
+| `image.pullPolicy`              | The pull policy for the WAS VM Quickstarter Docker images  | `IfNotPresent` |
+| `redhatSatellite.ip`            | The IP address of the Red Hat Satellite server. | |
+| `redhatSatellite.fqdn`          | The fully qualified domain name of the Red Hat Satellite server. | |
+| `redhatSatellite.organization`  | The organization name for the Red Hat Satellite subscription. | |
+| `redhatSatellite.activationKey` | The activation key for the Red Hat Satellite subscription. | |
 
  You should create a YAML file that specifies the values for the parameters that can be used when installing the chart.  Alternatively, specify each parameter using the `--set key=value[,key=value]` argument when you run the `helm install` command.
 

@@ -17,7 +17,7 @@ arch:
   amd64:
     __metadata:
       name: "amd64"
-      label: "amd64"
+      label: "amd64 scheduling preference"
       description: "Architecture preference for target worker node."
       type: "string"
       immutable: false
@@ -33,7 +33,7 @@ image:
   pullPolicy:
     __metadata:
       label: "Image Pull Policy"
-      description: "Pull policy for the WAS VM Quickstarter images"
+      description: "The default pull policy is IfNotPresent which causes the Kubelet to skip pulling an image if it already exists."
       type: "string"
       immutable: false
       required: true
@@ -195,6 +195,35 @@ vsphere:
       type: "string"
       required: true
 
+redhatSatellite:
+  __metadata:
+    label: "Red Hat Satellite"
+    description: "Parameters for Red Hat Satellite. Only if using Red Hat OS image for WAS VM Quickstarter VMs."
+  ip:
+    __metadata:
+      label: "IP Address"
+      description: "IP address of the Red Hat Satellite server."
+      type: "string"
+      required: false
+  fqdn:
+    __metadata:
+      label: "Fully Qualified Domain Name"
+      description: "Fully qualified domain name of the Red Hat Satellite server."
+      type: "string"
+      required: false
+  organization:
+    __metadata:
+      label: "Organization"
+      description: "Organization name for the Red Hat Satellite subscription."
+      type: "string"
+      required: false
+  activationKey:
+    __metadata:
+      label: "Activation Key"
+      description: "Activation key for the Red Hat Satellite subscription."
+      type: "string"
+      required: false
+
 devops:
   __metadata:
     label: "DevOps"
@@ -202,14 +231,14 @@ devops:
   image:
     repository:
       __metadata:
-        label: "Image Repository"
-        description: "WAS VM Quickstarter Devops image repository."
+        label: "DevOps Image Repository"
+        description: "Docker registry to pull WAS VM Quickstarter DevOps image from."
         type: "string"
         required: true
     tag:
       __metadata:
-        label: "Image Tag"
-        description: "Use the image tagged with the matching string."
+        label: "DevOps Image Tag"
+        description: "A tag is a label applied to an image in a repository. Tags are how various images in a repository are distinguished from each other."
         type: "string"
         required: false
 
@@ -220,14 +249,14 @@ cloudsm:
   image:
     repository:
       __metadata:
-        label: "Image Repository"
-        description: "WAS VM Quickstarter Service Management image repository."
+        label: "Service Management Image Repository"
+        description: "Docker registry to pull WAS VM Quickstarter Service Management image from."
         type: "string"
         required: true
     tag:
       __metadata:
-        label: "Image Tag"
-        description: "Use the image tagged with the matching string."
+        label: "Service Management Image Tag"
+        description: "A tag is a label applied to an image in a repository. Tags are how various images in a repository are distinguished from each other."
         type: "string"
         required: false
   capacity:
@@ -245,14 +274,14 @@ broker:
   image:
     repository:
       __metadata:
-        label: "Image Repository"
-        description: "WAS VM Quickstarter broker image repository."
+        label: "Broker Image Repository"
+        description: "Docker registry to pull WAS VM Quickstarter Broker image from."
         type: "string"
         required: true
     tag:
       __metadata:
-        label: "Image Tag"
-        description: "Use image tagged with the matching string."
+        label: "Broker Image Tag"
+        description: "A tag is a label applied to an image in a repository. Tags are how various images in a repository are distinguished from each other."
         type: "string"
         required: false
   ingress:
@@ -270,14 +299,14 @@ console:
   image:
     repository:
       __metadata:
-        label: "Image Repository"
-        description: "WAS VM Quickstarter console image repository."
+        label: "Console Image Repository"
+        description: "Docker registry to pull WAS VM Quickstarter Console image from."
         type: "string"
         required: true
     tag:
       __metadata:
-        label: "Image Tag"
-        description: "Use the image tagged with the matching string."
+        label: "Console Image Tag"
+        description: "A tag is a label applied to an image in a repository. Tags are how various images in a repository are distinguished from each other."
         type: "string"
         required: false
   ingress:
@@ -287,7 +316,7 @@ console:
         description: "Ingress path to the console container."
         type: "string"
         required: true
-        
+
 dashboard:
   __metadata:
     label: "Dashboard"
@@ -295,14 +324,14 @@ dashboard:
   image:
     repository:
       __metadata:
-        label: "Image Repository"
-        description: "WAS VM Quickstarter dashboard image repository."
+        label: "Dashboard Image Repository"
+        description: "Docker registry to pull WAS VM Quickstarter Dashboard image from."
         type: "string"
         required: true
     tag:
       __metadata:
-        label: "Image Tag"
-        description: "Use the image tagged with the matching string."
+        label: "Dashboard Image Tag"
+        description: "A tag is a label applied to an image in a repository. Tags are how various images in a repository are distinguished from each other."
         type: "string"
         required: false
   ingress:
@@ -339,14 +368,14 @@ couchdb:
   image:
     repository:
       __metadata:
-        label: "Image Repository"
-        description: "WAS VM Quickstarter CouchDB image repository."
+        label: "CouchDB Image Repository"
+        description: "Docker registry to pull WAS VM Quickstarter CouchDB image from."
         type: "string"
         required: true
     tag:
       __metadata:
-        label: "Image Tag"
-        description: "Use the image tagged with the matching string."
+        label: "CouchDB Image Tag"
+        description: "A tag is a label applied to an image in a repository. Tags are how various images in a repository are distinguished from each other."
         type: "string"
         required: false
 

@@ -1,33 +1,42 @@
 charts:
-  - archive: file:repo/stable/ibm-minio-objectstore-1.6.0.tgz
+  - archive: file:repo/stable/ibm-minio-objectstore-1.6.2.tgz
     repository-keys:
       - image.repository
+      - mcImage.repository
 
 images:
-- image: ibmcom/minio:RELEASE.2018-08-21T00-37-20Z
+- image: ibmcom/minio:RELEASE.2019-04-09T01-22-30Z.1
   references:
-  - repository: ibmcom/minio:RELEASE.2018-08-21T00-37-20Z
-    pull-repository:  ibmcom/minio:RELEASE.2018-08-21T00-37-20Z
-    os: linux 
-    architecture: amd64
-        
-- image: ibmcom/minio-mc:RELEASE.2018-07-13T00-53-22Z
-  references:
-  - repository: ibmcom/minio-mc:RELEASE.2018-07-13T00-53-22Z
-    pull-repository: ibmcom/minio-mc:RELEASE.2018-07-13T00-53-22Z 
-    os: linux
-    architecture: amd64
+  - repository: ibmcom/minio-amd64:RELEASE.2019-04-09T01-22-30Z.1
+    pull-repository: ibmcom/minio-amd64:RELEASE.2019-04-09T01-22-30Z.1
+    platform:
+      os: linux
+      architecture: amd64
+  - repository: ibmcom/minio-ppc64le:RELEASE.2019-04-09T01-22-30Z.1
+    pull-repository: ibmcom/minio-ppc64le:RELEASE.2019-04-09T01-22-30Z.1
+    platform:
+      os: linux
+      architecture: ppc64le
+  - repository: ibmcom/minio-s390x:RELEASE.2019-04-09T01-22-30Z.1
+    pull-repository: ibmcom/minio-s390x:RELEASE.2019-04-09T01-22-30Z.1
+    platform:
+      os: linux
+      architecture: s390x
 
-- image: ibmcom/minio-ppc64le:RELEASE.2018-08-21T00-37-20Z
+- image: ibmcom/minio-mc:RELEASE.2019-04-03T17-59-57Z.1
   references:
-  - repository: ibmcom/minio-ppc64le:RELEASE.2018-08-21T00-37-20Z
-    pull-repository: ibmcom/minio-ppc64le:RELEASE.2018-08-21T00-37-20Z 
-    os: linux 
-    architecture: ppc64le
-        
-- image: ibmcom/minio-mc-ppc64le:RELEASE.2018-07-13T00-53-22Z
-  references:
-  - repository: ibmcom/minio-mc-ppc64le:RELEASE.2018-07-13T00-53-22Z 
-    pull-repository: ibmcom/minio-mc-ppc64le:RELEASE.2018-07-13T00-53-22Z
-    os: linux
-    architecture: ppc64le 
+  - repository: ibmcom/minio-mc-amd64:RELEASE.2019-04-03T17-59-57Z.1
+    pull-repository: ibmcom/minio-mc-amd64:RELEASE.2019-04-03T17-59-57Z.1
+    platform:
+      os: linux
+      architecture: amd64
+  - repository: ibmcom/minio-mc-ppc64le:RELEASE.2019-04-03T17-59-57Z.1
+    pull-repository: ibmcom/minio-mc-ppc64le:RELEASE.2019-04-03T17-59-57Z.1
+    platform:
+      os: linux
+      architecture: ppc64le
+  - repository: ibmcom/minio-mc-s390x:RELEASE.2019-04-03T17-59-57Z.1
+    pull-repository: ibmcom/minio-mc-s390x:RELEASE.2019-04-03T17-59-57Z.1
+    platform:
+      os: linux
+      architecture: s390x

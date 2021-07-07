@@ -1,0 +1,159 @@
+###############################################################################
+########## IBM InfoSphere Information Server Enterprise #############
+###############################################################################
+
+arch:
+  amd64: "3 - Most preferred"
+
+###############################################################################
+## global settings
+###############################################################################
+
+## 42670: To fix upgrade issue for scenario cpd-2.5.0 to cpd-3.0.1 to cpd-3.5.1 adding wkc:wkc label in metadata
+global:
+  ibmProduct: zen
+  dockerRegistryPrefix: ""
+  podLabels:
+    icpdsupport/app: "api"
+    icpdsupport/addOnId: "wkc"
+    wkc: "wkc"
+  deploymentTarget: "icp4data"
+  persistence:
+    enabled: true
+    useDynamicProvisioning: false
+    storageClassName: ""
+  image:
+    pullPolicy: IfNotPresent
+    wkcinitcontainer:
+      repository: wkc-init-container
+      tag: "1.0.122"
+      resources:
+        requests:
+          cpu: 100m
+          memory: 256Mi
+        limits:
+          cpu: 500m
+          memory: 512Mi
+
+# post delete
+postDelete:
+  serviceAccountName: "cpd-admin-sa"
+
+###############################################################################
+## Enterprise Search images
+###############################################################################
+#placeHolderSecrets:
+ #replaceSec stage: hyc-ug-staging-docker-registry-secret
+ #replaceSec acs: hyc-acs-docker-local-registry-secret
+ #replaceSec shop4info: iig-ug-shop4info-docker-staging-secret
+ #replaceSec release: hyc-ug-releases-docker-registry-secret
+ #replaceSec finley: hyc-finley-docker-local-secret
+ #replaceSec drcreds: dr-docker-registry-cred
+release:
+  ingress: false
+  image:
+    kafka:
+      repository: kafka-ubi7-x86_64
+      tag: "2.13-2.6.0_b820_bca3c97bb844"
+      runAsUser:
+      fsGroup:
+
+###############################################################################
+## Enterprise Search variables
+###############################################################################
+auditTrail:
+  app_name: audit-trail-service
+finley:
+  app_name: finley-ml
+igcUI:
+  app_name: igc-ui-react
+odfFA:
+  secret_name: odf-fast-analyzer-kerberos-config
+
+ia:
+  secret_name: ia-lib-ext
+  config_name: ia-config
+  analysis_name: ia-analysis
+
+omag:
+  app_name: omag
+  volumeClaim:
+    name: "omag-pvc"
+
+createTopicsHook:
+  requests:
+    cpu: 50m
+    memory: 100Mi
+  limits:
+    cpu: 200m
+    memory: 512Mi
+
+###############################################################################
+## Shop4info Images
+###############################################################################
+s4i:
+
+  #placeHolderSecrets:
+  #replaceSec  stage: hyc-ug-staging-docker-registry-secret
+  #replaceSec  acs: hyc-acs-docker-local-registry-secret
+  #replaceSec  shop4info: iig-ug-shop4info-docker-staging-secret
+  #replaceSec  release: hyc-ug-releases-docker-registry-secret
+  #replaceSec  finley: hyc-finley-docker-local-secret
+  #replaceSec  drcreds: dr-docker-registry-cred
+
+  shop4infoRest:
+    app_name: shop4info-rest
+
+  s4iEventConsumer:
+    app_name: shop4info-event-consumer
+
+  s4iScheduler:
+    app_name: shop4info-scheduler
+
+  s4iRegistry:
+    app_name: shop4info-type-registry-service
+
+
+  s4iSchemaInit:
+    app_name: shop4info-schema-init
+
+
+
+
+###############################################################################
+## Governance Images
+###############################################################################
+gov:
+  #placeHolderSecrets:
+  #replaceSec  stage: hyc-ug-staging-docker-registry-secret
+  #replaceSec  acs: hyc-acs-docker-local-registry-secret
+  #replaceSec  shop4info: iig-ug-shop4info-docker-staging-secret
+  #replaceSec  release: hyc-ug-releases-docker-registry-secret
+  #replaceSec  finley: hyc-finley-docker-local-secret
+  #replaceSec  drcreds: dr-docker-registry-cred
+
+  catalogSearchService:
+    app_name: gov-catalog-search-service
+
+  appConfigService:
+    app_name: gov-app-config-service
+
+  userPrefService:
+    app_name: gov-user-prefs-service
+
+  enterpriseSearchUI:
+    app_name: gov-enterprise-search-ui
+
+  qualityUI:
+    app_name: gov-quality-ui
+
+  adminUI:
+    app_name: gov-admin-ui
+
+  govUI:
+    app_name: gov-ui-commons
+
+  insightsService:
+    app_name: gov-insights-service
+
+serviceAccountName: ""

@@ -1,18 +1,22 @@
 # Skydive
 
 ## Introduction
-This is Helm chart for Skydive. Skydive is an open source real-time network topology and protocols analyzer.
+
+Skydive is an open source real-time network topology and protocols analyzer.
 It aims to provide a comprehensive way of understanding what is happening in the network infrastructure.
 
 Skydive agents collect topology informations and flows and forward them to a central agent for further analysis. All the informations are stored in an Elasticsearch database.
 
 Skydive is SDN-agnostic but provides SDN drivers in order to enhance the topology and flows informations.
 
-![](https://github.com/skydive-project/skydive.network/raw/images/overview.gif)
-
 ## Prerequisites
-* IBM Cloud Private 2.1.0.1 or higher
-* Kubernetes cluster 1.7 or higher
+
+Skydive requires:
+* Kubernetes cluster 1.10.0 or higher
+
+And can run on any one of the following private/hosted platforms:
+* IBM Cloud Private 2.1.0.3 or higher
+* IBM Cloud Kubernetes Service
 
 - Persistent volume is needed only if you want to "look back in time" with skydive (that is, if you are interested in the monitoring history); if you don't , then it is not required (an elastic search container will not be created). You can create a persistent volume via the IBM Cloud Private interface or through a yaml file. For example:
 
@@ -30,11 +34,24 @@ spec:
     path: <PATH>
 ```
 
+- Skydive Community Image. Docker Hub container registry docker.io/skydive/*  must be added to the list of trusted registries. First make sure you have the ClusterAdminRole role. Next under an admin role setup image policy:
+
+```
+kind: ClusterImagePolicy
+metadata:
+  name: skydive-ibmcloud-image-policy
+spec:
+  repositories:
+    - name: docker.io/skydive/*
+```
+  
+  Finally install ibm-skydive-dev using the docker.io/skydive/skydive:tag image.
+
 ## Installing the Chart
 To install the chart with the release name `my-release`:
 
 ```bash
-$ helm install --name my-release stable/skydive
+$ helm install --name my-release stable/ibm-skydive-dev
 ```
 
 The command deploys skydive on the Kubernetes cluster in the default configuration. The [configuration](#configuration) section lists the parameters that can be configured during installation.
@@ -59,17 +76,19 @@ The following tables lists the configurable parameters of skydive chart and thei
 
 | Parameter                            | Description                                     | Default                                                    |
 | ----------------------------------   | ---------------------------------------------   | ---------------------------------------------------------- |
-| `global.image.secretName`            | Image secret for private repository             | Empty                                                      |
 | `image.repository`                   | Skydive image repository                        | `ibmcom/skydive`                                           |
-| `image.tag`                          | Image tag                                       | `0.18`                                                     |
+| `image.tag`                          | Image tag                                       | `0.22.0`                                                   |
+| `image.secretName`                   | Image secret for private repository             | Empty                                                      |
 | `image.imagePullPolicy`              | Image pull policy                               | `IfNotPresent`                                             |
 | `resources`                          | CPU/Memory resource requests/limits             | Memory: `8192Mi`, CPU: `2000m`                             |
 | `service.name`                       | service name                                    | `skydive`                                                  |
 | `service.type`                       | k8s service type (e.g. NodePort, LoadBalancer)  | `NodePort`                                                 |
 | `service.port`                       | TCP port                                        | `8082`                                                     |
+| `etcd.port`                          | TCP port                                        | `12379`                                                     |
 | `analyzer.topology.fabric`           | Fabric connecting k8s nodes                     | `TOR1->*[Type=host]/eth0`                                  |
 | `env`                                | Extended environment variables                  | Empty                                                      |
-| `storage.elasticsearch.host`         | ElasticSearch end-point                         | `127.0.0.1:9200`                                           |
+| `storage.elasticsearch.host`         | ElasticSearch host                              | `127.0.0.1`                                                |
+| `storage.elasticsearch.port`         | ElasticSearch port                              | `9200`                                                     |
 | `storage.flows.indicesToKeep`        | Number of flow indices to keep in storage       | `10`                                                       |
 | `storage.flows.indexEntriesLimit`    | Number of flow records to keep per index        | `10000`                                                    |
 | `storage.topology.indicesToKeep`     | Number of topology indices to keep in storage   | `10`                                                       |
@@ -81,7 +100,7 @@ The following tables lists the configurable parameters of skydive chart and thei
 | `dataVolume.storageClassName`        | Storage class of backing PVC                    | `nil`                                                      |
 | `dataVolume.size`                    | Size of data volume                             | `10Gi`                                                     |
 
-## Chart details
+## Chart Details
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`.
 
 ## Topology fabric
@@ -97,7 +116,15 @@ env:
   - name: SKYDIVE_LOGGING_LEVEL
     value: "DEBUG"
 ```
- 
+Environment variables for SkyDive can also be defined using UI. The Env field should be changed, for example:
+```
+  [{"name":"SKYDIVE_LOGGING_LEVEL","value":"DEBUG"}]
+```
+
+## PodSecurityPolicy Requirements
+
+None
+
 ## Resources Required
 The chart deploys pods and daemon-set consuming minimum resources as specified in the `resources` configuration parameter (default: Memory: `512Mi`, CPU: `100m`)
 
@@ -108,7 +135,10 @@ Refer to section [Security implications](#security-implications)
 ## Persistence
 Skydive analyzer uses elasticsearch to store data at the `/usr/share/elasticsearch/data` path of the Analyzer container.
 
-The chart mounts a [Persistent Volume](http://kubernetes.io/docs/user-guide/persistent-volumes/) at this location. User need to create a PV before chart deployed, or enable dynamic volume provisioning in chart configuration.
+The chart mounts a [Persistent Volume](http://kubernetes.io/docs/user-guide/persistent-volumes/) at this location. User needs to create a PV before chart deployed, or enable dynamic volume provisioning in chart configuration.
+
+To make Elasticsearch work properly the user needs to set kernel setting vm.max_map_count to at least 262144 on each worker node. Please check
+[https://www.elastic.co/guide/en/elasticsearch/reference/5.5/docker.html](https://www.elastic.co/guide/en/elasticsearch/reference/5.5/docker.html)
 
 ## Documentation
 Skydive documentation can be found here:

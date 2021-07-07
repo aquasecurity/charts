@@ -3,10 +3,9 @@
 # Declare variables to be passed into your templates.
 datapower:
   image:
-    pullSecrets:
-# before final checkin remove this comment and make repo and tag be release values
+    pullSecret:
     repository: ibmcom/datapower
-    tag: 7.7.1.1.300826
+    tag: 2018.4.1.16.330899
     pullPolicy: IfNotPresent
   resources:
     limits:
@@ -19,6 +18,10 @@ datapower:
   env:
     # Should agree with .Values.requests.cpu if set. If not set or is 0 the env var will not be set.
     workerThreads: 4
+    # Format type for logging. Can be json-icp, text, raw, csv, cbe, or xml
+    defaultLogFormat: "json-icp"
+  # Set admin password using secret. See README Prereqs section
+  adminUserSecret:
   replicaCount: 1
   # Gateway MGMT variables
   # This value should either be 'enabled' or 'disabled'. Default is disabled
@@ -26,6 +29,8 @@ datapower:
   webGuiManagementPort: 9090
   webGuiManagementLocalAddress: 0.0.0.0
   # This value should either be 'enabled' or 'disabled'. Default is disabled
+  # Using SSH requires root permissions. Enabling SSH will make the container
+  # run as root and add needed capabilities.
   gatewaySshState: "disabled"
   gatewaySshPort: 9022
   gatewaySshLocalAddress: 0.0.0.0
@@ -41,27 +46,33 @@ datapower:
   snmpState: "enabled"
   snmpLocalAddress: 0.0.0.0
   snmpPort: 1161
+  additionalConfig: []
+  additionalLocal:
+  additionalCerts: []
 service:
   name: datapower
   type: NodePort
 
-# Patterns requires you to specify .Values.fronstsideKey
-# and .Values.frontsideCert for HTTPS to be enabled. If left blank HTTP is used.
+# HTTPS requires you to specify a secret with key.pem and cert.pem.
+# These should contain valid key-cert information. If left blank HTTP is used.
 crypto:
-  frontsideKey:
-  frontsideCert:
+  frontsideSecret:
 
 #-----------------------------------------------------------------------------
 # Pattern Section
 #
 # patternName selects the configuration options appropriate for the
-# pattern you want to select - Options are 'RESTProxy' or 'none'
-patternName: RESTProxy
+# pattern you want to select - Options are 'restProxy' or 'none'
+patternName: none
 
 #none:
-# patternName "none" signifies no pattern was selected 
+# patternName "none" signifies no pattern was selected
 # No config or services are set up when patternName is "none"
 
-RESTProxy:
+restProxy:
   backendURL: https://httpbin.org
   containerPort: 8443
+
+health:
+  livenessPort: 7879
+  readinessPort: 7878

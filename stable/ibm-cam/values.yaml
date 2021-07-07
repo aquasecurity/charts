@@ -11,19 +11,28 @@ global:
   image:
     secretName: ""
   id:
-    productID: "IBMCloudAutomationManager_5737E67_3100_CE_000"
+    productID: "IBMCloudAutomationManager_5737E67_4200_CE_000"
   iam:
     deployApiKey: ""
   offline: false
   audit: false
+  legacyAudit: false
+  enableFIPS: false
+  ICP32: false
 
 #arch: ppc64le
+#arch: s390x
 arch: amd64
 
-service:
-  namespace: services
+platform: icp
+#platform: mcmp
+
+icp:
+  port: 443
+  cluster_name: mycluster
 
 managementConsole:
+  hostname: ""
   port: 30000
 
 secureValues: 
@@ -32,19 +41,17 @@ secureValues:
 database:
   bundled: true
 
-redis:
-  bundled: true
-  host: redis
-  port: 6379
-
 image:
-  repository: "store/ibmcorp/"
-  tag: 3.1.0.0
+  repository: "cp.icr.io/cp/"
+  tag: 4.2.0.1
   pullPolicy: IfNotPresent
   dockerconfig: ""
 
 proxy:
   useProxy: false
+
+install:
+  controller: false
 
 camMongoPV:
   name: "cam-mongo-pv"
@@ -120,20 +127,23 @@ camAPI:
   replicaCount: 1
   camSecret:
     secretName: cam-api-secret
+  certificate:
+    certName: cert
 
 camUI:
   replicaCount: 1
   camUISecret:
     secretName: cam-ui-secret
     sessionKey: "opsConsole.sid"
+    sessionTTL: "43200"
 
 resources:
   requests:
     cpu: 100m
     memory: 256Mi
   limits:
-    cpu: 1
-    memory: 8Gi
+    cpu: 500m
+    memory: 1500Mi
 
 camBPDUI:
   bundled: true
@@ -168,12 +178,16 @@ camBPDDatabase:
     requests:
       memory: 256Mi
       cpu: 100m
+    limits:
+      memory: 512Mi
+      cpu: 200m      
 
 camBPDExternalDatabase:
   type: ""
   name: ""
   url: ""
   port: ""
+  secure: ""
   secret: ""
   extlibPV:
     existingClaimName: ""
@@ -189,8 +203,9 @@ camBPDResources:
 auditService:
   image:
     repository: "mycluster.icp:8500/ibmcom/"
-    tag: 3.1.0
+    tag: ""
     pullPolicy: IfNotPresent
+    pullSecret: ""
 
   resources:
     limits:
@@ -200,7 +215,45 @@ auditService:
       cpu: 100m
       memory: 256Mi
 
-  extraArgs: {}
-
   config:
     journalPath: '/run/systemd/journal'
+
+camLoggingPolicies:
+  logLevel: info
+
+camBpmProvider:
+  replicaCount: 0
+
+camAnsibleProvider:
+  replicaCount: 0
+
+camIcoProvider:
+  replicaCount: 0
+  
+camBrokerProvider:
+  replicaCount: 0
+
+camProviderTerraform:
+  isolateRuntime: false
+  runtime:
+    replicaCount: 2
+    resources:
+      requests:
+        cpu: 50m
+        memory: 128Mi
+      limits:
+        cpu: 250m
+        memory: 750Mi
+
+# mcmp:
+#   camHostName: cam.mydomain.com
+#   camPort: 30000
+#   gatewayUrl: https://myminikube.info:30091/
+#   storeCatalogUrl: https://helm-consume-test.gravitant.net/storeFront/main
+#   systemUserId: replacewithyoursystemuserid
+#   systemUserAPIKey: replaceWithYourSystemUserAPIKey
+#   multiTenantMode: true
+#   certificate: |-
+#     -----BEGIN CERTIFICATE-----
+#       ****REPLACE WITH PUBLIC CERT***
+#     -----END CERTIFICATE-----

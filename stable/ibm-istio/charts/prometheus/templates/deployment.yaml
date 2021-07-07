@@ -1,5 +1,5 @@
 # TODO: the original template has service account, roles, etc
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: prometheus
@@ -22,8 +22,8 @@ spec:
         heritage: {{ .Release.Service }}
         release: {{ .Release.Name }}
       annotations:
+        seccomp.security.alpha.kubernetes.io/pod: docker/default
         sidecar.istio.io/inject: "false"
-        scheduler.alpha.kubernetes.io/critical-pod: ""
         productName: prometheus
         productID: prometheus_{{ .Chart.Version }}_apachev2_00000
         productVersion: {{ .Chart.Version }}
@@ -37,7 +37,7 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.global.imagePullPolicy }}
           args:
-            - '--storage.tsdb.retention=6h'
+            - '--storage.tsdb.retention={{ .Values.retention }}'
             - '--config.file=/etc/prometheus/prometheus.yml'
           ports:
             - containerPort: 9090
@@ -59,13 +59,26 @@ spec:
           volumeMounts:
           - name: config-volume
             mountPath: /etc/prometheus
+          - mountPath: /etc/istio-certs
+            name: istio-certs
       volumes:
       - name: config-volume
         configMap:
           name: prometheus
-      nodeSelector:
-{{- include "prometheus.nodeselector" . | indent 6 }}
-      tolerations:
-{{- include "prometheus.tolerations" . | indent 6 }}
+      - name: istio-certs
+        secret:
+{{- if not .Values.security.enabled }}
+          defaultMode: 420
+{{- end }}
+          optional: true
+          secretName: istio.default
       affinity:
-{{- include "nodeaffinity" . | indent 6 }}
+      {{- include "nodeaffinity" . | indent 6 }}
+      {{- include "podAntiAffinity" . | indent 6 }}
+      {{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 6 }}
+      {{- else if .Values.global.defaultTolerations }}
+      tolerations:
+{{ toYaml .Values.global.defaultTolerations | indent 6 }}
+      {{- end }}

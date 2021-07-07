@@ -1,0 +1,86 @@
+# Default values for fci-security-auth.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicas: 2
+
+global:
+  dockerRegistryPrefix:
+
+nodejs:
+  image:
+    repository: ibmcom/fci-security-auth
+    tag: 6.6.0
+    pullPolicy: IfNotPresent
+  readinessProbe:
+    initialDelaySeconds: 60
+    timeoutSeconds: 5
+    httpGet:
+      path: /security-auth/api/v1.0/healthz
+      port: 3000
+      scheme: HTTPS
+  livenessProbe:
+    initialDelaySeconds: 300
+    timeoutSeconds: 5
+    httpGet:
+      path: /security-auth/api/v1.0/healthz
+      port: 3000
+      scheme: HTTPS
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "256Mi"
+      cpu: "100m"
+
+redis:
+  image:
+    repository: ibmcom/fci-memoryds
+    tag: 6.6.0
+    pullPolicy: IfNotPresent
+  resources:
+    requests:
+      memory: "32Mi"
+      cpu: "0.05"
+    limits:
+      memory: "256Mi"
+      cpu: "1"
+
+arch: amd64
+
+securityAuthConfig:
+  AUDIT_API_PORT: '9443'
+  AUDIT_ACTIVE: '1'
+
+  BRUTE_THROTTLING: 'true'
+  BRUTE_FREE_RETRIES: '5'
+
+  # HEALTHCHECK can be set to 'ldap' or 'saml' depending on the backend used
+  HEALTHCHECK: 'internal'
+
+  HTTPS_CERT: 'fci_universal_ks.crt.pem'
+  HTTPS_KEY: 'fci_universal_ks.pvtk.pem'
+  JWT_KEY_EXPIRY: '1d'
+  JWT_ISSUER: 'fci.ibm.com'
+  REFRESH_TOKEN_STORE: 'redis'
+  REFRESH_TOKEN_EXPIRY: '4h'
+  LDAP_GROUP_MEMBERS: 'ibm-allmembers'
+  LDAP_SERVER_CERT: 'ldap.crt'
+  LOG_FILE_LEVEL: 'info'
+  NODE_TLS_REJECT_UNAUTHORIZED: "0"
+  REDIS_PORT: '6379'
+  REDIS_SSL: 'true'
+  SAML_DISABLEREQUESTEDAUTHNCONTEXT: "true"
+  SAML_ENTRY_POINT: 'https://<hostname>/adfs/ls'
+  SAML_IDENTIFIERFORMAT: 'urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified'
+  SAML_ISSUER: 'https://<hostname>/adfs/services/trust'
+  SAML_PROFILE_DISPLAYNAMEPROP: 'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'
+  SAML_PROFILE_EMAILPROP: 'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'
+  SAML_PROFILE_GROUPSPROP: 'http://schemas.xmlsoap.org/claims/Group'
+  SAML_PROFILE_NAMEIDPROP: 'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/upn'
+  CP4D_TOKEN: '/var/run/sharedsecrets/token'
+  CP_API_ENDPOINT: 'internal-nginx-svc:12443'
+  CP_USER_MANAGEMENT_API_ENDPOINT: 'usermgmt-svc:3443'
+  CP_API_TIMEOUT: '10000'
+  CP_TOKEN_UID: '1000330999'

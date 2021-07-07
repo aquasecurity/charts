@@ -1,4 +1,4 @@
-The translated license terms can be viewed here: http://www.ibm.com/software/sla/sladb.nsf/searchlis/?searchview&query=(L-MKUI-B3H7N9)
+The translated license terms can be viewed here: http://www.ibm.com/software/sla/sladb.nsf/searchlis/?searchview&query=(cloud+automation+manager+4.2)
 
 IMPORTANT: READ CAREFULLY
 
@@ -26,7 +26,7 @@ LICENSE INFORMATION
 The Programs listed below are licensed under the following License Information terms and conditions in addition to the Program license terms previously agreed to by Client and IBM. If Client does not have previously agreed to license terms in effect for the Program, the International License Agreement for Evaluation of Programs (Z125-5543-05) applies.
 
 Program Name (Program Number):
-IBM Cloud Automation Manager 3.1 (Evaluation)
+IBM Cloud Automation Manager 4.2 (Evaluation)
 
 The following standard terms apply to Licensee's use of the Program.
 
@@ -36,14 +36,7 @@ The evaluation period begins on the date that Licensee agrees to the terms of th
 
 Prohibited Uses
 
-Licensee may not use or authorize others to use the Program, alone or in combination with other services or products, in support of any of the following high risk activities: design, construction, control, or maintenance of nuclear facilities, mass transit systems, air traffic control systems, automotive control systems, weapons systems, or aircraft navigation or communications, or any other activity where program failure could give rise to a material threat of death or serious personal injury.
-
-Supporting Programs
-
-Licensee is authorized to install and use the Supporting Programs identified below. Licensee is authorized to install and use such Supporting Programs only to support Licensee's use of the Principal Program under this Agreement. The phrase "to support Licensee's use" would only include those uses that are necessary or otherwise directly related to a licensed use of the Principal Program or another Supporting Program. The Supporting Programs may not be used for any other purpose. A Supporting Program may be accompanied by license terms, and those terms, if any, apply to Licensee's use of that Supporting Program. In the event of conflict, the terms in this License Information document supersede the Supporting Program's terms. Licensee must obtain sufficient entitlements to the Program, as a whole, to cover Licensee's installation and use of all of the Supporting Programs, unless separate entitlements are provided within this License Information document. For example, if this Program were licensed on a PVU (Processor Value Unit) basis and Licensee were to install the Principal Program or a Supporting Program on a 100 PVU machine (physical or virtual) and another Supporting Program on a second 100 PVU machine, Licensee would be required to obtain 200 PVU entitlements to the Program.
-
-Supporting Programs:
-IBM Cloud Private
+Licensee may not use or authorize others to use the Program if failure of the Program could lead to death, bodily injury, or property or environmental damage.
 
 Separately Licensed Code
 
@@ -64,79 +57,168 @@ Notwithstanding these exclusions, in Germany and Austria, IBM's warranty and lia
 Note: IBM may provide limited support for some Separately Licensed Code. If such support is available, the details and any additional terms related to such support will be set forth in the License Information document.
 
 The following are Separately Licensed Code:
-Mongo DB 3.4.4
-JCIP-ANNOTATIONS
-Man pages for Knife,
-opscode.css_t Sphinx stylesheet,
-SPDX Standard,
-spdx-exceptions
-spdx-exceptions:1.0.4
-material-design-icons-iconfont 2.0.5
-heartbeat_test.c,Font Awesome Icons
-GuardedBy.java
 (crc)pycrc/doc/pycrc.xml
-html.erb,
-
-libvk-hashicorp/serf
 (MongoDB)wiredtiger v 2.9.2
-docker.initd
-python-colorama-whl
-AXSI
-asciidoc.asciidoc
-(Supervisor)debian/*
 (python-pip-whl)pip-manpage.rst
-gmain:1.0.0
-chardet
-python-chardet-whl 2.2.1-2~ubuntu1
-masterzen/xmlpath:13f4951
-(MongoDB)wiredtiger v 2.9.2,
-docker.initd,
-python-colorama-whl,
-AXSI,
-asciidoc.asciidoc,
-(Supervisor)debian/*,
-ax_cc_maxopt.m4,
-compile,
-depcomp,
-mdate-sh,
-missing,
-config.guess,
-Libtool,
-knife-spork 1.7.1,
-ldiff.rb,
-libffi.info,
-libffi.texi,
-Libltdl,
-ltmain,
-Libtoolize,
-texinfo.tex,
-libtool-ldflags,
-Libtoolize,
+(RUBY GEM) HIGHLINE
+ACLOCAL [nfs-utils]
+ANNOBIN
+ANNOCHECK [annobin]
+ARGZ.C [libgvc6-plugins-gtk]
+AR-LIB
+asciidoc.asciidoc
+AUTOMAKE
+AX_* Autoconf Macros
+ax_cc_maxopt.m4
+ax_pthread.m4
+AXSI
+BOOTSRAP DOCS
+BUILDSCRIPTS [MongoDB]
+CANIUSE-LITE
+CHECK
+COMMAND LINE NUMA POLICY CONTROL. [Numactl]
+COMPILE
+CONFIG [jq]
+config.guess
+CONFIG.RPATH
+config.sub
+CONFIGURE
+CRTI.ASM FOR MT [gccxml]
+darkfish/css/fonts.css
+DEBIAN/* [Supervisor]
+DEBIAN-ARCHIVE-KEYRING
+DEBUGGING
+depcomp
+DEPGUARD
+DIR.TMPL
+DOC/GSASL.TEXI [libgsasl7]
+DOC/TEXINFO/* (GFDL V1.2) [libmailutils5]
+docker.initd
+DOCS
+DOCS_JQ.1
+DOTPARSE.C [libgvc6-plugins-gtk]
+EFI-SRPM-MACROS
+EPEL-RELEASE
+FFI-LIBARCHIVE (RUBY GEM)
+FILE
+Font Awesome
+font.css
+GALERA
+GCC [annobin]
+GCC BUILD-SPECIFIC CONFIGURATION FILE[gccxml]
+GCCXML_CC1PLUS [gccxml]
+GCOV [gccxml]
+GENTYPE-YACC.AC
+GHC-SRPM-MACROS
+GLOB LOGO
+gmock-1.7.0
+GNU GNATS [gccxml]
+GNU LIBTOOL
+GNU SASL [libgsasl7]
+GOLANGCI-LINT
+GOPHER
+GO-SRPM-MACROS
+GuardedBy.java
+heartbeat_test.c
+html.erb
+HTTP2/H2DEMO/TMPL.GO
+IBM Plex
+ICONV.M4 [libgvc6-plugins-gtk]
+ITHOSTFLAGS.M4
+JCIP-ANNOTATIONS
+JINJA.EL [Jinja2]
+JQ
+KIMBIE-HIGHLIGHT.JS
+knife-spork 1.7.1
+KYOTOCABINET [libkyotocabinet16v5]
+Lato font
+ldiff.rb
+libffi
+LIBGSASL7
+LIBIO/ISTREAM (GPL V2 WITH EXCEPTION) [gccxml]
+LIBKYOTOCABINET16V5
+Libltdl
+LIBMAILUTILS5
+LIBONIG2
+LIBONIG4
+library of utility subroutines manual
+Libtool
+libvk-hashicorp/serf
+LONGLONG.H
+ltmain
+MAILUTILS
+MAKEFILE FOR LIBCPP [gccxml]
+Man pages for Knife
+MANGEN.SH [libmailutils5]
+MANUAL PROCESS MIGRATION [Numactl]
+MAP_TEST.GO
+MARIADB
+material-design-icons-iconfont 2.0.5
+MD5.H [gccxml]
+mdate-sh
+missing
+MONGODB
+MOUNTSTATS [nfs-utils],
+MYSQL AND INNODB MONITOR. [mariadb-10.1]
+mysqlreport
+NATURAL DOCS [libjpeg62-turbo]
+NCAT.1
+NFS-UTILS
+NMAP-NCAT
+OCAML-SRPM-MACROS
+opscode.css_t Sphinx stylesheet
+Orbitron
+parser.tab.cpp
+PERCONAFT
+PERCONA-XTRABACKUP
+PIP-MANPAGE.RST [python-pip]
+PKG.M4 [libgvc6-plugins-gtk]
+PLUGIN 1.0 [MariaDB]
+PREDEFINED SYMBOLS AND MACROS
+PWGEN
+PYINSTALLER
+PYTHON3-RPM-GENERATORS
+PYTHON3-SUBSCRIPTION-MANAGER-RHSM
+python-colorama-whl
+QT5-SRPM-MACROS
+RANDSOCIAL.C
 rawdeflate.js
-gmock-1.7.0/aclocal.m4
-gmock-1.7.0/configure
-gmock-1.7.0/gtest/configure
-gmock-1.7.0/gtest/m4/libtool.m4
-gmock-1.7.0/build-aux/*
-
-(python-pip-whl)pip-manpage.rst,
-AX_* Autoconf Macros,
-ax_pthread.m4,
-config.guess,
-libffi test files,
-libffi.texi,
-ltmain.sh,
-parser.tab.cpp,
-rsync,
-Snoopy/ruby_bundler-bundler-audit 0.5.0,
-target-libpath.exp,
-texinfo.tex
-MongoDB
-JSON-Java (1.0.0.v20101106)
+RedHat UBI v7/v8
+RPCBIND
+rsync
+SCHEMA [MongoDB]
+SCREENSHOTS
+SEMVER DOC
+set_make
+SHARNESS [libjemalloc1]
+Snoopy/ruby_bundler-bundler-audit 0.5.0
+SOCAT
+SPDX Standard
+spdx-exceptions
+SQL_YACC.CC [percona-xtrabackup]
+STRUCTCHECK
+subscription-manager.xml
+SYMBOL CODES FOR GNU SYSTEM [gccxml]
+SYMBOL CONCATENATION UTILITIES
+target-libpath.exp
+TEST [nfs-utils]
+TEXINFO.TEX
+texinfo.tex,
+THREEBYTEUTF8
+TIMESTAMP
+TOKUDB [MariaDB]
+VALGRIND-3.11.0 [MongoDB]
+VARCHECK
+WSREP_MEMBERSHIP PLUGIN 1.0 [MariaDB]
+WSREP_STATUS
 
 Export and Import Restrictions
 
 This Program may contain cryptography. Transfer to, or use by, users of the Program may be prohibited or subject to export or import laws, regulations or policies, including those of the United States Export Administration Regulations. Licensee assumes all responsibility for complying with all applicable laws, regulations, and policies regarding the export, import, or use of this Program, including but not limited to, U.S. restrictions on exports or reexports. To obtain the export classification of this Program refer to: https://www.ibm.com/products/exporting/.
+
+Third Party Data and Services
+
+The Program may contain links to or be used to access third party data services, databases, web services, software, or other third party content (all, "content"). Access to this content is provided "AS-IS", WITH NO WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING THE WARRANTY OF TITLE, NON-INFRINGEMENT OR NON-INTERFERENCE AND THE IMPLIED WARRANTIES AND CONDITIONS OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. Access can be terminated by the relevant third parties at their sole discretion at any time. Licensee may be required to enter into separate agreements with the third parties for the access to or use of such content. IBM is not a party to any such separate agreements and as an express condition of this license Licensee agrees to comply with the terms of such separate agreements.
 
 
 
@@ -145,7 +227,7 @@ LICENSE INFORMATION
 The Programs listed below are licensed under the following License Information terms and conditions in addition to the Program license terms previously agreed to by Client and IBM. If Client does not have previously agreed to license terms in effect for the Program, the International Program License Agreement (Z125-3301-14) applies.
 
 Program Name (Program Number):
-IBM Cloud Automation Manager 3.1 (5737-E67)
+IBM Cloud Automation Manager 4.2 (5737-E67)
 
 The following standard terms apply to Licensee's use of the Program.
 
@@ -159,14 +241,7 @@ Program's specifications can be found in the collective Description and Technica
 
 Prohibited Uses
 
-Licensee may not use or authorize others to use the Program, alone or in combination with other services or products, in support of any of the following high risk activities: design, construction, control, or maintenance of nuclear facilities, mass transit systems, air traffic control systems, automotive control systems, weapons systems, or aircraft navigation or communications, or any other activity where program failure could give rise to a material threat of death or serious personal injury.
-
-Supporting Programs
-
-Licensee is authorized to install and use the Supporting Programs identified below. Licensee is authorized to install and use such Supporting Programs only to support Licensee's use of the Principal Program under this Agreement. The phrase "to support Licensee's use" would only include those uses that are necessary or otherwise directly related to a licensed use of the Principal Program or another Supporting Program. The Supporting Programs may not be used for any other purpose. A Supporting Program may be accompanied by license terms, and those terms, if any, apply to Licensee's use of that Supporting Program. In the event of conflict, the terms in this License Information document supersede the Supporting Program's terms. Licensee must obtain sufficient entitlements to the Program, as a whole, to cover Licensee's installation and use of all of the Supporting Programs, unless separate entitlements are provided within this License Information document. For example, if this Program were licensed on a PVU (Processor Value Unit) basis and Licensee were to install the Principal Program or a Supporting Program on a 100 PVU machine (physical or virtual) and another Supporting Program on a second 100 PVU machine, Licensee would be required to obtain 200 PVU entitlements to the Program.
-
-Supporting Programs:
-IBM Cloud Private
+Licensee may not use or authorize others to use the Program if failure of the Program could lead to death, bodily injury, or property or environmental damage.
 
 Separately Licensed Code
 
@@ -187,94 +262,177 @@ Notwithstanding these exclusions, in Germany and Austria, IBM's warranty and lia
 Note: IBM may provide limited support for some Separately Licensed Code. If such support is available, the details and any additional terms related to such support will be set forth in the License Information document.
 
 The following are Separately Licensed Code:
-Mongo DB 3.4.4
-JCIP-ANNOTATIONS
-Man pages for Knife,
-opscode.css_t Sphinx stylesheet,
-SPDX Standard,
-spdx-exceptions
-spdx-exceptions:1.0.4
-material-design-icons-iconfont 2.0.5
-heartbeat_test.c,Font Awesome Icons
-GuardedBy.java
 (crc)pycrc/doc/pycrc.xml
-html.erb,
-
-libvk-hashicorp/serf
 (MongoDB)wiredtiger v 2.9.2
-docker.initd
-python-colorama-whl
-AXSI
-asciidoc.asciidoc
-(Supervisor)debian/*
 (python-pip-whl)pip-manpage.rst
-gmain:1.0.0
-chardet
-python-chardet-whl 2.2.1-2~ubuntu1
-masterzen/xmlpath:13f4951
-(MongoDB)wiredtiger v 2.9.2,
-docker.initd,
-python-colorama-whl,
-AXSI,
-asciidoc.asciidoc,
-(Supervisor)debian/*,
-ax_cc_maxopt.m4,
-compile,
-depcomp,
-mdate-sh,
-missing,
-config.guess,
-Libtool,
-knife-spork 1.7.1,
-ldiff.rb,
-libffi.info,
-libffi.texi,
-Libltdl,
-ltmain,
-Libtoolize,
-texinfo.tex,
-libtool-ldflags,
-Libtoolize,
+(RUBY GEM) HIGHLINE
+ACLOCAL [nfs-utils]
+ANNOBIN
+ANNOCHECK [annobin]
+ARGZ.C [libgvc6-plugins-gtk]
+AR-LIB
+asciidoc.asciidoc
+AUTOMAKE
+AX_* Autoconf Macros
+ax_cc_maxopt.m4
+ax_pthread.m4
+AXSI
+BOOTSRAP DOCS
+BUILDSCRIPTS [MongoDB]
+CANIUSE-LITE
+CHECK
+COMMAND LINE NUMA POLICY CONTROL. [Numactl]
+COMPILE
+CONFIG [jq]
+config.guess
+CONFIG.RPATH
+config.sub
+CONFIGURE
+CRTI.ASM FOR MT [gccxml]
+darkfish/css/fonts.css
+DEBIAN/* [Supervisor]
+DEBIAN-ARCHIVE-KEYRING
+DEBUGGING
+depcomp
+DEPGUARD
+DIR.TMPL
+DOC/GSASL.TEXI [libgsasl7]
+DOC/TEXINFO/* (GFDL V1.2) [libmailutils5]
+docker.initd
+DOCS
+DOCS_JQ.1
+DOTPARSE.C [libgvc6-plugins-gtk]
+EFI-SRPM-MACROS
+EPEL-RELEASE
+FFI-LIBARCHIVE (RUBY GEM)
+FILE
+Font Awesome
+font.css
+GALERA
+GCC [annobin]
+GCC BUILD-SPECIFIC CONFIGURATION FILE[gccxml]
+GCCXML_CC1PLUS [gccxml]
+GCOV [gccxml]
+GENTYPE-YACC.AC
+GHC-SRPM-MACROS
+GLOB LOGO
+gmock-1.7.0
+GNU GNATS [gccxml]
+GNU LIBTOOL
+GNU SASL [libgsasl7]
+GOLANGCI-LINT
+GOPHER
+GO-SRPM-MACROS
+GuardedBy.java
+heartbeat_test.c
+html.erb
+HTTP2/H2DEMO/TMPL.GO
+IBM Plex
+ICONV.M4 [libgvc6-plugins-gtk]
+ITHOSTFLAGS.M4
+JCIP-ANNOTATIONS
+JINJA.EL [Jinja2]
+JQ
+KIMBIE-HIGHLIGHT.JS
+knife-spork 1.7.1
+KYOTOCABINET [libkyotocabinet16v5]
+Lato font
+ldiff.rb
+libffi
+LIBGSASL7
+LIBIO/ISTREAM (GPL V2 WITH EXCEPTION) [gccxml]
+LIBKYOTOCABINET16V5
+Libltdl
+LIBMAILUTILS5
+LIBONIG2
+LIBONIG4
+library of utility subroutines manual
+Libtool
+libvk-hashicorp/serf
+LONGLONG.H
+ltmain
+MAILUTILS
+MAKEFILE FOR LIBCPP [gccxml]
+Man pages for Knife
+MANGEN.SH [libmailutils5]
+MANUAL PROCESS MIGRATION [Numactl]
+MAP_TEST.GO
+MARIADB
+material-design-icons-iconfont 2.0.5
+MD5.H [gccxml]
+mdate-sh
+missing
+MONGODB
+MOUNTSTATS [nfs-utils],
+MYSQL AND INNODB MONITOR. [mariadb-10.1]
+mysqlreport
+NATURAL DOCS [libjpeg62-turbo]
+NCAT.1
+NFS-UTILS
+NMAP-NCAT
+OCAML-SRPM-MACROS
+opscode.css_t Sphinx stylesheet
+Orbitron
+parser.tab.cpp
+PERCONAFT
+PERCONA-XTRABACKUP
+PIP-MANPAGE.RST [python-pip]
+PKG.M4 [libgvc6-plugins-gtk]
+PLUGIN 1.0 [MariaDB]
+PREDEFINED SYMBOLS AND MACROS
+PWGEN
+PYINSTALLER
+PYTHON3-RPM-GENERATORS
+PYTHON3-SUBSCRIPTION-MANAGER-RHSM
+python-colorama-whl
+QT5-SRPM-MACROS
+RANDSOCIAL.C
 rawdeflate.js
-gmock-1.7.0/aclocal.m4
-gmock-1.7.0/configure
-gmock-1.7.0/gtest/configure
-gmock-1.7.0/gtest/m4/libtool.m4
-gmock-1.7.0/build-aux/*
-
-(python-pip-whl)pip-manpage.rst,
-AX_* Autoconf Macros,
-ax_pthread.m4,
-config.guess,
-libffi test files,
-libffi.texi,
-ltmain.sh,
-parser.tab.cpp,
-rsync,
-Snoopy/ruby_bundler-bundler-audit 0.5.0,
-target-libpath.exp,
-texinfo.tex
-MongoDB
-JSON-Java (1.0.0.v20101106)
+RedHat UBI v7/v8
+RPCBIND
+rsync
+SCHEMA [MongoDB]
+SCREENSHOTS
+SEMVER DOC
+set_make
+SHARNESS [libjemalloc1]
+Snoopy/ruby_bundler-bundler-audit 0.5.0
+SOCAT
+SPDX Standard
+spdx-exceptions
+SQL_YACC.CC [percona-xtrabackup]
+STRUCTCHECK
+subscription-manager.xml
+SYMBOL CODES FOR GNU SYSTEM [gccxml]
+SYMBOL CONCATENATION UTILITIES
+target-libpath.exp
+TEST [nfs-utils]
+TEXINFO.TEX
+texinfo.tex,
+THREEBYTEUTF8
+TIMESTAMP
+TOKUDB [MariaDB]
+VALGRIND-3.11.0 [MongoDB]
+VARCHECK
+WSREP_MEMBERSHIP PLUGIN 1.0 [MariaDB]
+WSREP_STATUS
 
 Export and Import Restrictions
 
 This Program may contain cryptography. Transfer to, or use by, users of the Program may be prohibited or subject to export or import laws, regulations or policies, including those of the United States Export Administration Regulations. Licensee assumes all responsibility for complying with all applicable laws, regulations, and policies regarding the export, import, or use of this Program, including but not limited to, U.S. restrictions on exports or reexports. To obtain the export classification of this Program refer to: https://www.ibm.com/products/exporting/.
 
+Third Party Data and Services
+
+The Program may contain links to or be used to access third party data services, databases, web services, software, or other third party content (all, "content"). Access to this content is provided "AS-IS", WITH NO WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING THE WARRANTY OF TITLE, NON-INFRINGEMENT OR NON-INTERFERENCE AND THE IMPLIED WARRANTIES AND CONDITIONS OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. Access can be terminated by the relevant third parties at their sole discretion at any time. Licensee may be required to enter into separate agreements with the third parties for the access to or use of such content. IBM is not a party to any such separate agreements and as an express condition of this license Licensee agrees to comply with the terms of such separate agreements.
+
 The following units of measure may apply to Licensee's use of the Program.
 
-Virtual Processor Core
+Managed Virtual Server
 
-Virtual Processor Core is a unit of measure by which the Program can be licensed. A Physical Server is a physical computer that is comprised of processing units, memory, and input/output capabilities and that executes requested procedures, commands, or applications for one or more users or client devices. Where racks, blade enclosures, or other similar equipment is being employed, each separable physical device (for example, a blade or a rack-mounted device) that has the required components is considered itself a separate Physical Server. A Virtual Server is either a virtual computer created by partitioning the resources available to a Physical Server or an unpartitioned Physical Server. A Processor Core (commonly called a processor or CPU) is a functional unit within a computing device that interprets and executes instructions. A Processor Core consists of at least an instruction control unit and one or more arithmetic or logic unit. A Virtual Processor Core is a Processor Core in an unpartitioned Physical Server, or a virtual core assigned to a Virtual Server. Licensee must obtain entitlement for each Virtual Processor Core made available to the Program.
+Managed Virtual Server is a unit of measure by which the Program can be licensed. A server is a physical computer that is comprised of processing units, memory, and input/output capabilities and that executes requested procedures, commands, or applications for one or more users or client devices. Where racks, blade enclosures, or other similar equipment is being employed, each separable physical device (for example, a blade or a rack-mounted device) that has the required components is considered itself a separate server. A virtual server is either a virtual computer created by partitioning the resources available to a physical server or an unpartitioned physical server. Licensee must obtain Managed Virtual Server entitlements for each virtual server managed by the Program.
 
-For each Physical Server, Licensee must have sufficient entitlements for the lesser of 1) the sum of all available Virtual Processor Cores on all Virtual Servers made available to the Program or 2) all available Processor Cores on the Physical Server.
-
-In addition to the above, the following terms apply to Licensee's use of the Program.
-
-When using IBM Cloud Private as a Supporting Program to this Program, such use is limited to only that which is necessary to manage external environments and the Supporting Program cannot be used to manage IBM Cloud Private workloads.
-
-L/N:  L-MKUI-B3H7N9
-D/N:  L-MKUI-B3H7N9
-P/N:  L-MKUI-B3H7N9
+L/N:  L-WQIN-BLSA65
+D/N:  L-WQIN-BLSA65
+P/N:  L-WQIN-BLSA65
 
 

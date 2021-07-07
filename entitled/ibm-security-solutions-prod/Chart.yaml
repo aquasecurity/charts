@@ -1,0 +1,31 @@
+apiVersion: v2
+name: ibm-security-solutions-prod
+version: 1.0.8
+description: |- 
+ IBM Cloud Pak For Security Shared Platform Services
+ Documentation
+  
+ IBM Cloud Pak For Security Shared Platform Services
+
+ License
+ "The translated license terms can be viewed here: http://www14.software.ibm.com/cgi-bin/weblap/lap.pl?li_formnum=L-GBLK-BNGLB3"
+
+
+keywords:
+  - Resilient
+  - Cases
+  - Data Explorer
+  - Threat Intelligence Insights
+  - Unified Data Service
+  - Car
+  - Analytics Toolkit
+  - amd64
+  - Commercial
+  - Security
+  - ICPRHOCP
+icon: http://raw.githubusercontent.com/IBM/charts/master/logo/IBM-Security-icon.png
+appVersion: "1.4.0.0"
+kubeVersion: ">=1.16.0"
+home: "https://www.ibm.com/security"
+maintainers:
+- name: IBM

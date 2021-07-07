@@ -11,16 +11,15 @@
 apiVersion: v1
 kind: Service
 metadata:
-  annotations:
-    prometheus.io/scrape: 'true'
   name: cam-proxy
   labels:
     name: cam-proxy
-    app: {{ template "fullname" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    "app.kubernetes.io/name": {{ template "fullname" . }}
+    "helm.sh/chart": "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
-  namespace: {{ .Values.service.namespace }}
+    "app.kubernetes.io/instance": "{{ .Release.Name }}"
+    "app.kubernetes.io/managed-by": "{{ .Release.Service }}"
+  namespace: {{ .Release.Namespace }}
 spec:
   type: NodePort
   ports:
@@ -30,7 +29,7 @@ spec:
     {{- if eq (printf "%T" .Values.managementConsole.port) "float64" }}
     nodePort: {{ .Values.managementConsole.port }}
     {{- end }}
-    {{- end }}    
+    {{- end }}
     name: cam-proxy-https
   selector:
     name: cam-proxy

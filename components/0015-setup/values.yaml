@@ -1,0 +1,47 @@
+global:
+  cockroachdb: true
+  databaseUser: 'zen_user'
+  databaseName: 'zen'
+  databaseHost: 'zen-metastoredb-public'
+  databasePort: 26257
+  databaseEnableSSL: true
+  databaseSSLMode: 'require'
+  databaseClientCert: 'client.zen_user.crt'
+  databaseClientKey: 'client.zen_user.key'
+  databaseRootCert: 'ca.crt'
+  persistence:
+    enabled: true
+    storageClassName: ''
+    useDynamicProvisioning: true
+  baseInstaller: false
+  userHomePVC:
+    persistence:
+      existingClaimName: ''
+  ibmProduct: zen
+  architecture: "amd64"
+  image:
+    tag: 3.5.2
+  viewer:
+    sa: cpd-viewer-sa
+  docker_registry_prefix: "docker-registry.default.svc:5000/icpd-lite"
+image:
+  pullPolicy: IfNotPresent
+zenProxy:
+  serviceType: ClusterIP
+  externalPort: 31843
+nginxRepo:
+  image:
+    repository: icp4data-nginx-repo
+  replicas: 2
+  resolver: "kubernetes.default"
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 200m
+      memory: 256Mi
+      
+podLabels:
+  icpdsupport/addOnId: 'zen-lite'
+  icpdsupport/app: 'gateway'

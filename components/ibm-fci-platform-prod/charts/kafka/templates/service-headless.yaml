@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "kafka.fullname" . }}-headless
+  labels:
+{{- include "common.label.metadata" (list . (include "kafka.name" .) (include "kafka.chart" .) .Release.Name .Release.Service ) | indent 4 }}
+spec:
+  ports:
+  - name: broker
+    port: 9092
+    targetPort: kafka
+  clusterIP: None
+  selector:
+{{- include "common.selector.labels" (list .  (include "kafka.name" .) .Release.Name ) | indent 4 }}

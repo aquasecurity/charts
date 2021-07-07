@@ -1,0 +1,35 @@
+{{- include "sch.config.init" (list . "isamwrp.sch.chart.config.values") -}}
+
+{{- $dot := . }}
+{{- range $index, $inst := .Values.container.instances }}
+{{- $instance := lower $inst }}
+{{- $index    := (printf "%d" $index) }}
+
+#
+# This file contains the definition for the service provides by this helm
+# chart.
+#
+
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: {{ include "wrp.name" (list $dot $instance) }}
+  labels:
+{{ include "sch.metadata.labels.standard" (list $dot "") | indent 4 }}
+
+spec:
+  type: {{ $.Values.service.type }}
+
+  ports:
+   - name: {{ include "wrp.service.name" (list $dot $index) }}
+     port: {{ template "runtime.port" $dot }}
+
+  selector:
+    app: {{ include "wrp.name" (list $dot $instance) }}
+
+---
+
+{{- end -}}
+
+

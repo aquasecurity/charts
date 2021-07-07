@@ -1,0 +1,42 @@
+# Default values for dv-addon.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+arch: "amd64"
+
+#dockerRegistryPrefix and cloudpakInstanceId come from cpd installer
+global:
+  dockerRegistryPrefix: mycluster.icp:8500/zen
+  cloudpakInstanceId: 11111111-1111-1111-1111-111111111111
+  sch:
+    enabled: true
+
+image:
+  dockerImage: dv-addon
+  tag: 1.5.0.0
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+
+resources:
+  addon:
+    requests:
+      cpu: 100m
+      memory: 100Mi
+  serviceProvider:
+    requests:
+      cpu: 100m
+      memory: 100Mi
+
+serviceProvider:
+  image:
+    dockerImage: dv-service-provider
+    tag: 1.5.0.0
+    pullPolicy: Always
+  service:
+    type: ClusterIP
+    httpsPort: 3443
+    httpsPortName: "dv-sp-https"

@@ -1,0 +1,17 @@
+The deployment may take a few minutes to complete.
+Please wait for a few minutes and launch the Mobile Foundation Operations Console by opening the following URL in your browser
+
+export NODE_IP=$(kubectl get nodes --selector=kubernetes.io/role!=master -o jsonpath={.items[*].status.addresses[?\(@.type==\"ExternalIP\"\)].address})
+export HTTP_NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ template "fullname" . }})
+export HTTPS_NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[1].nodePort}" services {{ template "fullname" . }})
+
+Get the Server URL by running these commands:
+
+Launch Mobile Foundation Server Administration Console URL by running these commands:
+  echo http://$NODE_IP:$HTTP_NODE_PORT/mfpconsole
+Mobile Foundation Push Endpoint
+  echo http://$NODE_IP:$HTTP_NODE_PORT/imfpush
+Launch Analytics URL by running these commands:
+  echo http://$NODE_IP:$HTTP_NODE_PORT/analytics/console
+Launch Application Center Console URL by running these commands:
+  echo http://$NODE_IP:$HTTP_NODE_PORT/appcenterconsole

@@ -12,7 +12,7 @@ image:
   tag:
     __metadata:
       label: "Tag"
-      description: "Specify the tag for the Docker image."
+      description: "Specify the tag or digest for the Docker image."
       type: "string"
       required: true
   pullPolicy:
@@ -62,6 +62,44 @@ image:
           label: "s390x"
           value: "s390x"
 
+## Service parameters
+service:
+  __metadata:
+    label: "Service"
+    description: "The service parameters."
+  enableRoute:
+    __metadata:
+      label: "Enable Route"
+      description: "Specify whether we should create Openshift routes automaticaly. If true, the routes are created for all ODM components. "
+      type: "boolean"
+      required: true
+  hostname:
+    __metadata:
+      label: "Route Hostname"
+      description: "Specify the hostname used by the created routes."
+      type: "string"
+      required: false
+  type:
+    __metadata:
+      label: "Type"
+      description: "Specify the service type."
+      type: "string"
+      required: true
+      options:
+        -
+          label: "Node port"
+          value: "NodePort"
+        -
+          label: "Cluster IP"
+          value: "ClusterIP"
+
+## ServiceAccount parameters
+serviceAccountName:
+  __metadata:
+    label: "ServiceAccount name"
+    description: "Specify ServiceAccount to use in Kubernetes."
+    type: "string"
+    required: false
 
 ## Resource parameters
 resources:
@@ -278,3 +316,56 @@ livenessProbe:
       description: "Specify how many times Kubernetes will try before giving up when a pod starts and the probe fails. Giving up means restarting the pod."
       type: "number"
       required: true
+
+## Customization
+customization:
+  __metadata:
+    label: "Customization"
+    description: "The customization parameters."
+  baiEmitterSecretRef:
+      __metadata:
+        label: "Business Automation Insights emitter secret reference"
+        description: "Specify the name of the secret that contains the configuration files required to use the IBM Business Automation Insights emitter."
+        type: "string"
+        required: false
+  runAsUser:
+    __metadata:
+      label: "ODM container User Id"
+      description: "Specify the User Id to run the ODM containers."
+      type: "string"
+      required: false
+      hidden: true
+
+# Network Policy
+networkPolicy:
+  __metadata:
+    label: "Network Policy"
+    description: "The Network Policy parameters;"
+  enabled:
+    __metadata:
+      label: "Enabled"
+      description: "Specify whether to enable the network policy"
+      type: "boolean"
+      required: false
+      hidden: true
+  apiVersion:
+    __metadata:
+      label: "API Version"
+      description: "The network policy api version"
+      type: "string"
+      required: false
+      hidden: true
+
+license:
+  __metadata:
+    label: "License"
+    description: "Please read and accept the license agreement"
+    type: "string"
+    required: true
+    options:
+    - label: "Accepted"
+      value: "accept"
+    - label: "Not accepted"
+      value: "not accepted"
+    - label: "View"
+      value: "view"

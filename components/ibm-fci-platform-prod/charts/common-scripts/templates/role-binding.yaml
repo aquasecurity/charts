@@ -1,0 +1,30 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ template "common-scripts.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{- include "common.label.metadata" (list . (include "common-scripts.name" .) (include "common-scripts.chart" .) .Release.Name .Release.Service ) | indent 4 }}
+  annotations:
+    "helm.sh/hook": pre-install, pre-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation
+    "helm.sh/hook-weight": "-1"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ template "common-scripts.fullname" . }}
+subjects:
+  - kind: ServiceAccount
+    name: fci-common-scripts
+  - kind: ServiceAccount
+    name: fci-common
+  - kind: ServiceAccount
+    name: fci-kafka
+  - kind: ServiceAccount
+    name: fci-cognos
+  - kind: ServiceAccount
+    name: fci-mq
+  - kind: ServiceAccount
+    name: fci-wca
+  - kind: ServiceAccount
+    name: fci-kube-api-chown

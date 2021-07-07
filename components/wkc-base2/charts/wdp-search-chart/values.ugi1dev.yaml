@@ -1,0 +1,16 @@
+secret_object_name: secret-wdp-search
+global:
+  deploymentTarget: "ugi1dev"
+image:
+  repository: "${DOCKER_REGISTRY}/ubi/wdp-search"
+  tag: ${BM_APP_VERSION}
+  pullPolicy: "IfNotPresent"
+repository:
+  secret:
+    name: "dr-docker-registry-cred"
+environment:
+  environmentName: "ugi1dev"
+  environmentType: "ugi"
+  deployTarget: "ugi1dev"
+  deploymentTarget: "ugi1dev"
+  trustAllSslCert : "\"true\""

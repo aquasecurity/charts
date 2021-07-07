@@ -1,6 +1,6 @@
 ###############################################################################
 # Licensed Materials - Property of IBM.
-# Copyright IBM Corporation 2018. All Rights Reserved.
+# Copyright IBM Corporation 2019. All Rights Reserved.
 # U.S. Government Users Restricted Rights - Use, duplication or disclosure
 # restricted by GSA ADP Schedule Contract with IBM Corp.
 #
@@ -10,18 +10,25 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "fullname" . }}
+  name: {{ template "ibm-websphere-traditional.fullname" . }}
   labels:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    app: {{ template "fullname" . }}
+    app: {{ template "ibm-websphere-traditional.fullname" . }}
     release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"      
+    heritage: "{{ .Release.Service }}"
+{{- with .Values.service.labels }}
+{{ toYaml . | indent 4 }}
+{{- end }}
+  annotations:
+{{- with .Values.service.annotations }}
+{{ toYaml . | indent 4 }}
+ {{- end }}
 spec:
   type: {{ .Values.service.type }}
   ports:
-  - port: {{ .Values.service.port }}
-    targetPort: {{ .Values.service.targetPort }}
-    protocol: TCP
-    name: "{{ .Values.service.name  | trunc 57 | lower | trimSuffix "-" }}"
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
+      protocol: TCP
+      name: "{{ .Values.service.name  | trunc 57 | lower | trimSuffix "-" }}"
   selector:
-    app: {{ template "fullname" . }}
+    app: {{ template "ibm-websphere-traditional.fullname" . }}

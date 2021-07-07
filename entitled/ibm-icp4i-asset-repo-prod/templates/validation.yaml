@@ -1,0 +1,16 @@
+###############################################################################
+#  Licensed Materials - Property of IBM
+#
+# 5737-I89
+# © Copyright IBM Corp. 2019 All Rights Reserved
+# US Government Users Restricted Rights - Use, duplication or
+# disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+###############################################################################
+
+{{- include "sch.config.init" (list . "sch.chart.config.values") }}
+
+# Check release name is valid.
+{{- if not (regexMatch "^.{1,28}$" .Release.Name) }}
+  {{ fail (cat "Configuration error: Release name is too long, must be no more than 28 characters:" .Release.Name) }}
+{{- end }}
+

@@ -1,0 +1,19 @@
+images:
+- image: gov-ui-commons:b479_7f96dc7ee55f
+  references:
+  - repository: gov-ui-commons:b479_7f96dc7ee55f
+    pull-repository: ${DOCKER_REGISTRY}/gov-ui-commons:b479_7f96dc7ee55f
+    pull-authorization:
+      username:
+        env: ARTIFACTORY_USERNAME
+      password:
+        env: ARTIFACTORY_PASSWORD
+- image: wkc-init-container:1.0.107
+  references:
+  - repository: wkc-init-container:1.0.107
+    pull-repository: ${DOCKER_REGISTRY}/wkc-init-container:1.0.107
+    pull-authorization:
+      username:
+        env: ARTIFACTORY_USERNAME
+      password:
+        env: ARTIFACTORY_PASSWORD

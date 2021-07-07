@@ -1,0 +1,117 @@
+########################################################################
+#
+# Licensed Materials - Property of IBM
+#
+# 5725Q09
+#
+# (C) Copyright IBM Corp.
+#
+# 2018-2019 All Rights Reserved
+#
+# US Government Users Restricted Rights - Use, duplication or disclosure
+# restricted by GSA ADP Schedule Contract with IBM Corp.
+#
+########################################################################
+{{- if .Values.global.ingress.api.enabled }}
+{{- include "sch.config.init" (list . "sch.chart.config.values") -}}
+{{-  $externalHostname := printf "%s.%s.%s" "netcool"  .Release.Name  .Values.global.cluster.fqdn }}
+{{-  $cookiename := printf "%s-%s"  "webguiingress"  .Release.Name   }}
+{{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" }}
+apiVersion: networking.k8s.io/v1beta1    
+{{- else }}
+apiVersion: extensions/v1beta1           
+{{- end }}
+
+kind: Ingress
+metadata:
+  name: {{ include "sch.names.fullName" (list .) }}
+  labels:
+{{ include "sch.metadata.labels.standard" (list . "") | indent 4 }}
+  annotations:
+    kubernetes.io/ingress.class: '{{ .Values.global.ingress.api.class }}'
+    {{ .Values.global.ingress.api.prefix }}/proxy-body-size: '0'
+    {{ .Values.global.ingress.api.prefix }}/affinity: 'cookie'
+    {{ .Values.global.ingress.api.prefix }}/session-cookie-hash: 'sha1'
+    {{ .Values.global.ingress.api.prefix }}/session-cookie-expires: '3600'
+    {{ .Values.global.ingress.api.prefix }}/backend-protocol: 'HTTPS'
+    {{ .Values.global.ingress.api.prefix }}/proxy-read-timeout: '{{ .Values.ingress.proxyReadTimeout }}'
+    {{ .Values.global.ingress.api.prefix }}/proxy-send-timeout: '{{ .Values.ingress.proxySendTimeout }}'
+    {{ .Values.global.ingress.api.prefix }}/session-cookie-name: '{{ $cookiename }}'
+spec:
+  tls:
+  - secretName: {{ .Release.Name }}-netcool-tls-secret
+    hosts:
+{{- if eq .Values.global.ingress.prefixWithReleaseName  true }}
+    - {{ $externalHostname }}
+{{- else }}
+    - {{ .Values.global.cluster.fqdn }}
+{{ end }}
+  rules:
+{{- if eq .Values.global.ingress.prefixWithReleaseName true }}
+  - host: {{ $externalHostname }}
+{{- else }}
+  - host: {{ .Values.global.cluster.fqdn }}
+{{ end }}
+    http:
+      paths:
+      - path: /ibm
+        backend:
+          serviceName: {{ include "sch.names.fullName" (list . 63) }}
+          servicePort: {{ .Values.webgui.internal.dashPort }}
+      - backend:
+          serviceName: {{ include "sch.names.fullName" (list . 63) }}
+          servicePort: {{ .Values.webgui.internal.dashPort }}
+        path: /Impact_SSD_Dashlet
+      - backend:
+          serviceName: {{ include "sch.names.fullName" (list . 63) }}
+          servicePort: {{ .Values.webgui.internal.dashPort }}
+        path: /ISCWire
+      - backend:
+          serviceName: {{ include "sch.names.fullName" (list . 63) }}
+          servicePort: {{ .Values.webgui.internal.dashPort }}
+        path: /isc
+      - backend:
+          serviceName: {{ include "sch.names.fullName" (list . 63) }}
+          servicePort: {{ .Values.webgui.internal.dashPort }}
+        path: /ISCHA
+      - backend:
+          serviceName: {{ include "sch.names.fullName" (list . 63) }}
+          servicePort: {{ .Values.webgui.internal.dashPort }}
+        path: /tip_ISCAdminPortlet
+      - backend:
+          serviceName: {{ include "sch.names.fullName" (list . 63) }}
+          servicePort: {{ .Values.webgui.internal.dashPort }}
+        path: /ISCAdminPortlets
+      - backend:
+          serviceName: {{ include "sch.names.fullName" (list . 63) }}
+          servicePort: {{ .Values.webgui.internal.dashPort }}
+        path: /TIPWebWidget
+      - backend:
+          serviceName: {{ include "sch.names.fullName" (list . 63) }}
+          servicePort: {{ .Values.webgui.internal.dashPort }}
+        path: /TIPUtilPortlets
+      - backend:
+          serviceName: {{ include "sch.names.fullName" (list . 63) }}
+          servicePort: {{ .Values.webgui.internal.dashPort }}
+        path: /3PI
+      - backend:
+          serviceName: {{ include "sch.names.fullName" (list . 63) }}
+          servicePort: {{ .Values.webgui.internal.dashPort }}
+        path: /TWL_SSD_Dashlets
+      - backend:
+          serviceName: {{ include "sch.names.fullName" (list . 63) }}
+          servicePort: {{ .Values.webgui.internal.dashPort }}
+        path: /DASHRaveWidget
+      - backend:
+          serviceName: {{ include "sch.names.fullName" (list . 63) }}
+          servicePort: {{ .Values.webgui.internal.dashPort }}
+        path: /myBox
+      - backend:
+          serviceName: {{ include "sch.names.fullName" (list . 63) }}
+          servicePort: {{ .Values.webgui.internal.dashPort }}
+        path: /tip.samples  
+      - backend:
+          serviceName: {{ include "sch.names.fullName" (list . 63) }}
+          servicePort: {{ .Values.webgui.internal.dashPort }}
+        path: /oauth2
+{{ end -}}

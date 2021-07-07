@@ -1,0 +1,69 @@
+charts:
+  - archive: file:portworx-1.0.22.tgz
+    repository-keys:
+      - customRegistryURL
+images:
+- image: portworx/oci-monitor:2.7.2
+  references:
+  - repository: oci-monitor:2.7.2-amd64
+    pull-repository: portworx/oci-monitor:2.7.2
+- image: portworx/px-enterprise:2.7.2
+  references:
+  - repository: px-enterprise:2.7.2-amd64
+    pull-repository: portworx/px-enterprise:2.7.2
+- image: openstorage/stork:2.6.2
+  references:
+  - repository: stork:2.6.2-amd64
+    pull-repository: openstorage/stork:2.6.2
+- image: portworx/lh-config-sync:2.0.5
+  references:
+  - repository: lh-config-sync:2.0.5-amd64
+    pull-repository: portworx/lh-config-sync:2.0.5
+- image: portworx/lh-stork-connector:2.0.5
+  references:
+  - repository: lh-stork-connector:2.0.5-amd64
+    pull-repository: portworx/lh-stork-connector:2.0.5
+- image: portworx/px-etcd-preinstall-hook:v1.2
+  references:
+  - repository: px-etcd-preinstall-hook:v1.2-amd64
+    pull-repository: portworx/px-etcd-preinstall-hook:v1.2
+- image: portworx/px-lighthouse:2.0.5
+  references:
+  - repository: px-lighthouse:2.0.5-amd64
+    pull-repository: portworx/px-lighthouse:2.0.5
+- image: k8s.gcr.io/kube-scheduler:v1.13.9
+  references:
+  - repository: kube-scheduler:v1.13.9-amd64
+    pull-repository: k8s.gcr.io/kube-scheduler:v1.13.9
+- image: lachlanevenson/k8s-kubectl:v1.13.9
+  references:
+  - repository: k8s-kubectl:v1.13.9-amd64
+    pull-repository: lachlanevenson/k8s-kubectl:v1.13.9
+- image: busybox:latest
+  references:
+  - repository: busybox:latest-amd64
+    pull-repository: busybox:latest
+- image: pause:3.1
+  references:
+  - repository: pause:3.1
+    pull-repository: k8s.gcr.io/pause:3.1
+- image: kube-controller-manager-amd64:v1.16.2
+  references:
+  - repository: kube-controller-manager-amd64:v1.16.2
+    pull-repository: k8s.gcr.io/kube-controller-manager-amd64:v1.16.2
+- image: csi-provisioner:v1.6.0-1
+  references:
+  - repository: csi-provisioner:v1.6.0-1
+    pull-repository: quay.io/k8scsi/csi-provisioner:v1.6.0-1
+- image: csi-snapshotter:v2.1.0
+  references:
+  - repository: csi-snapshotter:v2.1.0
+    pull-repository: quay.io/k8scsi/csi-snapshotter:v2.1.0
+- image: snapshot-controller:v2.1.0
+  references:
+  - repository: snapshot-controller:v2.1.0
+    pull-repository: quay.io/k8scsi/snapshot-controller:v2.1.0
+- image: csi-resizer:v0.5.0
+  references:
+  - repository: csi-resizer:v0.5.0
+    pull-repository: quay.io/k8scsi/csi-resizer:v0.5.0

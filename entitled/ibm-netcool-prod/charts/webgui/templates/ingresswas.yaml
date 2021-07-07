@@ -1,0 +1,53 @@
+########################################################################
+#
+# Licensed Materials - Property of IBM
+#
+# 5725Q09
+#
+# (C) Copyright IBM Corp.
+#
+# 2018-2019 All Rights Reserved
+#
+# US Government Users Restricted Rights - Use, duplication or disclosure 
+# restricted by GSA ADP Schedule Contract with IBM Corp.
+#
+########################################################################
+{{- if .Values.global.ingress.api.enabled }}
+{{- include "sch.config.init" (list . "sch.chart.config.values") -}}
+{{-  $externalHostname := printf "%s.%s.%s" "was"  .Release.Name  .Values.global.cluster.fqdn }}
+{{-  $cookiename := printf "%s-%s"  "wasingress"  .Release.Name   }}
+{{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" }}
+apiVersion: networking.k8s.io/v1beta1    
+{{- else }}
+apiVersion: extensions/v1beta1           
+{{- end }}
+
+kind: Ingress
+metadata:
+  name: was-{{ include "sch.names.fullName" (list .) }}
+  labels:
+{{ include "sch.metadata.labels.standard" (list . "") | indent 4 }}
+  annotations:
+    kubernetes.io/ingress.class: '{{ .Values.global.ingress.api.class }}'
+    {{ .Values.global.ingress.api.prefix }}/proxy-body-size: '0'
+    {{ .Values.global.ingress.api.prefix }}/affinity: 'cookie'
+    {{ .Values.global.ingress.api.prefix }}/session-cookie-hash: 'sha1'
+    {{ .Values.global.ingress.api.prefix }}/session-cookie-expires: '3600'
+    {{ .Values.global.ingress.api.prefix }}/backend-protocol: 'HTTPS'
+    {{ .Values.global.ingress.api.prefix }}/proxy-read-timeout: '{{ .Values.ingress.proxyReadTimeout }}'
+    {{ .Values.global.ingress.api.prefix }}/proxy-send-timeout: '{{ .Values.ingress.proxySendTimeout }}'
+    {{ .Values.global.ingress.api.prefix }}/session-cookie-name: '{{ $cookiename }}'
+spec:
+  tls:
+  - secretName: {{ .Release.Name }}-was-tls-secret
+    hosts:
+    - {{ $externalHostname }}
+  rules:
+  - host: {{ $externalHostname }}
+    http:
+      paths:
+      - path: /ibm
+        backend:
+          serviceName: {{ include "sch.names.fullName" (list . 63) }}
+          servicePort: {{ .Values.webgui.internal.wasPort }}
+{{ end -}}

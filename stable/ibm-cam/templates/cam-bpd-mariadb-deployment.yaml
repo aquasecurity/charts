@@ -14,12 +14,14 @@ metadata:
   name: cam-bpd-mariadb
   labels:
     name: cam-bpd-mariadb
-    app: {{ template "fullname" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    "app.kubernetes.io/name": {{ template "fullname" . }}
+    "helm.sh/chart": "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
-  namespace: {{ .Values.service.namespace }}
+    "app.kubernetes.io/instance": "{{ .Release.Name }}"
+    "app.kubernetes.io/managed-by": "{{ .Release.Service }}"
+  namespace: {{ .Release.Namespace }}
 spec:
+  progressDeadlineSeconds: 1800
   selector:
     matchLabels:
       name: cam-bpd-mariadb
@@ -32,15 +34,25 @@ spec:
     metadata:
       labels:
         name: cam-bpd-mariadb
-        app: {{ template "fullname" . }}
-        chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+        "app.kubernetes.io/name": {{ template "fullname" . }}
+        "helm.sh/chart": "{{ .Chart.Name }}-{{ .Chart.Version }}"
         release: "{{ .Release.Name }}"
-        heritage: "{{ .Release.Service }}"
+        "app.kubernetes.io/instance": "{{ .Release.Name }}"
+        "app.kubernetes.io/managed-by": "{{ .Release.Service }}"
       annotations:
         productName: "Cloud Automation Manager"
         productID: "{{ .Values.global.id.productID }}"
         productVersion: "{{ .Chart.AppVersion }}"
     spec:
+      hostNetwork: false
+      hostPID: false
+      hostIPC: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+        supplementalGroups:
+          - 1000
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -53,10 +65,15 @@ spec:
       hostname: cam-bpd-mariadb
       containers:
       - name: cam-bpd-mariadb
+        securityContext:
+          privileged: false
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - MKNOD
         image: "{{ .Values.image.repository }}icam-bpd-mariadb:{{ .Values.image.tag }}{{ template "platform" . }}"
         imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
-        securityContext:
-          runAsUser: 0
         resources:
 {{ toYaml .Values.camBPDDatabase.resources | indent 10 }}
         env:
@@ -98,20 +115,29 @@ spec:
             - sh
             - -c
             - "mysqladmin ping -u root -p${MYSQL_ROOT_PASSWORD}"
-          initialDelaySeconds: 30
-          timeoutSeconds: 5
+          initialDelaySeconds: 75
+          timeoutSeconds: 20
         readinessProbe:
           exec:
             command:
             - sh
             - -c
             - "mysqladmin ping -u root -p${MYSQL_ROOT_PASSWORD}"
-          initialDelaySeconds: 5
-          timeoutSeconds: 1
+          initialDelaySeconds: 75
+          timeoutSeconds: 20
         volumeMounts:
+        - name: data
+          mountPath: /usr/local/mariadb-10.2.24-linux-s390x/data
+        - name: tmp-empty 
+          mountPath: /tmp
         - name: {{ .Values.camBPDAppDataPV.name }}
           mountPath: /var/lib/mysql
           subPath: mysql
+        - name: cam-cert
+          mountPath: /usr/src/app/certs
+          readOnly: true
+        - name: {{ .Values.camLogsPV.name }}
+          mountPath: /var/camlog
       {{- if .Values.global.image.secretName }}
       {{- if ne .Values.global.image.secretName "default"}}
       imagePullSecrets:
@@ -119,6 +145,13 @@ spec:
       {{- end }}
       {{- end }}
       volumes:
+      - name: data 
+        emptyDir: {}
+      - name: tmp-empty 
+        emptyDir: {}
+      - name: cam-cert
+        secret:
+          secretName: {{ .Values.camAPI.certificate.certName }}
       - name: "{{ .Values.camBPDAppDataPV.name }}"
       {{- if .Values.camBPDAppDataPV.persistence.enabled }}
         persistentVolumeClaim:
@@ -126,6 +159,17 @@ spec:
           claimName: {{ .Values.camBPDAppDataPV.persistence.existingClaimName }}
         {{- else }}
           claimName: {{ .Values.camBPDAppDataPV.name }}
+        {{- end }}
+      {{- else }}
+        emptyDir: {}
+      {{- end }}
+      - name:  {{ .Values.camLogsPV.name }}
+      {{- if .Values.camLogsPV.persistence.enabled }}
+        persistentVolumeClaim:
+        {{- if .Values.camLogsPV.persistence.existingClaimName }}
+          claimName: {{ .Values.camLogsPV.persistence.existingClaimName }}
+        {{- else }}
+          claimName:  {{ .Values.camLogsPV.name }}
         {{- end }}
       {{- else }}
         emptyDir: {}

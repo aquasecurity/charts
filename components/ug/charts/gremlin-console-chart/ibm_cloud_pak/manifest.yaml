@@ -1,0 +1,10 @@
+images:
+- image: gremlin-console-ubi7-x86_64:0.5.2_b820_bca3c97bb844
+  references:
+  - repository: gremlin-console-ubi7-x86_64:0.5.2_b820_bca3c97bb844
+    pull-repository: ${DOCKER_REGISTRY}/gremlin-console-ubi7-x86_64:0.5.2_b820_bca3c97bb844
+    pull-authorization:
+      username:
+        env: ARTIFACTORY_USERNAME
+      password:
+        env: ARTIFACTORY_PASSWORD

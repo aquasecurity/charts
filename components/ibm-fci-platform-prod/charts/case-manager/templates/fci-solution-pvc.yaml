@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ template "case.fullname" . }}-fci-solution
+  labels:
+{{- include "common.label.metadata" (list . (printf "%s-%s" (include "case.name" .) "fci-solution") (include "case.chart" .) .Release.Name .Release.Service ) | indent 4 }}
+spec:
+{{-   if .Values.solutionPvcSpec.accessModes }}
+{{-     with .Values.solutionPvcSpec.accessModes }}
+  accessModes:
+{{        toYaml . | indent 4 -}}
+{{-     end -}}
+{{-   end }}
+{{- if .Values.global.persistence.useDynamicProvisioning }}
+{{-   if not .Values.solutionPvcSpec.storageClassName }}
+  storageClassName: {{ default nil .Values.global.persistence.storageClassName | quote }}
+{{-   else }}
+  storageClassName: {{ .Values.solutionPvcSpec.storageClassName | quote }}
+{{-   end }}
+{{- else }}
+  storageClassName: {{ default "" .Values.solutionPvcSpec.storageClassName | quote }}
+{{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.solutionPvcSpec.size }}
+{{- if not .Values.global.persistence.useDynamicProvisioning }}
+  selector:
+    matchLabels:
+{{- include "common.selector.labels" (list . (printf "%s-%s" (include "case.name" .) "fci-solution") .Release.Name ) | indent 6 }}
+{{- end -}}

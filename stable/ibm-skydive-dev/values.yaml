@@ -1,21 +1,19 @@
 ###############################################################################
 ############################ Skydive ##########################################
 ###############################################################################
+---
 
-###################
-## Global variables
-global:
-  image:
-    secretName: ""
-    
 ##################
 ## Image variables
-arch: 
-  amd64: "3 - Most preferred"
-  
+arch:
+  amd64: "2 - No preference"
+  ppc64le: "2 - No preference"
+  s390x: "2 - No preference"
+
 image:
   repository: ibmcom/skydive
-  tag: 0.18
+  tag: "0.22.0"
+  secretName: ""
   imagePullPolicy: IfNotPresent
 
 ##################
@@ -36,13 +34,26 @@ service:
   port: 8082
   type: NodePort
 
+etcd:
+  port: 12379
+
 analyzer:
   topology:
     fabric: "TOR1->*[Type=host]/eth0"
 
+agent:
+  topology:
+    probes: "ovsdb docker runc"
+
 ## env variables
 env: []
 
+###################
+## Elastic search image 
+elasticsearch:
+  image:
+    repository: "ibmcom/elasticsearch"
+    tag: "5.5.1"
 
 ##################
 ## Data / Storage
@@ -66,4 +77,5 @@ storage:
     indicesToKeep: 10
     indexEntriesLimit: 10000
   elasticsearch:
-    host: 127.0.0.1:9200
+    port: 9200
+    host: 127.0.0.1

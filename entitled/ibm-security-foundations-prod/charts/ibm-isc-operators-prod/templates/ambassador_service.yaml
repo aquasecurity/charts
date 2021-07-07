@@ -1,0 +1,31 @@
+# Create a Service component for Ambassador
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "ambassador.fullname" . }}
+  annotations:
+    getambassador.io/config: |
+      ---
+      apiVersion: getambassador.io/v2
+      kind: Module
+      name: ambassador
+      config:
+        server_name: cp4s
+{{- if .Values.global.cookieFilter }}
+        cookie: yes
+{{- end }}
+  labels:
+    app.kubernetes.io/name: {{ include "ambassador.name" . }}
+    helm.sh/chart: {{ include "ambassador.chart" . }}
+    release: {{ $.Release.Name }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8443
+      targetPort: 8443
+      protocol: TCP
+      name: https
+  selector:
+    app.kubernetes.io/name: {{ include "ambassador.name" . }}

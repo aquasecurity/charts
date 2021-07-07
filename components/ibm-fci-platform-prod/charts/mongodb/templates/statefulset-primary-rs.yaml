@@ -1,0 +1,221 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+{{- include "common.label.metadata" (list . (include "mongodb.name" .) (include "mongodb.chart" .) .Release.Name .Release.Service ) | indent 4 }}
+  name: {{ template "mongodb.fullname" . }}-primary
+spec:
+  serviceName: {{ template "mongodb.fullname" . }}-headless
+{{ if .Values.enabled }}
+  replicas: {{ default 1 .Values.replicas }}
+{{ else }}
+  replicas: 0
+{{ end }}
+  selector:
+    matchLabels:
+{{- include "common.selector.labels" (list . (include "mongodb.name" .) .Release.Name ) | indent 6 }}
+      component: primary
+  template:
+    metadata:
+      labels:
+{{- include "common.label.metadata" (list . (include "mongodb.name" .) (include "mongodb.chart" .) .Release.Name .Release.Service ) | indent 8 }}
+        component: primary
+      annotations:
+{{ include "common.meteringAnnotations" . | indent 8 }}
+      {{- if .Values.podAnnotations }}
+{{ toYaml .Values.podAnnotations | indent 8 }}
+      {{- end }}
+    spec:
+      {{- if .Values.global.pvRequiresPermissionsFix }}
+      serviceAccountName: fci-mongodb
+      {{- else }}
+      serviceAccountName: fci-common-scripts
+      {{- end }}
+{{ include "common.configureHostAliases" . | indent 6 }}
+{{ include "common.PodHostConfig" . | indent 6 }}
+      affinity:
+{{ include "common.ArchNodeAffinity" . | indent 8 }}
+      {{- if .Values.securityContext.enabled }}
+      securityContext:
+        fsGroup: {{ .Values.securityContext.fsGroup }}
+        runAsUser: {{ .Values.securityContext.runAsUser }}
+      {{- else }}
+      securityContext:
+{{ include "common.PodSecurityContextConfig" . | indent 8 }}
+      {{- end }}
+      {{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+      {{- end }}
+      initContainers:
+      {{- if .Values.global.pvRequiresPermissionsFix }}
+      - name: permissionsfix
+        args:
+        - chown -R 1001:1001 /mount;
+        command:
+        - /bin/sh
+        - -c
+        image: "{{ required "global.dockerRegistryPrefix must specify from which repository the docker image should be fetched." .Values.global.dockerRegistryPrefix }}/{{ .Values.global.commonScripts.image.repository }}:{{ .Values.global.commonScripts.image.tag }}"
+        securityContext:
+{{ include "common.RootChownerContainerSecurityContext" . | indent 10 }}
+        resources:
+{{ toYaml .Values.sideCarContainers.resources | indent 10 }}
+        volumeMounts:
+        - mountPath: /mount
+          name: {{ .Release.Name }}-data
+        {{- end }}
+      containers:
+        - name: {{ template "mongodb.name" . }}-primary
+          image: "{{ .Values.global.dockerRegistryPrefix }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+          securityContext:
+{{ include "common.RestrictedContainerSecurityContext" . | indent 12 }}
+          ports:
+          - containerPort: {{ .Values.service.port }}
+            name: mongodb
+          envFrom:
+          - configMapRef:
+              name: {{ template "mongodb.fullname" . }}-db
+          env:
+          {{- if .Values.image.debug}}
+          - name: BITNAMI_DEBUG
+            value: "true"
+          {{- end }}
+          - name: MONGODB_SYSTEM_LOG_VERBOSITY
+            value: {{ .Values.mongodbSystemLogVerbosity | quote }}
+          - name: MONGODB_DISABLE_SYSTEM_LOG
+            {{- if .Values.mongodbDisableSystemLog }}
+            value: "yes"
+            {{- else }}
+            value: "no"
+            {{- end }}
+          - name: MONGODB_POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: MONGODB_REPLICA_SET_MODE
+            value: "primary"
+          - name: MONGODB_REPLICA_SET_NAME
+            value: {{ .Values.replicaSet.name | quote }}
+          - name: MONGODB_ADVERTISED_HOSTNAME
+            value: "$(MONGODB_POD_NAME).{{ template "mongodb.fullname" . }}-headless.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}"
+          {{- if .Values.mongodbUsername }}
+          - name: MONGODB_USERNAME
+            value: {{ .Values.mongodbUsername | quote }}
+          {{- end }}
+          {{- if .Values.mongodbDatabase }}
+          - name: MONGODB_DATABASE
+            value: {{ .Values.mongodbDatabase | quote }}
+          {{- end }}
+          - name: MONGODB_ENABLE_IPV6
+          {{- if .Values.mongodbEnableIPv6 }}
+            value: "yes"
+          {{- else }}
+            value: "no"
+          {{- end }}
+          - name: MONGODB_ENABLE_DIRECTORY_PER_DB
+          {{- if .Values.mongodbDirectoryPerDB }}
+            value: "yes"
+          {{- else }}
+            value: "no"
+          {{- end }}
+          - name: MONGODB_EXTRA_FLAGS
+            value: {{ .Values.mongodbExtraFlags | join " " }}
+          - name: MONGODB_CLIENT_EXTRA_FLAGS
+            value: {{ .Values.mongodbClientExtraFlags | join " " }}
+{{- include "common.import-secret" (list . "MONGODB_IUI_PASSWORD" "mongo" "mongodb-iui-password") | indent 10 }}
+{{- include "common.import-secret" (list . "MONGODB_FCDD_PASSWORD" "mongo" "mongodb-fcdd-password") | indent 10 }}
+{{- include "common.import-secret" (list . "MONGODB_TLS_PASSWORD" "mongo" "mongodb-fcai-tls-password") | indent 10 }}
+{{- include "common.import-secret" (list . "MONGODB_PASSWORD" "mongo" "mongodb-password") | indent 10 }}
+{{- include "common.import-secret" (list . "MONGODB_ROOT_PASSWORD" "mongo" "mongodb-root-password") | indent 10 }}
+{{- include "common.import-secret" (list . "MONGODB_DSF_PASSWORD" "mongo" "mongodb-dsf-password") | indent 10 }}
+{{- include "common.import-secret" (list . "MONGODB_ERAAS_EES_PASSWORD" "mongo" "mongodb-eraas-ees-password") | indent 10 }}
+{{- include "common.import-secret" (list . "MONGODB_ERAAS_INVESTIGATION_PASSWORD" "mongo" "mongodb-eraas-investigation-password") | indent 10 }}
+{{- include "common.import-secret" (list . "MONGODB_ERAAS_PROXY_PASSWORD" "mongo" "mongodb-eraas-proxy-password") | indent 10 }}
+{{- include "common.import-secret" (list . "MONGODB_ERAAS_KYC_ADAPTER_PASSWORD" "mongo" "mongodb-eraas-kyc-adapter-password") | indent 10 }}
+{{- include "common.import-secret" (list . "MONGODB_ERAAS_OUTCOME_PASSWORD" "mongo" "mongodb-eraas-outcome-password") | indent 10 }}
+{{- include "common.import-secret" (list . "MONGODB_ERAAS_WORKFLOW_PASSWORD" "mongo" "mongodb-eraas-workflow-password") | indent 10 }}
+{{- include "common.import-secret" (list . "MONGODB_ERAAS_PLAN_PASSWORD" "mongo" "mongodb-eraas-plan-password") | indent 10 }}
+{{- include "common.import-secret" (list . "MONGODB_ERAAS_ARTICLE_PASSWORD" "mongo" "mongodb-eraas-article-password") | indent 10 }}
+{{- include "common.import-secret" (list . "MONGODB_ERAAS_NEWS_PASSWORD" "mongo" "mongodb-eraas-news-password") | indent 10 }}
+{{- include "common.import-secret" (list . "MONGODB_ERAAS_NEWS_MCD_PASSWORD" "mongo" "mongodb-eraas-news-mcd-password") | indent 10 }}
+{{- include "common.import-secret" (list . "MONGODB_ERAAS_ML_API_PASSWORD" "mongo" "mongodb-eraas-ml-api-password") | indent 10 }}
+{{- include "common.import-secret" (list . "MONGODB_ERAAS_ML_PASSWORD" "mongo" "mongodb-eraas-ml-password") | indent 10 }}
+{{- include "common.import-secret" (list . "MONGODB_REPLICA_SET_KEY" "mongo" "mongodb-replica-set-key") | indent 10 }}
+          {{- if .Values.livenessProbe.enabled }}
+          livenessProbe:
+            exec:
+              command:
+                - mongo
+                - --sslAllowInvalidCertificates
+                - --ssl
+                - --eval
+                - "db.adminCommand('ping')"
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.livenessProbe.successThreshold }}
+            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+          {{- end }}
+          {{- if .Values.readinessProbe.enabled }}
+          readinessProbe:
+            exec:
+              command:
+                - mongo
+                - --sslAllowInvalidCertificates
+                - --ssl
+                - --eval
+                - "db.adminCommand('ping')"
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.readinessProbe.successThreshold }}
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+          {{- end }}
+          volumeMounts:
+            - name: {{ .Release.Name }}-data
+              mountPath: /bitnami/mongodb
+            {{- if .Values.configmap }}
+            - name: config
+              mountPath: /opt/bitnami/mongodb/conf/mongodb.conf
+              subPath: mongodb.conf
+            {{- end }}
+            - name: file-secrets
+              mountPath: /mongodb.key
+              subPath: fci_universal_ks.pvtk.pem
+            - name: file-secrets
+              mountPath: /mongodb.crt
+              subPath: fci_universal_ks.crt.pem
+      volumes:
+        - name: file-secrets
+          secret:
+            secretName: {{ .Release.Name }}-platform-secret-files
+        {{- if .Values.configmap }}
+        - name: config
+          configMap:
+            name: {{ template "mongodb.fullname" . }}
+        {{- end }}
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ .Release.Name }}-data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: {{ .Values.pvcSpec.size }}
+{{- if .Values.global.persistence.useDynamicProvisioning }}
+{{-   if not .Values.pvcSpec.storageClassName }}
+        storageClassName: {{ default nil .Values.global.persistence.storageClassName | quote }}
+{{-   else }}
+        storageClassName: {{ .Values.pvcSpec.storageClassName | quote }}
+{{-   end }}
+{{- else }}
+        storageClassName: {{ default "" .Values.pvcSpec.storageClassName | quote }}
+{{- end }}
+{{- if not .Values.global.persistence.useDynamicProvisioning }}
+        selector:
+          matchLabels:
+{{- include "common.selector.labels" (list . (printf "%s-%s" (include "mongodb.name" .) "primary") .Release.Name ) | indent 10 }}
+{{ end }}

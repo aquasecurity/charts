@@ -1,0 +1,92 @@
+{{- $releaseName := .Release.Name }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "security-auth.fullname" . }}-nodejs
+  labels:
+{{- include "common.label.metadata" (list . (printf "%s-%s" (include "security-auth.name" .) "nodejs") (include "security-auth.chart" .) .Release.Name .Release.Service ) | indent 4 }}
+spec:
+  selector:
+    matchLabels:
+{{- include "common.selector.labels" (list . (printf "%s-%s" (include "security-auth.name" .) "nodejs" ) .Release.Name ) | indent 6 }}
+  replicas: {{ .Values.replicas }}
+  template:
+    metadata:
+      annotations:
+{{ include "common.meteringAnnotations" . | indent 8 }}
+      labels:
+{{- include "common.label.metadata" (list . (printf "%s-%s" (include "security-auth.name" .) "nodejs") (include "security-auth.chart" .) .Release.Name .Release.Service ) | indent 8 }}
+{{- include "common.using-secrets" (list "auth" "platform") | indent 8 }}
+    spec:
+      serviceAccountName: fci-common
+{{ include "common.configureHostAliases" . | indent 6 }}
+{{ include "common.PodHostConfig" . | indent 6 }}
+      securityContext:
+{{ include "common.PodSecurityContextConfig" . | indent 8 }}
+      affinity:
+{{ include "common.ArchNodeAffinity" . | indent 8 }}
+      volumes:
+{{- if eq .Values.global.IDENTITY_SERVER_TYPE "CLOUD_PAK" }}
+        - name: zen-service-broker-secret
+          secret:
+            defaultMode: 420
+            secretName: zen-service-broker-secret
+{{- end }}
+        - name: file-secrets
+          secret:
+            secretName: {{ .Release.Name }}-platform-secret-files
+      containers:
+      - name: 'nodejs'
+        envFrom:
+        - configMapRef:
+            name: {{ template "security-auth.fullname" . }}
+        securityContext:
+{{ include "common.RestrictedContainerSecurityContext" . | indent 10 }}
+        env:
+{{- include "common.import-secret" (list . "JWT_KEY" "platform" "JWT_KEY") | indent 8 }}
+        - name: APPID_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.global.externalSecretName }}
+              key: APPID_API_KEY
+        - name: APPID_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.global.externalSecretName }}
+              key: APPID_SECRET
+
+        {{- range $key, $value := .Values.securityAuthConfig }}
+        {{- if hasPrefix "USER_ID_" $key }}
+        - name: {{ $key | replace "_ID_" "_PASSWORD_" }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ $releaseName }}-auth-secrets-env
+              key: {{ $key | replace "_ID_" "_PASSWORD_" }}
+        {{- end }}
+        {{- end }}
+        volumeMounts:
+        - name: file-secrets
+          mountPath: /opt/ibm/fci/security-auth/certs/fci_universal_ks.pvtk.pem
+          subPath: fci_universal_ks.pvtk.pem
+        - name: file-secrets
+          mountPath: /opt/ibm/fci/security-auth/certs/fci_universal_ks.crt.pem
+          subPath: fci_universal_ks.crt.pem
+        - name: file-secrets
+          mountPath: /opt/ibm/fci/security-auth/certs/ldap.crt
+          subPath: fci_universal_ks.crt.pem
+{{- if eq .Values.global.IDENTITY_SERVER_TYPE "CLOUD_PAK" }}
+        - mountPath: /var/run/sharedsecrets
+          name: zen-service-broker-secret
+{{- end }}
+        imagePullPolicy: {{ .Values.nodejs.image.pullPolicy }}
+        image: {{ required "global.dockerRegistryPrefix must specify from which repository the docker image should be fetched." .Values.global.dockerRegistryPrefix }}/{{ .Values.nodejs.image.repository }}:{{ .Values.nodejs.image.tag }}
+        livenessProbe:
+{{ toYaml .Values.nodejs.livenessProbe | indent 10 }}
+        readinessProbe:
+{{ toYaml .Values.nodejs.readinessProbe | indent 10 }}
+        resources:
+{{ toYaml .Values.nodejs.resources | indent 10 }}
+        ports:
+        - containerPort: 3000
+        - containerPort: 9229
+      restartPolicy: Always

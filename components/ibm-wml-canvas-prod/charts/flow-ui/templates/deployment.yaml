@@ -1,0 +1,218 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "flow-ui.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ template "flow-ui.name" . }}
+    app.kubernetes.io/managed-by: {{.Release.Service | quote }}
+    helm.sh/chart: {{ template "flow-ui.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    release: {{ .Release.Name }}
+    {{- include "flow-ui.flowUiaddOnPodLabels" . | indent 4 }}
+  annotations:
+    build: {{ .Values.global.buildVersion | quote }}
+    {{- include "spss-modeler.cloudpak_annotations" . | indent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ template "flow-ui.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      release: {{ .Release.Name }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 4
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ template "flow-ui.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/managed-by: {{.Release.Service | quote }}
+        helm.sh/chart: {{ template "flow-ui.chart" . }}
+        release: {{ .Release.Name }}
+        {{- include "flow-ui.flowUiaddOnPodLabels" . | indent 8 }}
+      annotations:
+        build: {{ .Values.global.buildVersion | quote }}
+        {{- include "spss-modeler.cloudpak_annotations" . | indent 8 }}
+    spec:
+      hostNetwork: false
+      hostPID: false
+      hostIPC: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: {{ .Values.global.runAsUser }}
+      serviceAccount: {{ .Values.global.viewer.sa }}
+      serviceAccountName: {{ .Values.global.viewer.sa }}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: beta.kubernetes.io/arch
+                    operator: In
+                    values:
+                      - "amd64"
+                      - "ppc64le"
+
+      {{- if .Values.global.nginx.importSSLCertificate.enabled }}
+      volumes:
+      - name: certificates
+        secret:
+          secretName: {{ .Values.global.nginx.importSSLCertificate.certificateSecret.name }}
+          items:
+          # The key name is dictated by the installer team - who created the secret.
+          - key: {{ .Values.global.nginx.importSSLCertificate.certificateSecret.key }}
+            # The path where we mount the secret is up to us.
+            path: {{ .Values.global.nginx.internalSSLCertificate.fileName }}
+      {{- end }}
+      containers:
+      - name: {{ .Chart.Name }}
+        image: {{ template "full-image-url" . }}
+        imagePullPolicy: {{ .Values.global.image.pullPolicy }}
+        securityContext:
+          runAsUser: {{ .Values.global.runAsUser }}
+          capabilities:
+            drop:
+            - ALL
+          allowPrivilegeEscalation: false
+          privileged: false
+          runAsNonRoot: true
+        ports:
+          - name: https
+            containerPort: {{ .Values.container.https_port }}
+            protocol: TCP
+        resources:
+          limits:
+            cpu: {{ .Values.resources.cpuLimits }}
+            memory: {{ .Values.resources.memLimits }}
+          requests:
+            cpu: {{ .Values.resources.cpuRequests }}
+            memory: {{ .Values.resources.memRequests }}
+        livenessProbe:
+          httpGet:
+            path: /monitor
+            port: {{ .Values.container.https_port }}
+            scheme: HTTPS
+          initialDelaySeconds: 90
+          periodSeconds: 30
+          timeoutSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /monitor
+            port: {{ .Values.container.https_port }}
+            scheme: HTTPS
+          initialDelaySeconds: 30
+          periodSeconds: 30
+
+        {{ if .Values.global.nginx.importSSLCertificate.enabled }}
+        volumeMounts:
+        - name: certificates
+          mountPath: {{ .Values.global.nginx.internalSSLCertificate.mountFolder }}
+          readOnly: true
+        {{- end }}
+
+        env:
+        # Control the node runtime
+        - name: NODE_ENV
+          value: {{ .Values.node.env }}
+        - name: NODE_MODULES_CACHE
+          value: "{{ .Values.node.modules.cache }}"
+
+        # Which environment are we deploying into.
+        - name: DSX_OPERATING_ENVIRONMENT
+          value: {{ .Values.global.watsonStudio.operatingEnvironment }}
+        - name: DEPLOYMENT_TARGET
+          value: {{ .Values.global.watsonStudio.deploymentTarget }}
+
+        # Documentation URLs
+        - name: KNOWLEDGE_CENTER_API_URL
+          value: {{ .Values.flowUiDocumentationUrls.knowledgeCenterApiUrl }}
+        - name: DOCUMENTATION_URL
+          value: {{ .Values.flowUiDocumentationUrls.documentationUrl }}
+
+        # Product where application is running
+        - name: IBM_PRODUCT
+          value: {{ .Values.global.ibmProduct }}
+
+        # flow-ui specific settings
+        - name: CACHE_ACCESS_RETRY_INTERVAL
+          value: {{ .Values.flowUiSettings.cache_access_retry_interval | quote }}
+        - name: DISABLE_NONCE
+          value: {{ .Values.flowUiSettings.disable_nonce | quote }}
+        - name: MAX_CACHE_ACCESS_RETRY
+          value: {{ .Values.flowUiSettings.max_cache_access_retry | quote }}
+        - name: MAX_CACHE_RETRY
+          value: {{ .Values.flowUiSettings.max_cache_retry | quote }}
+        - name: NNM_DISABLED
+          value: {{ .Values.flowUiSettings.nnm_disabled | quote }}
+        - name: SESSION_CACHE_ENABLED
+          value: {{ .Values.flowUiSettings.session_cache_enabled | quote }}
+        - name: SESSION_NOT_ACCESSIBLE_RETRY
+          value: {{ .Values.flowUiSettings.session_not_accessible_retry | quote }}
+        - name: USE_FLOW_SESSION
+          value: {{ .Values.flowUiSettings.use_flow_session | quote }}
+        - name: host_port_https
+          value: {{ .Values.container.https_port | quote }}
+
+        # Session
+        - name: APP_ENV_SESSION_KEY
+          valueFrom:
+            secretKeyRef:
+              name: watson-studio-secrets
+              key: session-key.txt
+        - name: APP_ENV_SESSION_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: watson-studio-secrets
+              key: session-secret.txt
+
+        {{- if .Values.global.auth.icp4d.enabled }}
+        # icp4d auth.
+        - name: auth__icp4d__authorizationUrl
+          value: {{ .Values.global.auth.icp4d.authorizationUrl }}
+        - name: auth__icp4d__publicKeyUrl
+          value: {{ .Values.global.auth.icp4d.publicKeyUrl }}
+        - name: auth__icp4d__serviceIdAuth
+          valueFrom:
+            secretKeyRef:
+              name: wdp-service-id
+              key: service-id-credentials
+        - name: auth__icp4d__callbackUrl
+          value: {{ .Values.global.auth.icp4d.callbackUrl }}
+        - name: auth__icp4d__logoutUrl
+          value: {{ .Values.global.auth.icp4d.logoutUrl }}
+        {{- end }}
+        - name: config__commonApi__url
+          value: {{ .Values.global.commonApi.url }}
+        - name: config__commonUI__url
+          value: {{ .Values.global.commonUI.url }}
+        {{- if .Values.global.redis.enabled }}
+        - name: composeRedis_url
+          valueFrom:
+            secretKeyRef:
+              name: redis-ha
+              key: redis-url-ssl
+        - name: APP_ENV_REDIS_ENCRYPTION_KEY
+          valueFrom:
+            secretKeyRef:
+              name: watson-studio-secrets
+              key: redis-encryption-token.txt
+        - name: APP_ENV_REDIS_SSL_CERTIFICATE
+          valueFrom:
+            secretKeyRef:
+              key: cacertb64.pem
+              name: redis-ha-cert
+        {{- end }}
+
+        {{ if .Values.global.nginx.importSSLCertificate.enabled }}
+        - name: NODE_EXTRA_CA_CERTS
+          value: {{ .Values.global.nginx.internalSSLCertificate.mountFolder }}/{{ .Values.global.nginx.internalSSLCertificate.fileName }}
+        {{- end }}
+
+
+      {{ if .Values.global.docker.useImagePullSecret }}
+      imagePullSecrets:
+      - name: {{ .Values.global.imagePullSecretName }}
+      {{ end }}

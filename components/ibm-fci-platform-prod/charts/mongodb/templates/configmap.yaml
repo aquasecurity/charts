@@ -1,0 +1,11 @@
+{{- if .Values.configmap }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+{{- include "common.label.metadata" (list . (include "mongodb.name" .) (include "mongodb.chart" .) .Release.Name .Release.Service ) | indent 4 }}
+  name: {{ template "mongodb.fullname" . }}
+data:
+  mongodb.conf: |-
+{{ toYaml .Values.configmap | indent 4 }}
+{{- end }}

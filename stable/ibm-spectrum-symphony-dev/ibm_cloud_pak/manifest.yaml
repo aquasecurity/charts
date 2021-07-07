@@ -1,0 +1,7 @@
+charts:
+  - archive: file:ibm-spectrum-symphony-dev-3.0.0.tgz
+    repository-keys:
+      - image.repository
+
+images:
+- image: ibmcom/spectrum-symphony:7.3.0.0

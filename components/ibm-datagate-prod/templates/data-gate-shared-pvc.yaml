@@ -1,0 +1,25 @@
+{{- if eq .Values.storage.type "storageClass" }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ template "dg.fullname" . }}-shared-pvc
+  labels:
+    app: {{ template "dg.fullname" . }}
+    chart: "{{ .Chart.Name }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+{{ include "dg.addOnLevelLabels" . | indent 4 }}
+{{ include "dg.addOnInstanceLabels" . | indent 4 }}
+{{ include "dg.metadataLabels" . | indent 4 }}
+spec:
+  {{- if .Values.storage.useDynamicProvisioning }}
+  storageClassName: {{ default nil .Values.storage.storageClass.name | quote }}
+  {{- else }}
+  storageClassName: {{ default "" .Values.storage.storageClass.name | quote }}
+  {{- end }}
+  accessModes:
+    - "ReadWriteMany"
+  resources:
+    requests:
+      storage: {{ .Values.storage.storageClass.size | quote }}
+{{- end }}

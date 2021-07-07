@@ -15,12 +15,14 @@ metadata:
   name: cam-mongo
   labels:
     name: cam-mongo
-    app: {{ template "fullname" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    "app.kubernetes.io/name": {{ template "fullname" . }}
+    "helm.sh/chart": "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
-  namespace: {{ .Values.service.namespace }}
+    "app.kubernetes.io/instance": "{{ .Release.Name }}"
+    "app.kubernetes.io/managed-by": "{{ .Release.Service }}"
+  namespace: {{ .Release.Namespace }}
 spec:
+  progressDeadlineSeconds: 1800
   replicas: 1
   selector:
     matchLabels:
@@ -34,15 +36,25 @@ spec:
     metadata:
       labels:
         name: cam-mongo
-        app: {{ template "fullname" . }}
-        chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+        "app.kubernetes.io/name": {{ template "fullname" . }}
+        "helm.sh/chart": "{{ .Chart.Name }}-{{ .Chart.Version }}"
         release: "{{ .Release.Name }}"
-        heritage: "{{ .Release.Service }}"
+        "app.kubernetes.io/instance": "{{ .Release.Name }}"
+        "app.kubernetes.io/managed-by": "{{ .Release.Service }}"
       annotations:
         productName: "Cloud Automation Manager"
         productID: "{{ .Values.global.id.productID }}"
         productVersion: "{{ .Chart.AppVersion }}"
     spec:
+      hostNetwork: false
+      hostPID: false
+      hostIPC: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+        supplementalGroups:
+          - 1000
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -54,6 +66,11 @@ spec:
                 - {{ .Values.arch }}
       hostname: cam-mongo
       volumes:
+      - name: cam-cert
+        secret:
+          secretName: {{ .Values.camAPI.certificate.certName }}
+      - name: tmp-empty 
+        emptyDir: {}
       - name: {{ .Values.camMongoPV.name }}
       {{- if .Values.camMongoPV.persistence.enabled }}
         persistentVolumeClaim:
@@ -73,10 +90,15 @@ spec:
       {{- end }}
       containers:
       - name: cam-mongo
+        securityContext:
+          privileged: false
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - MKNOD
         image: "{{ .Values.image.repository }}icam-mongo:{{ .Values.image.tag }}{{ template "platform" . }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
-        securityContext:
-          runAsUser: 0
         env:
         - name: MONGO_INITDB_ROOT_USERNAME
           value: 'root'
@@ -102,26 +124,39 @@ spec:
               key: mongoDbPassword
         - name: MONGODB_DATABASE
           value: 'cam'
+        - name: MONGODB_SSL
+          value: 'true'
+        - name: CA_CERT
+          valueFrom:
+            configMapKeyRef:
+              name: common-config
+              key: NODE_EXTRA_CA_CERTS
         ports:
         - name: mongo
           containerPort: 27017
         livenessProbe:
           tcpSocket:
             port: mongo
-          initialDelaySeconds: 10
+          initialDelaySeconds: 30
           periodSeconds: 20
         readinessProbe:
           tcpSocket:
             port: mongo
-          initialDelaySeconds: 5
+          initialDelaySeconds: 30
           periodSeconds: 20
         resources:
-{{ toYaml .Values.resources | indent 10 }}
+          requests:
+            memory: 2Gi
+            cpu: 100m
+          limits:
+            memory: 4Gi
+            cpu: 500m
         volumeMounts:
+          - name: cam-cert
+            mountPath: /usr/src/app/certs
+            readOnly: true
           - name: "{{ .Values.camMongoPV.name }}"
             mountPath: /data/db
-        lifecycle:
-            postStart:
-                exec:
-                    command: ["bash", "-c", "sleep 20 && /createusers.sh 2>&1 >> /data/db/postStart.log"]
+          - name: tmp-empty
+            mountPath: /tmp
 {{- end }}

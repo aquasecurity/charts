@@ -1,0 +1,120 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "baas.fullname" . }}-spp-agent
+  labels:
+    app.kubernetes.io/name: {{ include "baas.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ include "baas.appversion" . }}
+    app.kubernetes.io/component: spp-agent
+    app.kubernetes.io/managed-by: {{ .Values.managedBy }}
+    helm.sh/chart: {{ .Chart.Name }}
+rules:
+- apiGroups:
+  - snapshot.storage.k8s.io
+  resources:
+  - volumesnapshots
+  - volumesnapshotclasses
+  - volumesnapshotcontents
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - storage.k8s.io
+  resources:
+  - storageclasses
+  verbs:
+  - get
+  - list
+- apiGroups:
+  - baas.io
+  resources:
+  - baasreqs
+  verbs:
+  - get
+  - list
+  - create
+  - patch
+- apiGroups:
+  - ""
+  resources:
+  - persistentvolumes
+  - persistentvolumeclaims
+  - nodes
+  - namespaces
+  - services
+  - endpoints
+  verbs:
+  - get
+  - list
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  - statefulsets
+  verbs:
+  - get
+  - patch
+- apiGroups: 
+  - config.openshift.io
+  resources:
+  - clusteroperators
+  verbs:
+  - get
+- apiGroups:
+  - velero.io
+  resources:
+  - backups
+  - restores
+  - backupstoragelocations
+  - deletebackuprequests
+  verbs:
+  - get
+  - create
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - replicationcontrollers
+  verbs:
+  - list
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  - replicasets
+  - statefulsets
+  - daemonsets
+  verbs:
+  - list
+- apiGroups:
+  - batch
+  resources:
+  - cronjobs
+  verbs:
+  - list
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - list
+  - get
+  - create
+  - patch
+- apiGroups:
+  - '*'
+  resources:
+  - '*'
+  verbs:
+  - get
+  - list
+- apiGroups:
+  - '*'
+  resources:
+  - subjectaccessreviews
+  verbs:
+  - create

@@ -7,19 +7,21 @@
 # Contributors:
 #  IBM Corporation - initial API and implementation
 ###############################################################################
-
+{{- if .Capabilities.APIVersions.Has "servicecatalog.k8s.io/v1beta1" }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cam-broker
   labels:
     name: cam-broker
-    app: {{ template "fullname" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    "app.kubernetes.io/name": {{ template "fullname" . }}
+    "helm.sh/chart": "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
-  namespace: {{ .Values.service.namespace }}
+    "app.kubernetes.io/instance": "{{ .Release.Name }}"
+    "app.kubernetes.io/managed-by": "{{ .Release.Service }}"
+  namespace: {{ .Release.Namespace }}
 spec:
+  progressDeadlineSeconds: 1800
   replicas: {{ .Values.camBroker.replicaCount }}
   selector:
     matchLabels:
@@ -34,15 +36,25 @@ spec:
     metadata:
       labels:
         name: cam-broker
-        app: {{ template "fullname" . }}
-        chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+        "app.kubernetes.io/name": {{ template "fullname" . }}
+        "helm.sh/chart": "{{ .Chart.Name }}-{{ .Chart.Version }}"
         release: "{{ .Release.Name }}"
-        heritage: "{{ .Release.Service }}"
+        "app.kubernetes.io/instance": "{{ .Release.Name }}"
+        "app.kubernetes.io/managed-by": "{{ .Release.Service }}"
       annotations:
         productName: "Cloud Automation Manager"
         productID: "{{ .Values.global.id.productID }}"
         productVersion: "{{ .Chart.AppVersion }}"
     spec:
+      hostNetwork: false
+      hostPID: false
+      hostIPC: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+        supplementalGroups:
+          - 1000
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -54,6 +66,11 @@ spec:
                 - {{ .Values.arch }}
       hostname: cam-broker
       volumes:
+      - name: tmp-empty
+        emptyDir: {}
+      - name: cam-cert
+        secret:
+          secretName: {{ .Values.camAPI.certificate.certName }}
       - name:  {{ .Values.camLogsPV.name }}
       {{- if .Values.camLogsPV.persistence.enabled }}
         persistentVolumeClaim:
@@ -73,6 +90,21 @@ spec:
       {{- end }}
       containers:
       - name: cam-broker
+        args:
+        - -c
+        - 'curl --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+          -H "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" -XPATCH  -H "Accept: application/json,
+          */*" -H "Content-Type: application/strategic-merge-patch+json" https://kubernetes.default/apis/servicecatalog.k8s.io/v1beta1/clusterservicebrokers/cam-broker-{{ .Release.Namespace }}
+          --data ''{"metadata":{"finalizers": null}}'' && /usr/bin/configBoot.sh'
+        command:
+        - /bin/sh
+        securityContext:
+          privileged: false
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - MKNOD
         image: "{{ .Values.image.repository }}icam-broker:{{ .Values.image.tag }}{{ template "platform" . }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
@@ -82,25 +114,29 @@ spec:
           httpGet:
             path: /api/v2/health
             port: liveness-port
+            scheme: HTTPS
           initialDelaySeconds: 300
           periodSeconds: 20
         readinessProbe:
           httpGet:
             path: /api/v2/health
             port: liveness-port
+            scheme: HTTPS
           initialDelaySeconds: 5
           periodSeconds: 20
         resources:
 {{ toYaml .Values.resources | indent 10 }}
         volumeMounts:
+          - name: tmp-empty 
+            mountPath: /tmp
+          - name: cam-cert
+            mountPath: /usr/src/app/certs
+            readOnly: true
           - name:  {{ .Values.camLogsPV.name }}
             mountPath: /var/camlog
-            subPath: cam-broker
         envFrom:
         - configMapRef:
             name: common-config
-        - configMapRef:
-            name: redis-config
         env:
         - name: MONGODB_PASSWORD
           valueFrom:
@@ -130,30 +166,35 @@ spec:
             configMapKeyRef:
               name: oauth-client-map
               key: MASTER_IP
+        - name: ICP_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: common-config
+              key: ICP_PORT
         - name: ICP_PROXY_IP
           valueFrom:
             configMapKeyRef:
               name: oauth-client-map
               key: PROXY_IP
         - name: ICP_ENDPOINT
-          value: https://$(ICP_MASTER_IP):8443
-        - name: ORPHEUS_IDENTITY_API_URL
-          value: $(ICP_ENDPOINT)/idprovider
+          value: https://$(ICP_MASTER_IP):$(ICP_PORT)
+        - name: ORPHEUS_IDENTITY_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              name: common-config
+              key: ORPHEUS_TENANT_URL
         - name: ORPHEUS_IDENTITY_URL
+          {{- if ne .Values.platform "icp"}}
+          value: $(ORPHEUS_IDENTITY_ENDPOINT)/api
+          {{- else }}
           value: $(ICP_ENDPOINT)/idprovider
+          {{- end }}
+        - name: ORPHEUS_IDENTITY_API_URL
+          value: $(ORPHEUS_IDENTITY_URL)
         - name: POD_NAME
           valueFrom:
             fieldRef:
               fieldPath: metadata.name
-      initContainers:
-      - name: cam-broker-init
-        image: "{{ .Values.image.repository }}icam-busybox:{{ .Values.image.tag }}{{ template "platform" . }}"
-        imagePullPolicy:  {{ .Values.image.pullPolicy }}
-        securityContext:
-          runAsUser: 0
-        command: ["/bin/sh", "-c"]
-        args:
-          - mkdir -p /var/camlog/cam-broker && chown -R 1000:1000 /var/camlog/cam-broker;
-        volumeMounts:
-        - name: {{ .Values.camLogsPV.name }}
-          mountPath: /var/camlog
+        - name: LOG_LEVEL
+          value: {{ .Values.camLoggingPolicies.logLevel }}
+{{- end}}

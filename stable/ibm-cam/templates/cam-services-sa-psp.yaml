@@ -2,16 +2,17 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: cam-services-sa-psp
-  namespace: services
+  namespace: {{ .Release.Namespace }}
   labels:
     name: cam-services-sa-psp
-    app: {{ template "fullname" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    "app.kubernetes.io/name": {{ template "fullname" . }}
+    "helm.sh/chart": "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
+    "app.kubernetes.io/instance": "{{ .Release.Name }}"
+    "app.kubernetes.io/managed-by": "{{ .Release.Service }}"
 rules:
 - apiGroups: ["extensions"]
   resources: ["podsecuritypolicies"]
   verbs: ["use"]
   resourceNames:
-    - cam-services-psp
+    - cam-services-psp-{{ .Release.Namespace }}

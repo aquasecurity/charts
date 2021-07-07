@@ -7,10 +7,12 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+{{ include "odm-additional-labels" . | indent 4 }}
 spec:
-  type: NodePort
+{{ include "odm-service-type" . | indent 2 }}
   ports:
     - port: 9060
+      name: odm-port
       targetPort: 9060
       protocol: TCP
   selector:

@@ -10,7 +10,6 @@
 {{- include "sch.config.init" (list . "sch.chart.config.values") }}
 {{- $compName := .sch.chart.components.dashboard.name }}
 {{- $commonName := .sch.chart.components.common.name }}
-{{- $brokerName := .sch.chart.components.broker.name }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -46,8 +45,8 @@ spec:
           livenessProbe:
             tcpSocket:
               port: 3000
-            initialDelaySeconds: 30
-            periodSeconds: 30
+            initialDelaySeconds: 10
+            periodSeconds: 10
           env:
             - name: FUNC_PROVIDER_USERNAME
               valueFrom:

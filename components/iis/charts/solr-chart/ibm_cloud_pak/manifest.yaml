@@ -1,0 +1,28 @@
+images:
+- image: solr-ubi7-x86_64:8.6.3_b820_bca3c97bb844
+  references:
+  - repository: solr-ubi7-x86_64:8.6.3_b820_bca3c97bb844
+    pull-repository: ${DOCKER_REGISTRY}/solr-ubi7-x86_64:8.6.3_b820_bca3c97bb844
+    pull-authorization:
+      username:
+        env: ARTIFACTORY_USERNAME
+      password:
+        env: ARTIFACTORY_PASSWORD
+- image: wkc-init-container:1.0.107
+  references:
+  - repository: wkc-init-container:1.0.107
+    pull-repository: ${DOCKER_REGISTRY}/wkc-init-container:1.0.107
+    pull-authorization:
+      username:
+        env: ARTIFACTORY_USERNAME
+      password:
+        env: ARTIFACTORY_PASSWORD
+- image: wkc-ugconfig:3.5.22
+  references:
+  - repository: wkc-ugconfig:3.5.22
+    pull-repository: ${DOCKER_REGISTRY}/wkc-ugconfig:3.5.22
+    pull-authorization:
+      username:
+        env: ARTIFACTORY_USERNAME
+      password:
+        env: ARTIFACTORY_PASSWORD

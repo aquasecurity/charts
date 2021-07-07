@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cem-operator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: cem-operator
+  template:
+    metadata:
+      annotations:
+        productName: "IBM Netcool Operations Insight"
+        productID: "4dba2b5a269740caae5fecdafe0568aa"
+        productVersion: "1.6.3"
+        productMetric: "MANAGED_VIRTUAL_SERVER"
+        operatorVersion: "1.2.0-20201201205059"
+        operandVersion: "2.9.0"
+        cloudpakId: "7f6eda41081c4e08a255be1f0b4aef2d"
+        cloudpakName: "IBM Cloud Pak for Multicloud Management"
+        cloudpakVersion: "2.0"
+      labels:
+        name: cem-operator
+    spec:
+      hostNetwork: false
+      hostPID: false
+      hostIPC: false
+      serviceAccountName: noi-operator
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/arch
+                operator: In
+                values:
+                  - amd64
+      containers:
+        - name: cem-operator
+          # Replace this with the built image name
+          image: {{ .Values.global.image.publicOperatorRepo }}/cem-operator@sha256:bbb4232bec11af66db3289856ee7d352ecef72f2beb5c13819fe94ca33b0b018
+          command:
+          - cem-operator
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: WATCH_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: OPERATOR_NAME
+              value: "cem-operator"
+            - name: CHARTS_DIR
+              value: "charts/2.9.0/ibm-cem"
+          resources:
+            limits:
+              cpu: 200m
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 64Mi
+          securityContext:
+            privileged: false
+            readOnlyRootFilesystem: false
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+      securityContext:
+        runAsNonRoot: true

@@ -1,0 +1,129 @@
+########################################################################
+#
+# Licensed Materials - Property of IBM
+#
+# 5725Q09
+#
+# (C) Copyright IBM Corp.
+#
+# 2018-2019 All Rights Reserved
+#
+# US Government Users Restricted Rights - Use, duplication or disclosure
+# restricted by GSA ADP Schedule Contract with IBM Corp.
+#
+########################################################################
+
+global:
+  # Review and accept the license terms? ['accept','not accepted']
+  license: "not accepted"
+
+  ingress:
+    port : "443"
+    prefixWithReleaseName: true
+    api:
+      # Ingress must be from: https://kubernetes.github.io/ingress-nginx/
+      # Set to true if you need/want an ingress definition.
+      # This will disable routes on OpenShift
+      enabled: false
+      # This is the ingress prefix that has been set with
+      # the  --annotations-prefix argument when configuring Ingress
+      prefix: 'nginx.ingress.kubernetes.io'
+      # This is the ingress class that has been set with
+      # the --ingress-class argument when configuring Ingress
+      class: 'nginx'    
+
+  # Enable sub-chart resource requests
+  resource:
+    requests:
+      enable: true
+  # Define where/who the images will be pulled from
+  image:
+    # This is the artifactory server to pull the docker images from
+    repository: 
+    # Secret used to access the docker repository above
+    secret:
+    # pullPolicy: IfNotPresent change to Always to make the latest is always picked up
+    pullPolicy: Always
+    # Use image tags instead of digests
+    useTag: true
+    # Tag to use for configuration share utility image
+    sharedTag: 1.6.3-20201201000312
+  cluster:
+    # Public name or IP the deployment cluster will be accessible from.
+    fqdn: "mycluster.icp"
+
+  ldapservice:
+    name: ldapservice
+    verifypasswords : true
+    internal:
+      ldapPort: 389
+      ldapSSLPort: 636
+      suffix: "dc=mycluster,dc=icp"
+      baseDN: dc=mycluster,dc=icp
+      bindDN: "cn=admin,dc=mycluster,dc=icp"
+      userFilter: "uid=%s,ou=users"
+      groupFilter: "cn=%s,ou=groups"
+      serverType: "CUSTOM"
+  rbac:
+    serviceAccountName: noi-service-account
+
+replicaCount: "environmentSizeDefault"
+image:
+  name: impactgui
+  tag: 1.6.3-20201201000318
+  digest: sha256:558f211431c8fabd269db66d964dc5983c0fc2c2eddb3b7d436773cb2cd1157c
+
+ingress:
+  proxyReadTimeout: 300
+  proxySendTimeout: 300
+
+test:
+  image:
+    name: "configuration-share"
+    tag:  "1.6.3-20201201000312"
+    digest: "sha256:d784b16f3f3c511884f21618581f449cefb35ba67b61c3750db994b2ffc33a94"
+
+impactgui:
+  service:
+    name: impactgui
+  internal:
+    impactguiPort: 17311
+    httpPort: 17310
+  env:
+    dbPath: /space
+  liveness:
+    initialDelaySeconds: 300
+    periodSeconds: 60
+    timeoutSeconds: 10
+    failureThreshold: 40
+  readiness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 250
+
+impactcore:
+  subdomain: "nciservers"
+  internal:
+    nameserverPort: 9080
+
+pvc:
+  # specify the storageClassName you want to use
+  # if you don't specify a storageClassName it will use the default
+  storageClassName: ""
+
+  # Specify the name of the Existing Claim to be used by your application
+  # empty string means don't use an existClaim
+  existingClaimName: ""
+
+  # if your not using dynamic provisioning, you can use selectors to 
+  # refine the binding process. You cannot specify a selector if your using dynamic provisioning!
+  selector:
+    label: ""
+    value: ""
+
+  size: 5Gi
+
+sso:
+  internal:
+    ltpaKeyFile: dash_ltpa.key

@@ -1,0 +1,35 @@
+{{- if .Values.nodeport.enabled }}
+  {{- $fullName := include "kafka.fullname" . }}
+  {{- $brokers := .Values.replicas | int }}
+  {{- $servicePort := .Values.nodeport.servicePort }}
+  {{- $root := . }}
+  {{- range $i, $e := until $brokers }}
+    {{- $externalListenerPort := add $root.Values.nodeport.firstListenerPort $i }}
+    {{- $responsiblePod := printf "%s-%d" (printf "%s" $fullName) $i }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+{{- if $root.Values.externalService.annotations }}
+  annotations:
+{{ toYaml $root.Values.externalService.annotations | indent 4 }}
+{{- end }}
+  name: {{ include "kafka.fullname" $root }}-{{ $i }}-external
+  labels:
+{{- include "common.label.metadata" (list . (include "kafka.name" $root) (include "kafka.chart" $root) $root.Release.Name $root.Release.Service ) | indent 4 }}
+    pod: {{ $responsiblePod }}
+spec:
+  type: LoadBalancer
+  ports:
+    - name: external-broker
+      port: {{ $servicePort }}
+      targetPort: 9092
+      {{- if (not (empty $root.Values.nodeport.firstListenerPort)) }}
+      nodePort: {{ $externalListenerPort }}
+      {{- end }}
+      protocol: TCP
+  selector:
+{{- include "common.selector.labels" (list .  (include "kafka.name" $root ) $root.Release.Name ) | indent 4 }}
+    statefulset.kubernetes.io/pod-name: {{ $responsiblePod | quote }}
+  {{- end }}
+{{- end }}

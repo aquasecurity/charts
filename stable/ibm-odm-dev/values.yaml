@@ -1,4 +1,4 @@
-# © Copyright IBM Corporation 2018
+# © Copyright IBM Corporation 2020
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,12 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# License must be set to "accept" to accept the terms of the IBM license
+license: ""
+
 # Default values for ibm-odm-dev.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 image:
   repository: ibmcom
-  tag: 8.10.0.0
+  tag: 8.10.5.1
   pullPolicy: IfNotPresent
 ## Optionally specify an array of imagePullSecrets.
 ## Secrets must be manually created in the namespace.
@@ -30,6 +33,14 @@ image:
 ## Only amd64 is supported for ibm-odm-dev.
   arch: "amd64"
 
+serviceAccountName: ""
+
+service:
+  # If on Openshift the enableRoute value will be overridden to true
+  enableRoute: false
+  hostname: ""
+  # If enableRoute is set to true the type value will be overridden to ClusterIP
+  type: NodePort
 
 resources:
   requests:
@@ -45,7 +56,7 @@ decisionCenter:
 internalDatabase:
   populateSampleData: true
   persistence:
-    enabled: true
+    enabled: false
     useDynamicProvisioning: false
     storageClassName: ""
     resources:
@@ -69,3 +80,16 @@ livenessProbe:
   initialDelaySeconds: 300
   periodSeconds: 10
   failureThreshold: 10
+
+customization:
+  baiEmitterSecretRef:
+  # If on Openshift the runAsUSer value will be overridden to empty
+  # as per restricted scc requirements
+  runAsUser: 1001
+
+networkPolicy:
+  # Enable creation of NetworkPolicy resources.
+  enabled: true
+  # For Kubernetes v1.4, v1.5 and v1.6, use 'extensions/v1beta1'
+  # For Kubernetes v1.7, use 'networking.k8s.io/v1'
+  apiVersion: networking.k8s.io/v1

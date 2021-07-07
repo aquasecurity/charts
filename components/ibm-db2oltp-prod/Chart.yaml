@@ -1,0 +1,14 @@
+apiVersion: v1
+description: IBM Db2 Advanced Edition 11.5.2.0
+home: https://www.ibm.com/products/db2-database
+icon: 
+keywords: ['db2u', 'mpp', 'dashdb', 'db2warehouse', 'warehouse', 'local', 'db2', 'database', 'sql', 'Commercial', 'RHOCP', 'amd64']
+maintainers:
+- name: IBM Data and AI
+name: ibm-db2oltp-prod
+sources:
+- https://github.com/IBM/charts/tree/master/stable
+tillerVersion: '>=2.9.0'
+version: 3.0.0
+kubeVersion: ">=1.11.0"
+appVersion: 11.5.2.0

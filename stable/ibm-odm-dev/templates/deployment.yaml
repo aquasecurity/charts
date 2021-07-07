@@ -1,10 +1,4 @@
-{{- if semverCompare ">=1.11.1" .Capabilities.KubeVersion.GitVersion }}
 apiVersion: apps/v1
-{{- else if .Capabilities.APIVersions.Has "apps/v1beta2" }}
-apiVersion: apps/v1beta2
-{{- else }}
-apiVersion: apps/v1beta1
-{{- end }}
 kind: Deployment
 metadata:
   name: {{ template "fullname" . }}
@@ -13,6 +7,7 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+{{ include "odm-additional-labels" . | indent 4 }}
 spec:
   replicas: 1
   selector:
@@ -22,6 +17,10 @@ spec:
   template:
     metadata:
       labels:
+        app.kubernetes.io/instance: {{ template "name" . }}
+        app.kubernetes.io/managed-by: {{ .Release.Service }}
+        app.kubernetes.io/name: {{ template "name" . }}
+        helm.sh/chart: {{ .Chart.Name }}
         run: {{ template "name" . }}
         app: {{ template "name" . }}
         chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
@@ -29,9 +28,12 @@ spec:
         heritage: {{ .Release.Service }}
       annotations:
         productName: {{ .Chart.Description | quote }}
-        productID: "OperationalDecisionManagerForDevelopers"
+        productID: "7b1b6b93868c4468abbe83421c00f667"
         productVersion: {{ .Chart.AppVersion }}
+        productMetric: "FREE"
     spec:
+{{ include "odm-serviceAccountName" . | indent 6 }}
+{{ include "odm-spec-security-context" . | indent 6 }}
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -48,19 +50,25 @@ spec:
                 operator: In
                 values:
                 - {{ .Values.image.arch }}
-      {{- if and .Values.internalDatabase.persistence.enabled (empty .Values.externalDatabase.serverName) }}
       volumes:
+      {{- if and .Values.internalDatabase.persistence.enabled (empty .Values.externalDatabase.serverName) }}
       - name: {{ template "fullname" . }}-volume
         persistentVolumeClaim:
           claimName: {{ template "odm.persistenceclaim.fullname" . }}
       {{- end }}
+      {{- if not (empty (.Values.customization.baiEmitterSecretRef)) }}
+      - name: {{ template "odm-baiemitterconfig-secret-volume.fullname" . }}
+        secret:
+          secretName: {{ .Values.customization.baiEmitterSecretRef }}
+      {{- end}}
       containers:
         - name: {{ .Chart.Name }}
-          image: {{ template "odm.repository.name" . }}/odm:{{ .Values.image.tag }}_{{ .Chart.Version }}{{ template "platform" . }}
+{{ include "image.tagOrDigest" (dict "containerName" "odm" "root" .) | indent 10  }}
+{{ include "odm-security-context" . | indent 10 }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
           - name: LICENSE
-            value: "accept"
+            value: "{{ .Values.license }}"
           {{- if empty .Values.externalDatabase.serverName }}
           - name: DB_TYPE
             value: "h2"
@@ -87,13 +95,22 @@ spec:
           {{- end }}
           - name: DC_PERSISTENCE_LOCALE
             value: "{{ .Values.decisionCenter.persistenceLocale }}"
+          - name: "RELEASE_NAME"
+            value: {{ .Release.Name }}
           ports:
           - containerPort: 9060
-          {{- if and .Values.internalDatabase.persistence.enabled (empty .Values.externalDatabase.serverName) }}
+    #      {{- if or (not (empty (.Values.customization.baiEmitterSecretRef))) (and .Values.internalDatabase.persistence.enabled (empty .Values.externalDatabase.serverName)) }}
           volumeMounts:
+          {{- if and .Values.internalDatabase.persistence.enabled (empty .Values.externalDatabase.serverName) }}
           - name: {{ template "fullname" . }}-volume
             mountPath: /config/dbdata/
           {{- end }}
+          {{- if not (empty (.Values.customization.baiEmitterSecretRef)) }}
+          - name: {{ template "odm-baiemitterconfig-secret-volume.fullname" . }}
+            readOnly: true
+            mountPath: {{ template "odm-baiemitterconfig-dir" . }}
+          {{- end}}
+    #      {{- end}}
           readinessProbe:
             httpGet:
               scheme: HTTP

@@ -1,0 +1,18 @@
+charts:
+  - archive: file:ibm-ws-rstudio-3.5.0.tgz
+    repository-keys:
+      - image.repository
+
+images:
+- image: wslocal-rstudio-init:cpd350-24-amd64
+  references: 
+  - repository : wslocal-rstudio-init:cpd350-24-amd64
+    pull-repository: cp.icr.io/cp/cpd/wslocal-rstudio-init:cpd350-24-amd64 
+    platform:
+        architecture: amd64  
+- image: wslocal-runtime-rstudio:cpd350-275-amd64
+  references: 
+  - repository : wslocal-runtime-rstudio:cpd350-275-amd64
+    pull-repository: cp.icr.io/cp/cpd/wslocal-runtime-rstudio:cpd350-275-amd64 
+    platform:
+        architecture: amd64   

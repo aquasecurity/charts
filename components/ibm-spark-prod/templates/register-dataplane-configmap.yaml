@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ .Values.environment.name }}-{{ .Values.dataplaneReg.name }}-script"
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: "{{ .Values.environment.name }}-script"
+{{- include "helm.labels" . | indent 4 }}
+{{- include "cloudpak.labels" . | indent 4 }}
+data:
+  template-list: {{ .Values.templates.list }}
+  cache-of-templates-dataplane-details.sh: |-
+{{ .Files.Get "conf/cache-of-templates-dataplane-details.sh" | indent 4 }}
+  register-dataplane.sh: |-
+{{ .Files.Get "conf/register-dataplane.sh" | indent 4 }}
+  create_kernel.py: |-
+{{ .Files.Get "conf/create_kernel.py" | indent 4 }}

@@ -1,0 +1,20 @@
+apiVersion: v1
+appVersion: "1410"
+name: ibm-informix-prod
+version: 3.5.0
+kubeVersion: ">=1.10.1-0"
+tillerVersion: ">=2.9.0"
+home: https://www.ibm.com/support/knowledgecenter/en/SSQNUZ_current/svc-welcome/ifx.html
+description: IBM Informix Helm chart for Kubernetes
+maintainers:
+  - name: IBM
+keywords:
+- informix
+- oltp
+- timeseries
+- database
+- Databases
+- sql
+- amd64
+- Commercial
+- ICP

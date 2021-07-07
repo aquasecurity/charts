@@ -21,7 +21,7 @@ metadata:
     glusterfs-sc: "job"
   annotations:
     description: Defines how to create glusterfs storage class
-    "helm.sh/hook": post-install
+    "helm.sh/hook": post-install, post-upgrade, post-rollback
     "helm.sh/hook-weight": "-1"
     "helm.sh/hook-delete-policy": hook-succeeded, hook-failed, before-hook-creation
 spec:

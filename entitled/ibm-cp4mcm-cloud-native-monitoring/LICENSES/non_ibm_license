@@ -1,0 +1,538 @@
+TERMS AND CONDITIONS FOR SEPARATELY LICENSED CODE
+
+IBM Cloud Pak for Multicloud Management v1.3
+
+The IBM license agreement and any applicable information on the web
+download page for IBM products refers Licensee to this file for details
+concerning terms and conditions applicable to code identified as
+Separately Licensed Code in the License Information document and
+included in the products listed above ("the Program").
+
+The "Separately Licensed Code" identified in the License Information
+document of the IBM license agreement is provided to Licensee under terms
+and conditions that are different from the IBM license agreement.
+Licensee's use of such components or portions thereof is subject to the
+terms of the associated license agreement provided or referenced in this
+section and not the terms of the IBM license agreement.
+
+Please note: This NON_IBM_LICENSE file may identify Separately Licensed
+Code and its related agreements that are not used by, or that were not
+shipped with, the Program as Licensee installed it.
+
+The following are Separately Licensed Code:
+Red Hat OpenShift Container Platform 4
+Red Hat Enterprise Linux 7
+Red Hat Ansible Tower 3.6
+ACLOCAL.M4
+ADOPTOPENJDK
+ANNOTATIONS
+AX_APPEND_FLAG.M4
+AX_CONFIGURE_ARGS.M4
+AX_PTHREAD.M4
+BASH
+BISON PARSER
+BOOTSTRAP DOCS
+CANIUSE-DB
+CANIUSE-LITE
+CC-CEDICT
+CFGPARSE.C
+CMPPROG
+COMPILE
+compute
+CONFIGURE
+containerd
+CONTRIBUTION
+COREUTILS
+DEBIAN
+DEBIAN PACKAGING [python-meld3]
+DEPCOMP
+EPEL-RELEASE
+fireworks.jpeg
+FLAGS.M4
+FONT AWESOME
+GBEMU-PART1.JS
+GBEMU-PART2.JS
+GEOLITE2
+GETTING STARTED-VALIDATOR
+GLOB-LOGO
+GNU LIBTOOL
+go-digest
+gonvml
+heketi
+HOWTO.DIVEINTOMARK
+HTTP2/H2DEMO/TMPL.GO
+IMAGES [jQuery-ui]
+ITMAIN.SH
+JANUSGRAPH
+JCIP-ANNOTATIONS
+JQ DOCS
+JSUNIT
+kimbie.light.css
+LDAPSDK
+LIBTOOL
+LIBTOOL.M4
+loads
+LTMAIN.SH
+MAKE_UNICODE
+mimelib
+MISSING
+MONGODB
+NOTTHREADSAFE
+PKGCONFIG,
+ratelimit
+react-icons
+RedHat UBI v7/v8
+REGULAR_EXPRESSIONS
+runtime
+RYU DOCS
+SHTOOL [pth],
+silkicons-ALLJARJAR-SRC
+SPDX- LINUX
+SPDX STANDARD
+SPDX-EXCEPTIONS
+SPDX-EXPRESSION-PARSE
+SPDX-LINUX CONTRIBUTION
+spdystream
+SVG AND JS FILE
+TEST-DRIVER
+TEXINFO.TEX
+text
+tools
+TOOLTOOL
+Ubuntu (main) 16.04.5
+Ubuntu (main) 18.04.1
+VALGRIND
+validate
+yaml.v2
+YLWRAP
+zstd
+
+
+Red Hat OpenShift Container Platform 4
+
+PLEASE READ THIS END USER LICENSE AGREEMENT CAREFULLY BEFORE USING SOFTWARE FROM RED HAT. BY USING RED HAT SOFTWARE, YOU SIGNIFY YOUR ASSENT TO AND ACCEPTANCE OF THIS END USER LICENSE AGREEMENT AND ACKNOWLEDGE YOU HAVE READ AND UNDERSTAND THE TERMS. AN INDIVIDUAL ACTING ON BEHALF OF AN ENTITY REPRESENTS THAT HE OR SHE HAS THE AUTHORITY TO ENTER INTO THIS END USER LICENSE AGREEMENT ON BEHALF OF THAT ENTITY. IF YOU DO NOT ACCEPT THE TERMS OF THIS AGREEMENT, THEN YOU MUST NOT USE THE RED HAT SOFTWARE. THIS END USER LICENSE AGREEMENT DOES NOT PROVIDE ANY RIGHTS TO RED HAT SERVICES SUCH AS SOFTWARE MAINTENANCE, UPGRADES OR SUPPORT. PLEASE REVIEW YOUR SERVICE OR SUBSCRIPTION AGREEMENT(S) THAT YOU MAY HAVE WITH RED HAT OR OTHER AUTHORIZED RED HAT SERVICE PROVIDERS REGARDING SERVICES AND ASSOCIATED PAYMENTS.
+
+This end user license agreement ("EULA") governs the use of the JBoss Enterprise Middleware and any related updates, source code, appearance, structure and organization (the "Programs"), regardless of the delivery mechanism.
+
+1. License Grant. Subject to the following terms, Red Hat, Inc. ("Red Hat") grants to you a perpetual, worldwide license to the Programs (each of which may include multiple software components) pursuant to the GNU Lesser General Public License v. 2.1. With the exception of certain image files identified in Section 2 below, each software component is governed by a license that permits you to run, copy, modify, and redistribute (subject to certain obligations in some cases) the software component. This EULA pertains solely to the Programs and does not limit your rights under, or grant you rights that supersede, the license terms applicable to any particular component.
+
+2. Intellectual Property Rights. The Programs and each of their components are owned by Red Hat and other licensors and are protected under copyright law and under other laws as applicable. Title to the Programs and any component, or to any copy, modification, or merged portion shall remain with Red Hat and other licensors, subject to the applicable license. The "JBoss" trademark, "Red Hat" trademark, the individual Program trademarks, and the "Shadowman" logo are registered trademarks of Red Hat and its affiliates in the U.S. and other countries. This EULA does not permit you to distribute the Programs using Red Hat's trademarks, regardless of whether they have been modified. You may make a commercial redistribution of the Programs only if (a) permitted under a separate written agreement with Red Hat authorizing such commercial redistribution or (b) you remove and replaced all occurrences of Red Hat trademarks and logos. Modifications to the software may corrupt the Programs. You should read the information found at http://www.redhat.com/about/corporate/trademark/ before distributing a copy of the Programs.
+
+3. Limited Warranty. Except as specifically stated in this Section 3, a separate agreement with Red Hat, or a license for a particular component, to the maximum extent permitted under applicable law, the Programs and the components are provided and licensed "as is" without warranty of any kind, expressed or implied, including the implied warranties of merchantability, non-infringement or fitness for a particular purpose. Red Hat warrants that the media on which the Programs and the components are provided will be free from defects in materials and manufacture under normal use for a period of 30 days from the date of delivery to you. Neither Red Hat nor its affiliates warrant that the functions contained in the Programs will meet your requirements or that the operation of the Programs will be entirely error free, appear or perform precisely as described in the accompanying documentation, or comply with regulatory requirements. This warranty extends only to the party that purchases subscription services for the Programs from Red Hat and/or its affiliates or a Red Hat authorized distributor.
+
+4. Limitation of Remedies and Liability. To the maximum extent permitted by applicable law, your exclusive remedy under this EULA is to return any defective media within 30 days of delivery along with a copy of your payment receipt and Red Hat, at its option, will replace it or refund the money you paid for the media. To the maximum extent permitted under applicable law, under no circumstances will Red Hat, its affiliates, any Red Hat authorized distributor, or the licensor of any component provided to you under this EULA be liable to you for any incidental or consequential damages, including lost profits or lost savings arising out of the use or inability to use the Programs or any component, even if Red Hat, its affiliates, an authorized distributor, and/or licensor has been advised of the possibility of such damages. In no event shall Red Hat's or its affiliates' liability, an authorized distributor's liability or the liability of the licensor of a component provided to you under this EULA exceed the amount that you paid to Red Hat for the media under this EULA.
+
+5. Export Control. As required by the laws of the United States and other countries, you represent and warrant that you: (a) understand that the Programs and their components may be subject to export controls under the U.S. Commerce Department's Export Administration Regulations ("EAR"); (b) are not located in a prohibited destination country under the EAR or U.S. sanctions regulations (currently Cuba, Iran, Iraq, North Korea, Sudan and Syria, subject to change as posted by the United States government); (c) will not export, re-export, or transfer the Programs to any prohibited destination, persons or entities on the U.S. Bureau of Industry and Security Denied Parties List or Entity List, or the U.S. Office of Foreign Assets Control list of Specially Designated Nationals and Blocked Persons, or any similar lists maintained by other countries, without the necessary export license(s) or authorizations(s); (d) will not use or transfer the Programs for use in connection with any nuclear, chemical or biological weapons, missile technology, or military end-uses where prohibited by an applicable arms embargo, unless authorized by the relevant government agency by regulation or specific license; (e) understand and agree that if you are in the United States and export or transfer the Programs to eligible end users, you will, to the extent required by EAR Section 740.17(e), submit semi-annual reports to the Commerce Department's Bureau of Industry and Security, which include the name and address (including country) of each transferee; and (f) understand that countries including the United States may restrict the import, use, or export of encryption products (which may include the Programs and the components) and agree that you shall be solely responsible for compliance with any such import, use, or export restrictions.
+
+6. Third Party Programs. Red Hat may distribute third party software programs with the Programs that are not part of the Programs. These third party software programs are not required to run the Programs, are provided as a convenience to you, and are subject to their own license terms. The license terms either accompany the third party software programs or can be viewed at http://www.redhat.com/licenses/thirdparty/eula.html. If you do not agree to abide by the applicable license terms for the third party software programs, then you may not install them. If you wish to install the third party software programs on more than one system or transfer the third party software programs to another party, then you must contact the licensor of the applicable third party software programs.
+
+7. General. If any provision of this EULA is held to be unenforceable, the enforceability of the remaining provisions shall not be affected. Any claim, controversy or dispute arising under or relating to this EULA shall be governed by the laws of the State of New York and of the United States, without regard to any conflict of laws provisions. The rights and obligations of the parties to this EULA shall not be governed by the United Nations Convention on the International Sale of Goods.
+
+Red Hat Enterprise Linux v7
+
+PLEASE READ THIS END USER LICENSE AGREEMENT CAREFULLY BEFORE USING SOFTWARE FROM RED HAT. BY USING RED HAT SOFTWARE, YOU SIGNIFY YOUR ASSENT TO AND ACCEPTANCE OF THIS END USER LICENSE AGREEMENT AND ACKNOWLEDGE YOU HAVE READ AND UNDERSTAND THE TERMS. AN INDIVIDUAL ACTING ON BEHALF OF AN ENTITY REPRESENTS THAT HE OR SHE HAS THE AUTHORITY TO ENTER INTO THIS END USER LICENSE AGREEMENT ON BEHALF OF THAT ENTITY. IF YOU DO NOT ACCEPT THE TERMS OF THIS AGREEMENT, THEN YOU MUST NOT USE THE RED HAT SOFTWARE. THIS END USER LICENSE AGREEMENT DOES NOT PROVIDE ANY RIGHTS TO RED HAT SERVICES SUCH AS SOFTWARE MAINTENANCE, UPGRADES OR SUPPORT. PLEASE REVIEW YOUR SERVICE OR SUBSCRIPTION AGREEMENT(S) THAT YOU MAY HAVE WITH RED HAT OR OTHER AUTHORIZED RED HAT SERVICE PROVIDERS REGARDING SERVICES AND ASSOCIATED PAYMENTS. 
+
+This end user license agreement ("EULA") governs the use of any of the versions of Red Hat Enterprise Linux, certain other Red Hat software applications that include or refer to this license, and any related updates, source code, appearance, structure and organization (the "Programs"), regardless of the delivery mechanism. 
+
+1. License Grant. Subject to the following terms, Red Hat, Inc. ("Red Hat") grants to you a perpetual, worldwide license to the Programs (most of which include multiple software components) pursuant to the GNU General Public License v.2. The license agreement for each software component is located in the software component's source code and permits you to run, copy, modify, and redistribute the software component (subject to certain obligations in some cases), both in source code and binary code forms, with the exception of (a) certain binary only firmware components and (b) the images identified in Section 2 below. The license rights for the binary only firmware components are located with the components themselves. This EULA pertains solely to the Programs and does not limit your rights under, or grant you rights that supersede, the license terms of any particular component. 
+
+2. Intellectual Property Rights. The Programs and each of their components are owned by Red Hat and other licensors and are protected under copyright law and under other laws as applicable. Title to the Programs and any component, or to any copy, modification, or merged portion shall remain with Red Hat and other licensors, subject to the applicable license. The "Red Hat" trademark and the "Shadowman" logo are registered trademarks of Red Hat in the U.S. and other countries. This EULA does not permit you to distribute the Programs or their components using Red Hat's trademarks, regardless of whether the copy has been modified. You may make a commercial redistribution of the Programs only if (a) permitted under a separate written agreement with Red Hat authorizing such commercial redistribution, or (b) you remove and replace all occurrences of Red Hat trademarks. Modifications to the software may corrupt the Programs. You should read the information found athttp://www.redhat.com/about/corporate/trademark/before distributing a copy of the Programs. 
+
+3. Limited Warranty. Except as specifically stated in this Section 3, a separate agreement with Red Hat, or a license for a particular component to the maximum extent permitted under applicable law, the Programs and the components are provided and licensed "as is" without warranty of any kind, expressed or implied, including the implied warranties of merchantability, non-infringement or fitness for a particular purpose. Red Hat warrants that the media on which the Programs and the components are provided will be free from defects in materials and manufacture under normal use for a period of 30 days from the date of delivery to you. Neither Red Hat nor its affiliates warrants that the functions contained in the Programs will meet your requirements or that the operation of the Programs will be entirely error free, appear or perform precisely as described in the accompanying documentation, or comply with regulatory requirements. This warranty extends only to the party that purchases subscription services for the Programs from Red Hat and/or its affiliates or a Red Hat authorized distributor.
+
+4. Limitation of Remedies and Liability. To the maximum extent permitted by applicable law, your exclusive remedy under this EULA is to return any defective media within 30 days of delivery along with a copy of your payment receipt and Red Hat, at its option, will replace it or refund the money you paid for the media. To the maximum extent permitted under applicable law, under no circumstances will Red Hat, its affiliates, any Red Hat authorized distributor, or the licensor of any component provided to you under this EULA be liable to you for any incidental or consequential damages, including lost profits or lost savings arising out of the use or inability to use the Programs or any component, even if Red Hat, its affiliates, an authorized distributor and/or licensor has been advised of the possibility of such damages. In no event shall Red Hat's or its affiliates' liability, an authorized distributor's liability or the liability of the licensor of a component provided to you under this EULA exceed the amount that you paid to Red Hat for the media under this EULA. 
+
+5. Export Control. As required by the laws of the United States and other countries, you represent and warrant that you: (a) understand that the Programs and their components may be subject to export controls under the U.S. Commerce Department's Export Administration Regulations ("EAR"); (b) are not located in a prohibited destination country under the EAR or U.S. sanctions regulations (currently Cuba, Iran, Iraq, North Korea, Sudan and Syria, subject to change as posted by the United States government); (c) will not export, re-export, or transfer the Programs to any prohibited destination or persons or entities on the U.S. Bureau of Industry and Security Denied Parties List or Entity List, or the U.S. Office of Foreign Assets Control list of Specially Designated Nationals and Blocked Persons, or any similar lists maintained by other countries, without the necessary export license(s) or authorization(s); (d) will not use or transfer the Programs for use in connection with any nuclear, chemical or biological weapons, missile technology, or military end-uses where prohibited by an applicable arms embargo, unless authorized by the relevant government agency by regulation or specific license; (e) understand and agree that if you are in the United States and export or transfers the Programs to eligible end users, you will, to the extent required by EAR Section 740.17(e), submit semi-annual reports to the Commerce Department's Bureau of Industry and Security, which include the name and address (including country) of each transferee; and (f) understand that countries including the United States may restrict the import, use, or export of encryption products (which may include the Programs and the components) and agree that you shall be solely responsible for compliance with any such import, use, or export restrictions.
+
+6. Third Party Programs. Red Hat may distribute third party software programs with the Programs that are not part of the Programs. These third party programs are not required to run the Programs, are provided as a convenience to you, and are subject to their own license terms. The license terms either accompany the third party software programs or can be viewed at http://www.redhat.com/licenses/thirdparty/eula.html. If you do not agree to abide by the applicable license terms for the third party software programs, then you may not install them. If you wish to install the third party software programs on more than one system or transfer the third party software programs to another party, then you must contact the licensor of the applicable third party software programs. 
+
+7. General. If any provision of this EULA is held to be unenforceable, the enforceability of the remaining provisions shall not be affected. Any claim, controversy or dispute arising under or relating to this EULA shall be governed by the laws of the State of New York and of the United States, without regard to any conflict of laws provisions. The rights and obligations of the parties to this EULA shall not be governed by the United Nations Convention on the International Sale of Goods.
+
+Red Hat Ansible Tower
+
+This end user license agreement ("EULA") governs the use of the Ansible Tower software  and  any  related  updates,  upgrades, versions, appearance, structure and organization (the "Ansible Tower Software"), regardless of the delivery mechanism.  
+
+1.  License Grant. Subject to the terms of this EULA, Red Hat, Inc. and its affiliates ("Red Hat") grant to you a non-transferable, non-exclusive,  worldwide,  non-sublicensable,  limited,  revocable  license  to  use the Ansible Tower Software  for  the  term  of  the associated Red Hat Software Subscription(s) and in a quantity equal to the number of Red Hat Software Subscriptions purchased from  Red  Hat  for  the Ansible Tower Software ("License"), each as set forth on the applicable  Red  Hat  ordering  document. You acquire only the right to use the Ansible Tower Software and do not acquire any rights of ownership. Red Hat reserves all rights to the Ansible Tower Software  not  expressly  granted  to you. This  License  grant  pertains  solely  to your  use  of  the Ansible  Tower Software  and  is  not  intended  to  limit your  rights  under,  or  grant you  rights  that  supersede,  the  license  terms  of  any  software packages which may be made available with the Ansible Tower Software that are subjectto an open source software license.  
+
+2. Intellectual  Property  Rights.   Title  to  the Ansible Tower Software  and  each  component,  copy  and  modification,  including  all derivative works whether made by Red Hat, you or on Red Hat's behalf, including those made at your suggestion and all associated intellectual property rights, are and shall remain the sole and exclusive property of Red Hat and/or it licensors.  The License does not authorize you (nor may you allow any third party, specifically non-employees of yours) to: (a) copy, distribute, reproduce, use or allow  third  party  access  to  the Ansible  Tower Software  except  as  expressly  authorized  hereunder;  (b)  decompile,  disassemble, reverse engineer, translate, modify, convert or apply any procedure or process to the Ansible Tower Software in order to ascertain, derive,  and/or  appropriate  for  any  reason  or  purpose,  including  the Ansible  Tower Software  source code  or  source  listings  or  any trade secret information or process contained in the Ansible Tower Software (except as permitted under applicable law); (c) execute or incorporate other software (except for approved software as appears in the Ansible Tower Software documentation or specifically approved by Red Hat in writing) into Ansible Tower Software, or create a derivative work of any part of the Ansible Tower Software; (d)  remove  any  trademarks,  trade  names  or  titles,  copyrights  legends  or  any  other  proprietary  marking  on  the Ansible  Tower Software;  (e)  disclose  the  results  of  any  benchmarking  of  the Ansible  Tower Software (whether or not obtained with Red Hat's assistance) to any third party; (f) attempt to circumvent any user limits or other license, timing or use restrictions that are built into, defined  or  agreed  upon,  regarding  the Ansible  Tower Software.  You  are  hereby  notified  that  the Ansible  Tower Software  may contain  time-out  devices, counter  devices,  and/or  other  devices  intended  to  ensure  the  limits  of  the License  will  not  be  exceeded ("Limiting Devices").  If the Ansible Tower Software contains Limiting Devices, Red Hat will provide you materials necessary to use the Ansible Tower Software to the extent permitted.  You may not tamper with or otherwise take any action to defeat or circumvent a Limiting  Device  or  other  control  measure,  including  but  not  limited  to,  resetting  the  unit  amount  or  using  false  host  identification number for the purpose of extending any term of the License. 
+
+3.  Evaluation Licenses. Unless you have purchased Ansible Tower Software Subscriptions from Red Hat or an authorized reseller under the terms of a commercial agreement with Red Hat, all use of the Ansible Tower Software shall be limited to testing purposes and not for production use ("Evaluation"). Unless otherwise agreed by Red Hat, Evaluation of the Ansible Tower Software shall be limited to an evaluation environment and the Ansible Tower Software shall not be used to manage any systems or virtual machines on networks being used in the operation of your business or any other non-evaluation purpose.  Unless otherwise agreed by Red Hat, you  shall  limit  all  Evaluation  use  to  a  single  30  day  evaluation  period  and  shall  not  download  or  otherwise  obtain  additional copies of the Ansible Tower Software or license keys for Evaluation.
+
+4.  Limited Warranty.  Except as specifically stated in this Section 4, to the maximum extent permitted under applicable law, the Ansible Tower Software and the components are provided and licensed "as is" without warranty of any kind, expressed or implied, including the implied warranties of merchantability, non-infringement or fitness for a particular purpose.  Red Hat warrants solely to you that the media on which the Ansible Tower Software may be furnished will be free from defects in materials and manufacture under  normal  use  for  a  period  of thirty  (30)  days  from  the  date  of  delivery  to you.    Red  Hat  does  not  warrant  that  the  functions contained  in  the Ansible  Tower Software  will  meet your  requirements  or  that  the  operation  of  the Ansible  Tower Software  will  be entirely error free, appear precisely as described in the accompanying documentation, or comply with regulatory requirements. 
+
+5.  Limitation of Remedies and Liability. To the maximum extent permitted by applicable law, your exclusive remedy under this EULA is to return any defective media within thirty (30) days of delivery along with a copy of your payment receipt and Red Hat, at its  option,  will  replace  it  or  refund  the money  paid  by you  for  the media.   To  the maximum  extent  permitted  under  applicable  law, neither Red Hat nor any RedHat authorized distributor will be liable to you for any incidental or consequential damages, including lost profits or lost savings arising out of the use or inability to use the Ansible Tower Software or any component, even if Red Hat or the authorized distributor has been advised of the possibility of such damages.  In no event shall Red Hat's liability or an authorized distributor's liability exceed the amount that you paid to Red Hat for the Ansible Tower Software during the twelve months preceding the first event giving rise to liability.
+
+6.  Export Control.  In accordance with the laws of the United States and other countries, you represent and warrant that you: (a) understand  that  the Ansible  Tower Software  and  its  components  may  be  subject  to  export  controls  under  the  U.S.  Commerce Department's  Export  Administration  Regulations  ("EAR");  (b)  are  not  located  in  any  country  listed  in  Country  Group  E:1  in Supplement  No.  1  to  part  740  of  the  EAR;  (c)  will  not  export,  re-export,  or  transfer  the Ansible  Tower Software  to  any  prohibited destination or to any end user who has been prohibited from participating in US export transactions by any federal agency of the US government;    (d)  will  not  use  or  transfer  the Ansible  Tower Software  for  use  in  connection  with  the  design,  development  or production of nuclear, chemical or biological weapons, or rocket systems, space launch vehicles, or sounding rockets or unmanned air  vehicle  systems;  (e)  understand  and  agree  that  if  you  are  in  the  United  States  and  you  export  or  transfer  the Ansible  Tower Software to eligible end users, you will, to the extent required by EAR Section 740.17 obtain a license for such export or transfer and will  submit  semi-annual reports to the Commerce Department's Bureau of Industry and Security,  which  include  the  name  and address (including country) of each transferee; and (f) understand that countries including the United States may restrict the import, use, or export of encryption products (which may include the Ansible Tower Software) and agree that you shall be solely responsible for compliance with any such import, use, or export restrictions.
+
+7.    General. If  any  provision  of  this  EULA  is  held  to  be  unenforceable,  that  shall  not  affect  the  enforceability  of  the  remaining provisions.  This agreement shall be governed by the laws of the State of New York and of the United States, without regard to any conflict  of  laws  provisions.  The  rights  and  obligations  of  the  parties  to  this  EULA  shall  not  be  governed  by  the  United  Nations Convention on the International Sale of Goods.
+
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+GNU AFFERO GENERAL PUBLIC LICENSE, VERSION 3
+
+The Program includes some or all of the following licensed to you as
+Separately Licensed Code under the GNU Affero General Public License.
+For copies of the source code for this software, send an email to
+contact@ibm.com identifying the IBM product and the AGPL-licensed 
+program for which you are requesting the source code.
+
+MONGODB (SUBSET)
+
+END OF GNU AFFERO GENERAL PUBLIC LICENSE, VERSION 3
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+CREATIVE COMMONS ATTRIBUTION 2.5 GENERIC
+
+The Program includes some or all of the following works licensed under
+the Creative Commons.
+The url to the license is https://creativecommons.org/licenses/by/2.5/legalcode
+
+JCIP-ANNOTATIONS [HttpCore]
+(http://search.maven.org/remotecontent?filepath=org/apache/httpcomponents/httpcore/4.4.5/httpcore-4.4.5-sources.jar)
+
+silkicons-ALLJARJAR-SRC [Groovy]
+(https://github.com/apache/groovy/releases/tag/GROOVY_2_4_5)
+
+NOTTHREADSAFE [JSR305] (http://central.maven.org/maven2/com/google/code/findbugs/jsr305)
+JCIP-ANNOTATIONS [httpcomponents-core] (https://github.com/stephenc/jcip-annotations)
+
+
+END OF CREATIVE COMMONS ATTRIBUTION 2.5 GENERIC NOTICES AND INFORMATION
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+CREATIVE COMMONS ATTRIBUTION 3.0 GENERIC
+
+The Program includes some or all of the following works licensed under
+the Creative Commons.
+The url to the license is https://creativecommons.org/licenses/by/3.0/legalcode
+
+SPDX-EXPRESSION-PARSE [NodeJS] (https://www.npmjs.com/package/spdx-expression-parse), 
+SPDX-EXCEPTIONS
+(https://www.npmjs.com/package/spdx-exceptions), SPDX STANDARD
+[spdx-expression-parse] (https://www.npmjs.com/package/spdx-expression-parse)
+JQ DOCS [jq] (https://download-ib01.fedoraproject.org/pub/epel/7/SRPMS/Packages/j/jq-1.5-1.el7.src.rpm)
+
+GETTING STARTED-VALIDATOR [Font-Awesome] (https://github.com/FortAwesome/
+Font-Awesome/releases/tag/v4.7.0), 
+FONT AWESOME
+DOCUMENTATION [Font-Awesome] (https://github.com/FortAwesome/Font-Awesome/
+releases/tag/v4.7.0)
+
+BOOTSTRAP DOCS [Bootstrap] (https://github.com/twbs/bootstrap),
+SPDX-LINUX CONTRIBUTION [NodeJS] (Not Required), SPDX- LINUX
+CONTRIBUTION [NodeJS] (https://github.com/nodejs/node/tree/v6.16.0)
+
+END OF CREATIVE COMMONS ATTRIBUTION 3.0 GENERIC NOTICES AND INFORMATION
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+CREATIVE COMMONS ATTRIBUTION 4.0 GENERIC
+
+The Program includes some or all of the following works licensed under
+the Creative Commons.
+The url to the license is https://creativecommons.org/licenses/by/4.0/legalcode
+
+JANUSGRAPH (DOCUMENTATION) [JanusGraph] (https://github.com/JanusGraph/janusgraph/tree/v0.4.0)
+
+CANIUSE-DB [NodeJS] (Not Required), CANIUSE-LITE [NodeJS] (Not Required)
+
+END OF CREATIVE COMMONS ATTRIBUTION 4.0 GENERIC NOTICES AND INFORMATION
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+CC-by-3.0
+
+The Program includes some or all of the following that IBM obtained under 
+the CC-by-SA-3.0 License." Include a url to the 
+license terms.  For example, the url to the unported license is http://
+creativecommons.org/licenses/by/3.0/ ; the url to the United States license 
+is http://creativecommons.org/licenses/by/3.0/us/.
+
+SPDX-EXPRESSION-PARSE [NodeJS] (https://github.com/nodejs/node/), 
+SPDX-EXCEPTIONS (NODE)
+HTTP2/H2DEMO/TMPL.GO [net] (http://registry.npmjs.org/spdx-exceptions/-/spdx-exceptions-2.2.0.tgz)
+tools
+fireworks.jpeg
+
+spdx-exceptions (author: The Linux Foundation; URL associated with the workhttps://github.com/jslicense/spdx-exceptions.json/archive/v2.2.0.zip)
+spdx-expression-parse (author: Kyle E. Mitchell; URL associated with the workhttps://github.com/jslicense/spdx-expression-parse.js/archive/v3.0.0.zip)
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+CC-by-4.0
+
+The Program includes some or all of the following that IBM obtained under 
+the CC-by-SA-3.0 License." Include a url to the 
+license terms.  For example, the url to the unported license is http://
+creativecommons.org/licenses/by/4.0/ ; the url to the United States license 
+is http://creativecommons.org/licenses/by/4.0/us/.
+
+react-icons
+loads
+runtime
+validate
+SVG AND JS FILE [Font-Awesome] 
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+CREATIVE COMMONS ATTRIBUTION SHARE ALIKE 2.5 GENERIC
+
+The Program includes some or all of the following works licensed under
+the Creative Commons.
+The url to the license is https://creativecommons.org/licenses/by-sa/2.5/legalcode
+
+ANNOTATIONS [Mongo-java-driver] (Not Required)
+HOWTO.DIVEINTOMARK [chardet] (Not Required)
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+CC-by-SA-3.0
+
+The Program includes some or all of the following that IBM obtained under 
+the CC-by-SA-3.0 License." Include a url to the 
+license terms.  For example, the url to the unported license is http://
+creativecommons.org/licenses/by/SA/3.0/ ; the url to the United States license 
+is http://creativecommons.org/licenses/by/SA/3.0/us/.
+
+REGULAR_EXPRESSIONS [posix-character-classes] (http://registry.npmjs.org/posix-character-classes/-/posix-character-classes-0.1.1.tgz), 
+CC-CEDICT [Firefox] (https://cc-cedict.org/wiki/), 
+react-icons
+text
+IMAGES [jQuery-ui]
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+CREATIVE COMMONS ATTRIBUTION SHARE ALIKE 4.0 GENERIC
+
+The Program includes some or all of the following works licensed under
+the Creative Commons.
+The url to the license is https://creativecommons.org/licenses/by-sa/4.0/legalcode
+
+GEOLITE2 [elastisearch] (https://github.com/elastic/elasticsearch/tree/v6.5.4)
+
+GLOB-LOGO [Glob] (http://registry.npmjs.org/glob/-/glob-7.1.5.tgz, http://registry.npmjs.org/glob/-/glob-7.1.4.tgz), 
+RYU DOCS [Firefox] (https://ryu.readthedocs.io/en/latest/)
+containerd
+spdystream
+go-digest
+compute
+
+kimbie.light.css [Highlight]
+
+caniuse-lite (author: Ben Briggs; URL associated with the work: https://github.com/ben-eb/caniuse-lite/archive/v1.0.30001006.zip)
+glob-logo [Glob] (Not Required)
+
+END OF CREATIVE COMMONS ATTRIBUTION SHARE ALIKE 4.0 GENERIC NOTICES AND INFORMATION
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+GENERAL PUBLIC LICENSE
+
+The Program includes some or all of the following licensed to you as 
+Separately Licensed Code under the GNU General Public License. For 
+copies of the source code for this software, send an email to 
+contact@ibm.com identifying the IBM product and the GPL-licensed 
+program for which you are requesting the source code:
+
+Ubuntu (main) 16.04.5, Ubuntu (main) 18.04.1
+
+END OF GENERAL PUBLIC LICENSE SEPARATELY LICENSED CODE AND INFORMATION
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+GNU Free Documentation License v1.3
+The Program includes some or all of the following licensed to you
+as Separately Licensed Code under the GNU Free documenation license v1.3
+
+bash(doc), Coreutils(doc)
+
+END OF GNU Free Documentation License v1.3
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+GNU GENERAL PUBLIC LICENSE, VERSION 2
+
+The Program includes some or all of the following licensed to you as
+Separately Licensed Code under the GNU General Public License. For copies
+of the source code for this software, send an email to contact@ibm.com
+identifying the IBM product and the GPL-licensed program for which you
+are requesting the source code
+
+ADOPTOPENJDK BINARIES FOR ECLIPSE OPENJ9, LDAPSDK, LIBTOOL.M4
+[oniguruma], LIBTOOL [oniguruma], CONFIG.GUESS [oniguruma],
+EPEL-RELEASE, DEPCOMP [oniguruma]
+
+EPEL-RELEASE
+FILES: DEBIAN/* [Supervisor]
+
+GNU LIBTOOL [xorg-server], CFGPARSE.C [xorg-x11-xkb-utils], TEXINFO.TEX
+[Python], ACLOCAL.M4 [gLib], DEBIAN/* [Supervisor], ADOPTOPENJDK,
+LTMAIN.SH [libxkbfile], CONFIGURE, LIBTOOL.M4 [xorg-server], COMPILE,
+DEPCOMP, MISSING, TEST-DRIVER, YLWRAP [xorg-server], DEPCOMP
+[libxkbfile],
+JSUNIT [htmlunit-driver], VALGRIND [Firefox], GBEMU-PART1.JS [Firefox],
+GBEMU-PART2.JS [Firefox], LTMAIN.SH [Firefox], TOOLTOOL [Firefox]
+zstd
+yaml.v2
+ratelimit
+heketi 
+SHTOOL [pth], 
+PKGCONFIG, 
+COMPILE [npth]
+
+END OF GNU GENERAL PUBLIC LICENSE, VERSION 2 NOTICES AND INFORMATION
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+GNU GENERAL PUBLIC LICENSE, VERSION 3
+
+The Program includes some or all of the following licensed to you as
+Separately Licensed Code under the GNU General Public License. For copies
+of the source code for this software, send an email to contact@ibm.com
+identifying the IBM product and the GPL-licensed program for which you
+are requesting the source code
+
+FLAGS.M4 [librtas], COREUTILS, DEBIAN PACKAGING [python-meld3], BASH
+
+AX_APPEND_FLAG.M4, AX_CONFIGURE_ARGS.M4 [Python], ACLOCAL.M4,
+AX_PTHREAD.M4 [xorg-server], CONFIG.GUESS, CONFIG.SUB [Python],
+CONFIG.GUESS [libxkbfile], BISON PARSER [xorg-server], ACLOCAL.M4
+[libxkbfile], LTMAIN.SH [libxscrnsaver], ITMAIN.SH [xorg-server],
+CMPPROG [Firefox], MAKE_UNICODE [Firefox]
+CONFIG.GUESS [npth]
+
+END OF GNU GENERAL PUBLIC LICENSE, VERSION 3 NOTICES AND INFORMATION
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+NVIDIA License
+
+This source code is subject to NVIDIA ownership rights under U.S. and 
+international Copyright laws.  Users and possessors of this source code 
+are hereby granted a nonexclusive, royalty-free license to use this code 
+in individual and commercial software.
+
+NVIDIA MAKES NO REPRESENTATION ABOUT THE SUITABILITY OF THIS SOURCE 
+CODE FOR ANY PURPOSE.  IT IS PROVIDED "AS IS" WITHOUT EXPRESS OR 
+
+gonvml
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+RedHat Universal Base Image v8.0
+
+RedHat UBI v7/v8 has been taken under EULA > https://www.redhat.com/licenses/eulas
+
+The Program maybe provided with third party software programs subject to their own license terms. 
+The license terms either accompany the third party software programs or, in some instances, maybe may be viewed at >
+https://access.redhat.com/containers/
+
+
+END OF RedHat Universal Base Image v8.0
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+SIL OPEN FONT LICENSE 1.1
+
+The Program includes some or all of the following works licensed under
+the SIL OPEN FONT LICENSE 1.1
+
+FONT AWESOME 4.6.3 [pac4j]
+
+SIL Open Font License 1.1
+
+The url to the license is https://opensource.org/licenses/OFL-1.1
+
+PREAMBLE
+The goals of the Open Font License (OFL) are to stimulate worldwide
+development of collaborative font projects, to support the font creation
+efforts of academic and linguistic communities, and to provide a free and
+open framework in which fonts may be shared and improved in partnership
+with others.
+
+The OFL allows the licensed fonts to be used, studied, modified and
+redistributed freely as long as they are not sold by themselves. The
+fonts, including any derivative works, can be bundled, embedded, 
+redistributed and/or sold with any software provided that any reserved
+names are not used by derivative works. The fonts and derivatives,
+however, cannot be released under any other type of license. The
+requirement for fonts to remain under this license does not apply
+to any document created using the fonts or their derivatives.
+
+DEFINITIONS
+"Font Software" refers to the set of files released by the Copyright
+Holder(s) under this license and clearly marked as such. This may
+include source files, build scripts and documentation.
+
+"Reserved Font Name" refers to any names specified as such after the
+copyright statement(s).
+
+"Original Version" refers to the collection of Font Software components as
+distributed by the Copyright Holder(s).
+
+"Modified Version" refers to any derivative made by adding to, deleting,
+or substituting -- in part or in whole -- any of the components of the
+Original Version, by changing formats or by porting the Font Software to a
+new environment.
+
+"Author" refers to any designer, engineer, programmer, technical
+writer or other person who contributed to the Font Software.
+
+PERMISSION & CONDITIONS
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of the Font Software, to use, study, copy, merge, embed, modify,
+redistribute, and sell modified and unmodified copies of the Font
+Software, subject to the following conditions:
+
+1) Neither the Font Software nor any of its individual components,
+in Original or Modified Versions, may be sold by itself.
+
+2) Original or Modified Versions of the Font Software may be bundled,
+redistributed and/or sold with any software, provided that each copy
+contains the above copyright notice and this license. These can be
+included either as stand-alone text files, human-readable headers or
+in the appropriate machine-readable metadata fields within text or
+binary files as long as those fields can be easily viewed by the user.
+
+3) No Modified Version of the Font Software may use the Reserved Font
+Name(s) unless explicit written permission is granted by the corresponding
+Copyright Holder. This restriction only applies to the primary font name as
+presented to the users.
+
+4) The name(s) of the Copyright Holder(s) or the Author(s) of the Font
+Software shall not be used to promote, endorse or advertise any
+Modified Version, except to acknowledge the contribution(s) of the
+Copyright Holder(s) and the Author(s) or with their explicit written
+permission.
+
+5) The Font Software, modified or unmodified, in part or in whole,
+must be distributed entirely under this license, and must not be
+distributed under any other license. The requirement for fonts to
+remain under this license does not apply to any document created
+using the Font Software.
+
+TERMINATION
+This license becomes null and void if any of the above conditions are
+not met.
+
+DISCLAIMER
+THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
+OF COPYRIGHT, PATENT, TRADEMARK, OR OTHER RIGHT. IN NO EVENT SHALL THE
+COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+INCLUDING ANY GENERAL, SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL
+DAMAGES, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM
+OTHER DEALINGS IN THE FONT SOFTWARE.
+
+END OF SIL OPEN FONT LICENSE 1.1 LICENSE NOTICES AND INFORMATION
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+European Union Public Licence V. 1.1 - EUPL (c) the European Community 2007
+
+The Program includes some or all of the following that IBM obtained under the European Union Public Licence V. 1.1 License.
+The url to the license is https://ec.europa.eu/idabc/servlets/Docbb6d.pdf?id=31979
+
+- mimelib (Copyright (c) 2011-2017 Andris Reinman, URL associated with the work: https://www.npmjs.com/package/mimelib)
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+L/N:  L-WQIN-BLJB2N
+D/N:  L-WQIN-BLJB2N
+P/N:  L-WQIN-BLJB2N

@@ -1,0 +1,127 @@
+# Default values for logging.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+global:
+  foundationalServicesReleaseName: ""
+  dockerRegistryPrefix: ""
+  createPv: true
+  nfsServer: ""
+
+elasticsearchUsername: fci_admin
+
+arch: amd64
+
+enabled: True
+
+cronjob:
+  # At 01:00 every day
+  schedule: "0 1 * * *"
+
+daysToKeepIndices: 5
+
+configMaps:
+  # Delete indices older than 5 days
+  action_file_yml: |-
+    ---
+    actions:
+      1:
+        action: delete_indices
+        description: "Clean up ES by deleting old indices"
+        options:
+          continue_if_exception: False
+          ignore_empty_list: True
+        filters:
+        - filtertype: pattern
+          kind: prefix
+          value: filebeat-
+        - filtertype: age
+          source: name
+          direction: older
+          timestring: '%Y.%m.%d'
+          unit: days
+          unit_count: ${DAYS:5}
+
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+logstash:
+  replicas: 1
+  image:
+    repository: ibmcom/fci-loganalysis
+    tag: 6.6.0
+    pullPolicy: IfNotPresent
+  livenessProbe:
+    httpGet:
+      path: /
+      port: 9600
+    initialDelaySeconds: 600
+    timeoutSeconds: 5
+  readinessProbe:
+    httpGet:
+      path: /
+      port: 9600
+    initialDelaySeconds: 20
+    timeoutSeconds: 5
+  resources:
+    requests:
+      memory: "16Mi"
+      cpu: "0.03"
+    limits:
+      memory: "1Gi"
+      cpu: "0.5"
+
+kibana:
+  image:
+    repository: ibmcom/fci-logvisualization
+    tag: 6.6.0
+    pullPolicy: IfNotPresent
+  livenessProbe:
+    httpGet:
+      path: /fci/kibana/api/status
+      scheme: HTTPS
+      port: 5601
+    initialDelaySeconds: 300
+  readinessProbe:
+    httpGet:
+      path: /fci/kibana/api/status
+      scheme: HTTPS
+      port: 5601
+    initialDelaySeconds: 20
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "0.02"
+    limits:
+      memory: "2Gi"
+      cpu: "0.5"
+
+
+kbEnv:
+  SERVER_SSL_ENABLED: "true"
+  SERVER_SSL_KEY: "/usr/share/kibana/config/kibana.key"
+  SERVER_SSL_CERTIFICATE: "/usr/share/kibana/config/kibana.crt"
+  ELASTICSEARCH_SSL_VERIFICATIONMODE: "none"
+
+esConfig:
+  config.reload.automatic: "true"
+  path.config: /usr/share/logstash/pipeline
+  path.data: /usr/share/logstash/data
+  queue.checkpoint.writes: 1
+  queue.drain: "true"
+  queue.max_bytes: 1gb
+  queue.type: persisted

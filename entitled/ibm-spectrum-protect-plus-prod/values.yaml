@@ -1,0 +1,339 @@
+# ---------------------------------------------------------
+# Default Helm chart values for IBM BaaS templates   v0.1.2
+# ---------------------------------------------------------
+#  Version history:
+#  2018-09-12 Initial version, Gero Schmidt
+#  2018-12-06 Included SPP, vSnap, DM, ETCD IP addresses
+#  2019-02-15 Added SPP-API,SC-API,SV secrets
+#  2019-05-13 Added imagePullSecrets for external, ICP, OCP
+#  2019-09-16 remove snapshotclass, cluster admin need create it by himself
+#  2020-03-30 Added cert-monitor entry, Mark Yakushev, 738
+#  2020-04-01 Removed replicaCount, Mark Yakushev, 738
+#  2020-05-10 Added liveliness and readiness probes, Mike Collins
+# ---------------------------------------------------------
+# Deploy Helm chart into its own namespace, e.g.
+# $ helm install baas --namespace baas
+# ---------------------------------------------------------
+
+## ----------------------------------
+## General BaaS deployment parameters
+## ----------------------------------
+# Change the value of license to true to indicate acceptance of license
+# https://www-03.ibm.com/software/sla/sladb.nsf/searchlis/?searchview&searchorder=4&searchmax=0&query=(5737-F11)
+license: false
+#requiredDuringSchedulingIgnoredDuringExecution nodeAffinity parameter 
+arch: "amd64"
+# isOCP is a boolean variable to enable (true) or disable (false=default) template modifications specific to OpenShift (OCP) 
+isOCP: false
+# isICP is a boolean variable to enable (true) or disable (false=default) template modifications specific to IBM Cloud Private (ICP)
+isICP: false
+
+# productLocale is a string variable representing a valid localization option, e.g.
+# en_US (English USA), cs_CZ (Czech Czech Republic), de_DE (German Germany), es_ES (Spanish Spain), 
+# fr_FR (French France), hu_HU (Hungarian Hungary), it_IT (Italian Italy), ja_JP (Japanese Japan), pl_PL (Polish Poland),
+# pt_BR (Portuguese Brazil), ru_RU (Russian Russia), zh_CN (Chinese Simplified China), zh_TW (Chinese Traditional Taiwan)
+productLocale: "en_US"
+
+# product trace log error INFO, DEBUG, ERROR
+productLoglevel: "INFO"
+
+# managedBy is a variable that tells which tool (Helm or Operator) is used to manage the operation of Baas
+managedBy: "Helm"
+
+## ----------------------
+## Product image registry
+## ----------------------
+
+# imageRegistry as FQDN[:port] to pull the product images
+imageRegistry: "cp.icr.io"
+# imageRegistryNamespace is "your-external-registry-namespace-name" or "" when using the local cluster image registry (here the product deployment namespace will be used automatically)
+imageRegistryNamespace: "baas"
+# imageRegistrySecret is the name of the ImagePullSecret for accessing an external image registry to pull BaaS images, e.g. created with: 
+# kubectl create secret docker-registry [name] --namespace [name] --docker-server=[registry] --docker-username=[name] --docker-password=[password/token] --docker-email=[email]
+imageRegistrySecret: "baas-registry-secret"
+
+## --------------------------------------------------------
+## External BaaS components - baas-configmap
+## --------------------------------------------------------
+
+# SPPips is a comma separated list of IP addresses of available IBM Spectrum Protect Plus servers for BaaS to connect to
+SPPips: ""
+# SPPport is the port of the IBM Spectrum Protect Plus server for BaaS to connect to
+SPPport: "443"
+# veleroNamespace is the namespace of the required velero installation
+veleroNamespace: ""
+# StorageClass that is used to create the Minio PVC
+minioStorageClass: ""
+
+## --------------------------------------------------------
+## Internal BaaS components - networkpolicy
+## --------------------------------------------------------
+networkPolicy:
+  # CLUSTER CIDR
+  # IF Kubernetes
+  # RUN COMMAND "kubectl cluster-info dump | grep -m 1 cluster-cidr" TO FIND IT
+  # IF OpenShift
+  # RUN COMMAND "oc get network -o yaml | grep -A1 clusterNetwork:" TO FIND IT
+  # Use the IP Address CIDR
+  clusterCIDR: ""
+  # CLUSTER API SERVER IP ADDRESS
+  # CLUSTER API SERVER PORT
+  # RUN "kubectl get endpoints -n default -o yaml kubernetes" - Replace kubectl with oc in OpenShift
+  # Use any of the provided addresses listed under addresses.
+  # For example, "kubectl get endpoints -n default -o yaml kubernetes"
+  clusterAPIServerips: 
+    - 0.0.0.0
+  clusterAPIServerport: "6443"
+
+# kubernetes cluster name
+clusterName: "kubernetes"
+
+## --------------------------------------------------------
+## SPP Agent
+## --------------------------------------------------------
+sppAgentServiceNodePort: 30001
+
+## --------------------------------------------------------
+## BaaS component deployment parameters 
+## --------------------------------------------------------
+## Kubernetes deployment arguments of BaaS components like
+## image name, image tag, replica count, pullPolicy, etc.
+## --------------------------------------------------------
+ 
+# BaaS Transaction Manager
+tm:
+  replicaCount: 1  
+  image:
+    name: baas-transaction-manager
+    tag: 10.1.7
+    pullPolicy: Always
+    port: 5000
+    portName: "tm"
+  service:
+    port: 5000
+    targetPort: 5000
+  readinessProbe:
+    enabled: true
+    failureThreshold: 5
+    initialDelaySeconds: 30
+    periodSeconds: 30
+    timeoutSeconds: 5
+  livenessProbe:
+    enabled: true
+    failureThreshold: 3
+    initialDelaySeconds: 60
+    periodSeconds: 60
+    timeoutSeconds: 5
+
+tmw:
+  image:
+    name: baas-transaction-manager-worker
+    tag: 10.1.7
+    pullPolicy: Always
+    port: 5000
+    portName: "tm-worker"
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 5
+    periodSeconds: 90
+    failureThreshold: 5
+    timeoutSeconds: 30
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 60
+    periodSeconds: 120
+    failureThreshold: 5
+    timeoutSeconds: 30
+
+tmredis:
+  image:
+    name: baas-transaction-manager-redis
+    tag: 10.1.7
+    pullPolicy: Always
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    failureThreshold: 5
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    failureThreshold: 5
+
+# BaaS Controller
+ctl:
+  replicaCount: 1  
+  image:
+    name: baas-controller
+    tag: 10.1.7
+    pullPolicy: Always
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 5
+    periodSeconds: 5
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 15
+    periodSeconds: 5
+    
+# BaaS Scheduler
+sdl:
+  replicaCount: 1
+  # rpo is the scheduler's recovery point objective  
+  rpo: 10
+  image:
+    name: baas-scheduler
+    tag: 10.1.7
+    pullPolicy: Always
+  service:
+    port: 8000
+    targetPort: 8000
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 30
+    periodSeconds: 60
+    timeoutSeconds: 5
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 60
+    periodSeconds: 90
+    timeoutSeconds: 5
+
+# BaaS Datamover
+dm:
+  image:
+    name: baas-datamover
+    tag: 10.1.7
+
+# BaaS sppagent
+sppagent:
+  replicaCount: 1
+  image:
+    name: baas-spp-agent
+    tag: 10.1.7
+    port: 22
+    portName: "ssh"
+    pullPolicy: Always
+  service:
+    port: 22
+    portName: ssh
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    failureThreshold: 3
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 60
+    periodSeconds: 30
+    failureThreshold: 4
+
+# BaaS strimzi Kafka operators
+kafkaOperator:
+  replicaCount: 1
+  image:
+    name: baas-kafka-operator
+    tag: 10.1.7
+    pullPolicy: Always
+    port: 8080    
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 10
+    periodSeconds: 30
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 10
+    periodSeconds: 30
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 384Mi
+    requests:
+      cpu: 200m
+      memory: 384Mi
+
+kafka25:
+  image: 
+    name: baas-kafka-2.5
+    tag: 10.1.7
+
+kafka24:
+  image:
+    name: baas-kafka-2.4
+    tag: 10.1.7
+
+baasKafkaBridge:
+  image:
+    name: baas-kafka-bridge
+    tag: 10.1.7
+    
+# BaaS kafka
+kafka:
+  openshift:
+    # Available update channels:
+    # stable
+    # amq-streams-1.x
+    # amq-streams-1.5.x
+    channel: stable
+    # Available update approval strategy:
+    # Manual
+    # Automatic
+    approval: Automatic
+  replicaCount: 1
+  service:
+    serverPort: 9092
+  resources:
+    limits:
+      memory: 1Gi
+      cpu: 2
+    requests:
+      memory: 400Mi
+      cpu: 300m
+    
+# BaaS minio
+minio:
+  replicaCount: 1
+  image:
+    name: baas-minio
+    tag: 10.1.7
+    pullPolicy: Always
+  service:
+    serverName: server
+    serverPort: 9000
+    targetServerPort: 9000
+  resources:
+    limits:
+      memory: 3Gi
+      cpu: 3
+    requests:
+      memory: 600Mi
+      cpu: 100m
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    failureThreshold: 3
+    timeoutSeconds: 5
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 30
+    periodSeconds: 120
+    failureThreshold: 3
+    timeoutSeconds: 5
+    
+# BaaS Certificate Monitor
+certmon:
+  image:
+    name: baas-cert-monitor
+    tag: 10.1.7
+    pullPolicy: Always
+
+## -----------------------------
+## General Helm chart parameters
+## -----------------------------
+
+# To avoid issues do not make changes to these 3 values
+fullnameOverride: "baas"
+nameOverride: "baas"
+versionOverride: ""

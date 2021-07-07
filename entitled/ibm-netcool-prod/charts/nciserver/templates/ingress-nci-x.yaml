@@ -1,0 +1,52 @@
+########################################################################
+#
+# Licensed Materials - Property of IBM
+#
+# 5725Q09
+#
+# (C) Copyright IBM Corp.
+#
+# 2018-2019 All Rights Reserved
+#
+# US Government Users Restricted Rights - Use, duplication or disclosure 
+# restricted by GSA ADP Schedule Contract with IBM Corp.
+#
+########################################################################
+{{- include "sch.config.init" (list . "sch.chart.config.values") -}}
+{{ $nodeCount := (include "noi.nciservers.replicas" (list . .Values.replicaCount)) | int -}}
+{{ $global := . }}
+{{- range $i := until $nodeCount }}
+{{- if $global.Values.global.ingress.api.enabled }}
+---
+{{ $externalHostname := printf "nci-%d.%s.%s" $i $global.Release.Name $global.Values.global.cluster.fqdn }}
+{{- if $global.Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" }}
+apiVersion: networking.k8s.io/v1beta1    
+{{- else }}
+apiVersion: extensions/v1beta1           
+{{- end }}
+
+kind: Ingress
+metadata:
+  name: {{ $global.Release.Name }}-nci-{{ $i }}
+  labels:
+{{ include "sch.metadata.labels.standard" (list $global "") | indent 4 }}
+  annotations:
+    kubernetes.io/ingress.class: '{{ $global.Values.global.ingress.api.class }}'
+    {{ $global.Values.global.ingress.api.prefix }}/proxy-body-size: '0'
+    {{ $global.Values.global.ingress.api.prefix }}/proxy-read-timeout: '{{ $global.Values.ingress.proxyReadTimeout }}'
+    {{ $global.Values.global.ingress.api.prefix }}/proxy-send-timeout: '{{ $global.Values.ingress.proxySendTimeout }}'
+spec:
+  tls:
+  - secretName: {{ $global.Release.Name }}-nci-{{ $i }}-tls-secret
+    hosts:
+    - {{ $externalHostname }}
+  rules:
+  - host: {{ $externalHostname }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: {{ $global.Release.Name }}-nci-{{ $i }}
+          servicePort: {{ $global.Values.impactcore.internal.nameserverPort }}
+{{ end }}
+{{ end }}

@@ -1,0 +1,96 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Chart.Name }}-deployment"
+  labels:
+    chart: '{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}'
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: "{{ .Chart.Name }}-selector"
+      release: {{ .Release.Name }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
+  template:
+    metadata:
+      labels:
+        app: "{{ .Chart.Name }}-selector"
+        release: {{ .Release.Name }}
+{{ include "addon.cpd.labels" . | indent 8 }}
+      annotations:
+{{ include "addon.cpd.annotations" . | indent 8 }}
+
+    spec:
+{{ toYaml .Values.hostOptions | indent 6 }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+{{ if .Values.icp4Data }}
+      serviceAccountName: cpd-editor-sa
+{{ else }}
+      serviceAccountName: {{  .Chart.Name }}-service-account
+      {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+{{ toYaml .Values.imagePullSecrets | indent 8 }}
+      {{- end }}
+{{ end }}
+      containers:
+      - name: "{{  .Chart.Name  }}"
+{{/*        image: {{ .Values.image.repository }}{{ .Values.image.name }}:{{ .Values.image.tag }}*/}}
+        image: {{ .Values.global.dockerRegistryPrefix }}/{{ .Values.image.name }}:{{ .Values.image.tag }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        livenessProbe:
+          tcpSocket:
+            port: {{ .Values.service.servicePort }}
+          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds}}
+          periodSeconds: {{ .Values.livenessProbe.periodSeconds}}
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: {{ .Values.service.servicePort }}
+            scheme: HTTP
+          initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds}}
+          periodSeconds: {{ .Values.readinessProbe.periodSeconds}}
+        ports:
+        - containerPort: {{ .Values.service.servicePort}}
+#        - containerPort: {{ .Values.service.httpsPort}}
+        volumeMounts:
+        - name: internal-tls
+          mountPath: /etc/internal-tls
+        - name: ca-charts
+          mountPath: /ca-instances
+        resources:
+{{ toYaml .Values.image.resources | indent 12 }}
+        securityContext:
+{{ toYaml .Values.securityContext | indent 12 }}
+
+        env:
+          - name: PORT
+            value : "{{ .Values.service.servicePort }}"
+          - name: APPLICATION_NAME
+            value: "{{ .Release.Name }}"
+          - name: KNJ_LOG_TO_CONSOLE
+            value: "true"
+          - name: LOG_LEVEL
+            value: "info"
+          - name: TLS_ENABLED
+            value: "true"
+          - name: TLS_CERTPATH
+            value: {{ .Values.global.tls.secretCertPath | quote }}
+          - name: TLS_KEYPATH
+            value: {{ .Values.global.tls.secretKeyPath | quote }}
+        command: [ "/app/run-dev" ]
+      volumes:
+      - name: ca-charts
+        persistentVolumeClaim:
+          claimName: {{ template "addon-pvc.name" . }}-pvc
+      - name: internal-tls
+        secret:
+          defaultMode: 420
+          secretName: {{ .Values.global.tls.secretName }}

@@ -1,0 +1,19 @@
+images:
+  - image: ia-analysis:b1919_1bb7ce1d5dcd
+    references:
+    - repository: ia-analysis:b1919_1bb7ce1d5dcd
+      pull-repository: ${DOCKER_REGISTRY}/ia-analysis:b1919_1bb7ce1d5dcd
+      pull-authorization:
+        username:
+          env: ARTIFACTORY_USERNAME
+        password:
+          env: ARTIFACTORY_PASSWORD
+  - image: wkc-init-container:1.0.107
+    references:
+    - repository: wkc-init-container:1.0.107
+      pull-repository: ${DOCKER_REGISTRY}/wkc-init-container:1.0.107
+      pull-authorization:
+        username:
+          env: ARTIFACTORY_USERNAME
+        password:
+          env: ARTIFACTORY_PASSWORD

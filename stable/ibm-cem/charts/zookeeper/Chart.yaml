@@ -1,8 +1,0 @@
-description: HDM Common Zookeeper
-keywords:
-- HDM
-- Zookeeper
-- Common
-name: zookeeper
-tillerVersion: '>=2.7.2'
-version: 0.2.0

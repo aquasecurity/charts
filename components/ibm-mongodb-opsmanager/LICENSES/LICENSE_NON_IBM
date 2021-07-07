@@ -1,0 +1,60 @@
+TERMS AND CONDITIONS FOR SEPARATELY LICENSED CODE
+
+IBM Data Management Platform for MongoDB Enterprise Advanced 2.0.3 for IBM Cloud Pak for Data
+
+The IBM license agreement and any applicable information on the web
+download page for IBM products refers Licensee to this file for details
+concerning terms and conditions applicable to code identified as
+Separately Licensed Code below and included in the products listed
+above ("the Program").
+
+The Separately Licensed Code is provided to Licensee under terms
+and conditions that are different from the IBM license agreement.
+Licensee's use of such components or portions thereof is subject to the
+terms of the associated license agreement provided or referenced in this
+section and not the terms of the IBM license agreement.
+
+Please note: This NON_IBM_LICENSE file may identify Separately Licensed
+Code and its related agreements that are not used by, or that were not
+shipped with, the Program as Licensee installed it.
+
+The following are Separately Licensed Code:
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+NON-IBM-LICENSE FOR IBM Data Management Platform for MongoDB Enterprise Advanced 2.0.3 for IBM Cloud Pak for Data  2020Q4
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+TABLE OF CONTENTS
+
+THE REMAINDER OF THIS NON-IBM-LICENSE FILE CONSISTS OF THE FOLLOWING 
+SECTIONS:
+
+GPL V2
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+GNU GENERAL PUBLIC LICENSE, VERSION 2
+
+The Program includes some or all of the following licensed to you as
+Separately Licensed Code under the GNU General Public License. For copies
+of the source code for this software, send an email to <emailaddress>
+identifying the IBM product and the GPL-licensed program for which you
+are requesting the source code
+
+JAVAC, ADOPTOPENJDK, JAVAC-SHADED, WIREDTIGER LIBRARY
+
+END OF GNU GENERAL PUBLIC LICENSE, VERSION 2 NON-IBM-LICENSE
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+END OF NON-IBM-LICENSE 
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+END OF NON-IBM-LICENSE FILE
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+L/N:  L-JPHR-BUSN48
+D/N:  L-JPHR-BUSN48
+P/N:  L-JPHR-BUSN48

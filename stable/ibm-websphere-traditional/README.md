@@ -22,8 +22,8 @@ If you prefer to install from the command prompt, you will need:
 
 The installation environment has the following prerequisites:
 
-* Kubernetes version `1.11.1`.
-* [PersistentVolume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) support in the underlying infrastructure if `logs.persistLogs` (See "[Create Persistent Volumes](#create-persistent-volumes)" below).
+* Kubernetes version `1.9.0`.
+* [PersistentVolume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) support in the underlying infrastructure if `logs.persistLogs` is set to `true` (See "[Create Persistent Volumes](#create-persistent-volumes)" below).
 
 ### PodSecurityPolicy Requirements
 
@@ -102,6 +102,69 @@ Download the following scripts located at [/ibm_cloud_pak/pak_extensions/post-de
 * The namespace scoped instructions are located at `namespaceAdministration/deleteSecurityNamespacePrereqs.sh` for team admin/operator to delete the RoleBinding for the namespace. This script takes one argument; the name of the namespace where the chart was installed.
   * Example usage: `./deleteSecurityNamespacePrereqs.sh myNamespace`
 
+### Red Hat OpenShift SecurityContextConstraints Requirements
+
+This chart requires a `SecurityContextConstraints` to be bound to the target namespace prior to installation. To meet this requirement there may be cluster scoped as well as namespace scoped pre and post actions that need to occur.
+
+The predefined `SecurityContextConstraints` name: [`ibm-restricted-scc`](https://ibm.biz/cpkspec-scc) has been verified for this chart, if your target namespace is bound to this `SecurityContextConstraints` resource you can proceed to install the chart.
+
+This chart defines a custom `SecurityContextConstraints` which can be used to finely control the permissions/capabilities needed to deploy this chart. You can enable this custom `SecurityContextConstraints` resource using the supplied instructions or scripts in the `pak_extensions/pre-install` directory.
+
+* From the user interface, you can copy and paste the following snippets to enable the custom `SecurityContextConstraints`
+  * Custom `SecurityContextConstraints` definition:
+
+  ```yaml
+  apiVersion: security.openshift.io/v1
+  kind: SecurityContextConstraints
+  metadata:
+    annotations:
+    name: ibm-websphere-traditional-scc
+  allowHostDirVolumePlugin: false
+  allowHostIPC: false
+  allowHostNetwork: false
+  allowHostPID: false
+  allowHostPorts: false
+  allowPrivilegedContainer: false
+  allowedCapabilities: []
+  allowedFlexVolumes: []
+  defaultAddCapabilities: []
+  fsGroup:
+    type: MustRunAs
+    ranges:
+    - max: 65535
+      min: 1
+  readOnlyRootFilesystem: false
+  requiredDropCapabilities:
+  - ALL
+  runAsUser:
+    type: MustRunAsNonRoot
+  seccompProfiles:
+  - docker/default
+  seLinuxContext:
+    type: RunAsAny
+  supplementalGroups:
+    type: MustRunAs
+    ranges:
+    - max: 65535
+      min: 1
+  volumes:
+  - configMap
+  - downwardAPI
+  - emptyDir
+  - persistentVolumeClaim
+  - projected
+  - secret
+  priority: 0
+  ```
+
+* From the command line, you can run the setup scripts included under `pak_extensions/pre-install`
+
+  As a cluster admin the pre-install instructions are located at:
+  * `pre-install/clusterAdministration/createSecurityClusterPrereqs.sh`
+
+  As team admin the namespace scoped instructions are located at:
+  * `pre-install/namespaceAdministration/createSecurityNamespacePrereqs.sh`
+
 ### Docker Image Requirements
 
 The Helm chart requires the Docker image to have certain directory linked. The `ibmcom/websphere-traditional` image from Docker Hub already has the expected links. If you are not extending from this image, you must add the following to your `Dockerfile`:
@@ -113,9 +176,19 @@ RUN ln -s /opt/IBM/WebSphere/AppServer/profiles/${PROFILE_NAME}/logs /logs \
 
 The Helm chart also assumes that the Docker image has a startup script that looks for properties files inside `/etc/websphere` and automatically applies them to the application server.  The `ibmcom/websphere-traditional` image from Docker Hub already has this script.
 
+If you are using Docker registries that require credentials please see the `image.pullSecrets` parameter below for instructions on how to prepare the secret for installation
+
+### Internal (In Cluster) Network Encryption - Recommended
+Use IPSec between the nodes in your cluster to ensure all internal connections are encrypted.
+More details can be found at [Encrypting cluster data network traffic with IPsec](http://ibm.biz/icp-ipsec_mesh)
+
 ## Resources Required
 
-See [System Requirements for WebSphere Application Server v9.0](http://www-01.ibm.com/support/docview.wss?rs=180&uid=swg27047911#base-90) and [Preparing the operating system for product installation](https://www.ibm.com/support/knowledgecenter/SSEQTP_9.0.0/com.ibm.websphere.installation.base.doc/ae/tins_prepare.html).
+This chart has the following minimum resource requirements per pod by default:
+0.5 CPU
+1 GiB memory
+
+See [System Requirements for WebSphere Application Server v9.0](http://www-01.ibm.com/support/docview.wss?rs=180&uid=swg27047911#base-90) and [Preparing the operating system for product installation](https://www.ibm.com/support/knowledgecenter/SSEQTP_9.0.0/com.ibm.websphere.installation.base.doc/ae/tins_prepare.html) for more information.
 
 ## Installing the Chart
 
@@ -162,8 +235,7 @@ The [Configuration](#configuration) lists the parameters that can be overridden 
 ```
 
 ### Verifying the Chart
-
-See NOTES.txt associated with this chart for verification instructions
+See the instruction (from NOTES.txt within chart) after the helm installation completes for chart verification. The instruction can also be viewed by running the command: helm status my-release --tls.
 
 ### Uninstalling the Chart
 
@@ -173,15 +245,17 @@ To uninstall/delete the `my-release` deployment:
 helm delete my-release --purge --tls
 ```
 
-This command removes all the Kubernetes components associated with the chart, except any persistent volume claims (PVCs) which is created when `logs.persistLogs`. This is the default behavior of Kubernetes, and ensures that valuable data is not deleted. In order to delete the server data, you can delete the PVC using the following command:
+This command removes all the Kubernetes components associated with the chart, except any persistent volume claims (PVCs) which is created when `logs.persistLogs` is set to `true`. This is the default behavior of Kubernetes, and ensures that valuable data is not deleted. In order to delete the server data, you can delete the PVC using the following command:
 
 ```bash
-kubectl delete pvc -l release=my-release
+kubectl delete pvc my-pvc
 ```
 
-### Cleanup any pre-requirement that were created
+Note: You can use `kubectl get pvc` to see the list of available PVCs.
 
-If cleanup scripts where included in the [/ibm_cloud_pak/pak_extensions/prereqs](./ibm_cloud_pak/pak_extensions/prereqs) directory; run them to cleanup namespace and cluster scoped resources when appropriate.
+### Cleanup any pre-reqs that were created
+
+If cleanup scripts were included in the pak_extensions/post-delete directory; run them to cleanup namespace and cluster scoped resources when appropriate.
 
 ## Configuration
 
@@ -192,14 +266,30 @@ The following tables lists the configurable parameters of the IBM WebSphere Appl
 | `replicaCount`             | The number of desired replica pods that run simultaneously                   | `1`                                                        |
 | `image.repository`         | Docker image repository                         | `ibmcom/websphere-traditional`                             |
 | `image.pullPolicy`         | Docker image pull policy. Defaults to `Always` when the latest tag is specified.                             | `IfNotPresent`                                             |
-| `image.tag`                | Docker image tag                                | `9.0.0.9-profile`                                          |
+| `image.tag`                | Docker image tag                                | `9.0.5.0`                                          |
+| `image.pullSecrets`        | Image [pull secrets](https://www.ibm.com/support/knowledgecenter/en/SSBS6K_3.2.0/manage_images/imagepullsecret.html), if using Docker registries that require credentials. | `[]`                                |
+| `image.extraEnvs`          | Additional Environment Variables                | `[]`                                                       |
+| `image.extraVolumeMounts`  | Extra Volume Mounts                             | `[]`                                                       |
+| `image.security`           | Configure the security attributes of the image  | `{}`
+| `deployment.annotations`   | Custom deployment annotations                   | `{}`                                                       |
+| `deployment.labels`        | Custom deployment labels                        | `{}`                                                       |
+| `pod.annotations`          | Custom pod annotations                          | `{}`                                                       |
+| `pod.labels`               | Custom pod labels                               | `{}`                                                       |
+| `pod.extraVolumes`         | Additional Volumes for server pods.             | `{}`                                                       |
+| `pod.security`             | Configure the security attributes of the pod    | `{}`
 | `service.type`             | Kubernetes service type exposing ports| `NodePort`                                                 |
 | `service.name`             | Kubernetes service name for HTTP                                | `https-was`                                                |
 | `service.port`             | The abstracted service port for HTTP, which other pods use to access this service                     | `9443`                                                    |
 | `service.targetPort`       | Secured HTTP port the container accepts traffic on. Ensure that it matches the port exposed by the container       | `9443`                                                    |
+| `service.annotations`      | Kubernetes service custom annotations"|        `{}`                                                 |
+| `service.labels`           | Kubernetes service custom labels"|        `{}`                                                      |
 | `ingress.enabled`          | Specifies whether to enable [Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/)                                  | `false`                                                    |
 | `ingress.rewriteTarget`    | Specifies target URI where traffic must be redirected | `/`                                                  |
 | `ingress.path`             | Specifies path for the Ingress HTTP rule        | `/`                                                        |
+| `ingress.annotations`      | Kubernetes ingress custom annotations |        `{}`                                                 |
+| `ingress.labels`           | Kubernetes ingress custom labels      |        `{}`                                                      |
+| `ingress.hosts`             | Specifies an array of fully qualified domain names of Ingress, as defined by RFC 3986. | `[]` |
+| `ingress.secretName`       | Specifies the name of the Kubernetes secret that contains [Ingress'](https://kubernetes.io/docs/concepts/services-networking/ingress/#tls) TLS certificate and key.   | `""` |
 | `configProperties.configMapName`      | Name of the [ConfigMap](https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/#create-a-configmap) that contains one or more [configuration properties](https://www.ibm.com/support/knowledgecenter/SSEQTP_9.0.0/com.ibm.websphere.base.doc/ae/txml_config_prop.html) files to configure your WebSphere Application Server traditional environment | `""`         |
 | `readinessProbe.initialDelaySeconds`| Number of seconds after the container has started before readiness probe is initiated | `30`        |
 | `readinessProbe.periodSeconds`| How often (in seconds) to perform the readiness probe. Minimum value is 1  | `5`                                                        |
@@ -219,11 +309,9 @@ The following tables lists the configurable parameters of the IBM WebSphere Appl
 | `resources.limits.memory`  | Describes the maximum amount of memory allowed                          | `10Gi`                                                     |
 | `resources.limits.cpu`     | Describes the maximum amount of CPU allowed                             | `500m`                                                     |
 | `arch.amd64`               | Architecture preference for amd64 worker node   | `2 - No preference`                                        |
-| `arch.ppc64le`             | Architecture preference for ppc64le worker node | `0 - Do not use`                                           |
-| `arch.s390x`               | Architecture preference for s390x worker node   | `0 - Do not use`                                           |
 | `persistence.name`         | A prefix for the name of the persistence volume claim (PVC). A PVC will not be created unless `logs.persistLogs` is set to `true` | `pvc` |
 | `persistence.size`         | Size of the volume to hold all the persisted data | `1Gi`                                                    |
-| `persistence.fsGroupGid`             | The group ID added to the containers with persistent storage to allow access. Volumes that support ownership management must be owned and writable by this group ID | `1000`                        |
+| `persistence.fsGroupGid`             | The group ID added to the containers with persistent storage to allow access. Volumes that support ownership management must be owned and writable by this group ID | `nil`                        |
 | `persistence.useDynamicProvisioning` | If `true`, the persistent volume claim will use the `storageClassName` to bind the volume. Otherwise, the selector will be used for the binding process | `true` |
 | `persistence.storageClassName`       | Specifies a StorageClass pre-created by the Kubernetes sysadmin. When set to `""`, then the PVC is bound to the default StorageClass setup by kube Administrator | `""` |
 | `persistence.selector.label`         | When matching a PV, the label is used to find a match on the key. See Kubernetes - [Labels and Selectors](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/) | `""` |
@@ -281,6 +369,47 @@ The `readinessProbe.initialDelaySeconds` and `livenessProbe.initialDelaySeconds`
 
 More information about configuring liveness and readiness probes can be found [here](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/)
 
+### Accessing the WebSphere Application Server Administrative Console
+
+Administrators can use `kubectl port-forward` to access the Admin Console of a WebSphere Application Server instance running inside a pod. Forward a local port to the admin console port:
+
+```bash
+kubectl port-forward <pod_name> <local_port>:<admin_console_port>
+```
+
+For example, run `kubectl port-forward websphere-server-pod-1 9043:9043` and then access Admin Console at `https://127.0.0.1:9043/ibm/console`
+
+The default admin user ID is `wsadmin` and the default password can be retrieved by running `kubectl exec <pod_name> cat /tmp/PASSWORD`
+
+Note that when a server running inside a pod is restarted, the container will be killed and all changes made via Admin console will be lost. Hence, any configurations that require a server restart should be done using configuration properties or scripts.
+
+### Analyzing WebSphere Application Server messages
+
+Logging in JSON format is enabled by default. Log events are forwarded to Elasticsearch automatically. Use Kibana to monitor and analyze the log events. Sample Kibana dashboards are provided at the Helm chart's [dashboards](https://github.com/IBM/charts/tree/master/stable/ibm-websphere-traditional/ibm_cloud_pak/pak_extensions/dashboards/) folder.
+
+#### View JSON logs in a Kibana dashboard
+
+**Important**: WebSphere Application Server must have generated log records before you set up the dashboard. Otherwise, you might see warnings or errors about missing fields when you import the dashboard.
+1. Create a logstash-* index pattern.
+   1. In the IBM Cloud Private console, open the Kibana dashboard by selecting **Platform > Logging**, and then select **Management > Index Patterns**.
+   2. In the Index name or pattern field, enter logstash-*.
+   3. For the Time Filter field, select @timestamp.
+   4. Click **Create**.
+  
+2. Create the WebSphere Application Server Kibana dashboard.
+   1. Download the sample Kibana dashboard JSON file from the dashboards folder in the IBM/charts/ibm-websphere-traditional GitHub repository.
+   2. Import the WebSphere Application Server sample dashboard.
+      1. From the Kibana tab, select **Management > Saved Objects**.
+      2. Click **Import**, and select the sample dashboard JSON file.
+      3. Click **Yes, overwrite all** to complete importing the dashboard.
+3. View the WebSphere Application Server dashboard on the Kibana tab by clicking **Dashboard** and selecting the dashboard.
+
+#### View basic mode logs in Kibana
+
+1. In the IBM Cloud Private console, open the Kibana dashboard by selecting **Platform > Logging**.
+2. Click the **Discover** tab.
+3. Review the log files.
+
 ## Storage
 
 If persistence is enabled, each server Pod requires one Physical Volume. You either need to create a
@@ -293,9 +422,12 @@ If these persistent volumes are to be created automatically at the time of insta
 
 More information about persistent volumes and the system administration steps required can be found [here](https://kubernetes.io/docs/concepts/storage/persistent-volumes/).
 
+## Secure Encryption of Persistent Storage
+Encryption of persistent storage can be achieved through encryption of the host file system upon which the persistent volumes are created. For instructions on how to set up encryption using LUKS, refer to [these instructions](https://www.ibm.com/support/knowledgecenter/en/SS6PEW_10.0.0/com.ibm.help.security.dimeanddare.doc/security/t_security_settingupluksencryption.html).
+
 ## Limitations
 
-See [`RELEASENOTES.md`](./RELEASENOTES.md) for the list of limitations.
+See release notes (RELEASENOTES.md) for the list of limitations.
 
 ## Documentation
 

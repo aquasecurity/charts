@@ -1,0 +1,85 @@
+{{- include "sch.config.init" (list . "sch.chart.zeno.config.values") -}}
+{{- $name := "service-instance" -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "sch.names.fullCompName" (list . $name) }}
+  namespace: {{ .Values.global.zenControlPlaneNamespace }}
+  labels:
+{{ include "sch.metadata.labels.standard" (list . $name (dict "icpdata_addon" "true" "waiopsServiceInstance" "true")) | trim | indent 4 }}
+data:
+  instance.json: |
+    {
+      "id": "{{ .Values.global.zenServiceInstanceId | int64 }}",
+      "addon_type": "aiops",
+      "display_name": "{{ .Values.global.zenServiceInstanceDisplayName }}",
+      "namespace": "{{ .Release.Namespace }}",
+      "addon_version": "1.0.0",
+      "create_arguments": {
+        "deployment_id": "{{ include "zeno.deploymentId" . }}",
+        "parameters": {
+          "url": "https://ibm-aiops---{{ .Values.global.zenServiceInstanceDisplayName }}-aio-{{ .sch.chart.components.controller }}.{{ .Values.global.tetheredNamespace}}:8000/v1/zeno/service_instances",
+          "watson": true,
+          "serviceId": "aiops"
+        },
+        "resources": {
+          "cpu": "-",
+          "memory": "-"
+        },
+        "description": "Automate how you detect, diagnose, and respond to IT incidents in real time.",
+        "metadata": {}
+      }
+    }
+  nginx.conf: |
+    location /aiops/ibm-aiops---{{.Values.global.zenServiceInstanceDisplayName}}/instances/{{ .Values.global.zenServiceInstanceId | int64 }}/api/ {
+      if ($request_method ~* "(GET|POST)") {
+        add_header "Access-Control-Allow-Origin"  *;
+      }
+      # Preflighted requests
+      if ($request_method = OPTIONS ) {
+        add_header "Access-Control-Allow-Origin"  *;
+        add_header "Access-Control-Allow-Methods" "GET, POST, PUT, DELETE, OPTIONS, HEAD";
+        add_header "Access-Control-Allow-Headers" "Origin, Accept, Content-Type, Content-Length, Authorization, User-Agent";
+        return 200;
+      }
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "upgrade";
+      proxy_set_header Host $host;
+      proxy_pass https://ibm-aiops---{{.Values.global.zenServiceInstanceDisplayName}}-aio-chatops-slack-integrator.{{.Release.Namespace}}:8000/;
+    }
+
+    location /aiops/addon/aiops-{{ .Values.global.zenServiceInstanceId | int64 }}/ {
+      access_by_lua_file /nginx_data/checkjwt.lua;
+      if ($request_method ~* "(GET|POST)") {
+        add_header "Access-Control-Allow-Origin"  *;
+      }
+      # Preflighted requests
+      if ($request_method = OPTIONS ) {
+        add_header "Access-Control-Allow-Origin"  *;
+        add_header "Access-Control-Allow-Methods" "GET, POST, PUT, DELETE, OPTIONS, HEAD";
+        return 200;
+      }
+      proxy_http_version 1.1;
+      proxy_set_header  Upgrade $http_upgrade;
+      proxy_set_header  Connection "upgrade";
+      
+      proxy_pass https://ibm-aiops---{{.Values.global.zenServiceInstanceDisplayName}}-aio-addon.{{.Release.Namespace}}:8000/;
+    }
+
+    location /aiops/ibm-aiops---{{.Values.global.zenServiceInstanceDisplayName}}-internal/instances/ {
+      internal;
+      if ($request_method ~* "(GET|POST)") {
+        add_header "Access-Control-Allow-Origin"  *;
+      }
+      # Preflighted requests
+      if ($request_method = OPTIONS ) {
+        add_header "Access-Control-Allow-Origin"  *;
+        add_header "Access-Control-Allow-Methods" "GET, POST, PUT, DELETE, OPTIONS, HEAD";
+        return 200;
+      }
+      proxy_http_version 1.1;
+      proxy_set_header  Upgrade $http_upgrade;
+      proxy_set_header  Connection "upgrade";
+      proxy_pass https://ibm-aiops---{{.Values.global.zenServiceInstanceDisplayName}}-aio-controller.{{.Release.Namespace}}:8000/;
+    }

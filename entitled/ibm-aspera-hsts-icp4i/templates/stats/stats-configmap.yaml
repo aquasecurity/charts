@@ -1,0 +1,11 @@
+{{- include "sch.config.init" (list . "hsts.sch.chart.config.values") -}}
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ include "sch.names.fullCompName" (list . .sch.chart.components.stats.compName ) | quote }}
+  labels:
+{{  include "sch.metadata.labels.standard" (list . .sch.chart.components.stats.compName) | indent 4 }}
+data:
+  STATS_REDIS_ADDRESS: "{{ template "hsts.hosts.redis" . }}:{{ template "hsts.ports.redis" . }}"
+  STATS_SERVICE_URL: {{ printf "http://%s:%d" (include "sch.names.fullCompName" (list . .sch.chart.components.stats.compName)) (int64 .Values.stats.service.api.port) | quote }}
+  LEADER_ELECTION_LOCK_NAME: {{ include "hsts.locks.stats" . }}

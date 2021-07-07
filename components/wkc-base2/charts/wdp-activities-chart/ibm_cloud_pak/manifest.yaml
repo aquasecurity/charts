@@ -1,0 +1,10 @@
+images:
+- image: wdp-activities:3.0.103
+  references:
+  - repository: wdp-activities:3.0.103
+    pull-repository: ${DOCKER_REGISTRY}/wdp-activities:3.0.103
+    pull-authorization:
+      username:
+        env: ARTIFACTORY_USERNAME
+      password:
+        env: ARTIFACTORY_PASSWORD

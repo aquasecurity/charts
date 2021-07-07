@@ -1,0 +1,21 @@
+{{- $compName := "zen-service-catalog-extension-points" -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: zen-service-catalog-extension-points
+  labels:
+    {{- include "zenhelper.labels" (list . $compName) | indent 4 }}
+    icpdata_addon: "true"
+    icpdata_addon_version: "3.5.2"
+data:
+  extension_points: |
+    [
+      {
+        "id":             "service_catalog_category",
+        "display_name":   "Service catalog categories",
+        "edit_allowed":   true,
+        "insert_allowed": true,
+        "editable_by":    "administrator",
+        "insertable_by":  "administrator"
+      }
+    ]

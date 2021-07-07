@@ -12,12 +12,13 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: audit-config
-  namespace: {{ .Values.service.namespace }}
+  namespace: {{ .Release.Namespace }}
   labels:
-    app: {{ template "fullname" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    "app.kubernetes.io/name": {{ template "fullname" . }}
+    "helm.sh/chart": "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
+    "app.kubernetes.io/instance": "{{ .Release.Name }}"
+    "app.kubernetes.io/managed-by": "{{ .Release.Service }}"
 data:
   JOURNAL_PATH: {{ .Values.auditService.config.journalPath }}
   logrotate-conf: "\n # rotate log files weekly\ndaily\n\n# use the syslog group by
@@ -26,5 +27,11 @@ data:
     rotating old ones \ncreate\n\n# uncomment this if you want your log files compressed\n
     #compress\n\n# packages drop log rotation information into this directory\n include
     /etc/logrotate.d\n# no packages own wtmp, or btmp -- we'll rotate them here\n"
-  logrotate: "/var/log/audit/*.log {\n  su root root\n  
-             copytruncate\n  rotate 24\n  hourly\n  missingok\n  notifempty\n}"
+  logrotate: |-
+    /var/log/audit/*.log {
+      copytruncate
+      rotate 24
+      hourly
+      missingok
+      notifempty
+    }

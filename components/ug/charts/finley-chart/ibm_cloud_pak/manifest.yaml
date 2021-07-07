@@ -1,0 +1,19 @@
+images:
+- image: finley:b4437_50f41d3dfa84cb35558c5e77ca8ef78ac7ec24bd
+  references:
+  - repository: finley:b4437_50f41d3dfa84cb35558c5e77ca8ef78ac7ec24bd
+    pull-repository: ${DOCKER_REGISTRY}/finley:b4437_50f41d3dfa84cb35558c5e77ca8ef78ac7ec24bd
+    pull-authorization:
+      username:
+        env: ARTIFACTORY_USERNAME
+      password:
+        env: ARTIFACTORY_PASSWORD
+- image: wkc-init-container:1.0.107
+  references:
+  - repository: wkc-init-container:1.0.107
+    pull-repository: ${DOCKER_REGISTRY}/wkc-init-container:1.0.107
+    pull-authorization:
+      username:
+        env: ARTIFACTORY_USERNAME
+      password:
+        env: ARTIFACTORY_PASSWORD

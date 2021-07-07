@@ -13,14 +13,16 @@ kind: Service
 metadata:
   annotations:
     prometheus.io/scrape: 'true'
+    prometheus.io/scheme: 'https'
   name: cam-ui-basic
   labels:
     name: cam-ui-basic
-    app: {{ template "fullname" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    "app.kubernetes.io/name": {{ template "fullname" . }}
+    "helm.sh/chart": "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
-  namespace: {{ .Values.service.namespace }}
+    "app.kubernetes.io/instance": "{{ .Release.Name }}"
+    "app.kubernetes.io/managed-by": "{{ .Release.Service }}"
+  namespace: {{ .Release.Namespace }}
 spec:
   ports:
   - port: 39002

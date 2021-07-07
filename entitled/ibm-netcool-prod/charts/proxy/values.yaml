@@ -1,0 +1,60 @@
+########################################################################
+#
+# Licensed Materials - Property of IBM
+#
+# 5725Q09
+#
+# (C) Copyright IBM Corp.
+#
+# 2018-2019 All Rights Reserved
+#
+# US Government Users Restricted Rights - Use, duplication or disclosure 
+# restricted by GSA ADP Schedule Contract with IBM Corp.
+#
+########################################################################
+
+global:
+  cluster:
+    # Public name or IP the deployment cluster will be accessible from.
+    fqdn: 
+
+  # Define where/who the images will be pulled from
+  image:
+    # This is the artifactory server to pull the docker images from
+    repository: ""
+    # Secret used to access the docker repository above
+    secret: ""
+    # pullPolicy: IfNotPresent change to Always to make the latest is always picked up
+    pullPolicy: Always
+    # Use image tags instead of digests
+    useTag: true
+  rbac:
+    create: true
+ 
+replicaCount: 1
+image:
+  name: qp-proxy
+  tag: 1.6.3-20201201000332
+  digest: sha256:f53520f4f799f0fe7a8d12d232df45fa1a798aa8f0b955ee45a53d06453df885
+
+proxy:
+  ports:
+    internal:
+      aggp: 6001
+      aggb: 6002
+  configmap:
+    name: proxy-config
+  tls:
+    enabled: true
+    handshakeTimeoutMs: 2000
+  connectionTimeoutMs: 900000
+  readiness:
+    initialDelaySeconds: 10
+    periodSeconds: 5
+    timeoutSeconds: 5
+    failureThreshold: 3
+  liveness:
+    initialDelaySeconds: 30
+    periodSeconds: 5
+    timeoutSeconds: 5
+    failureThreshold: 3

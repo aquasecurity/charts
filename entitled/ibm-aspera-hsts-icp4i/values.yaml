@@ -1,0 +1,304 @@
+# Whether the application is running production workloads
+productionDeployment: true
+
+global:
+  replicas: 3
+  resources:
+    all: medium
+    ascp: ""
+    asperanode: ""
+  image:
+    repository: "cp.icr.io/cp/icp4i/aspera"
+    pullSecret: "ibm-entitlement-key"
+
+rbac:
+  serviceAccountName: ibm-aspera-hsts-icp4i
+
+arch:
+  amd64: "3 - Most preferred"
+
+redis:
+  # If not deploying redis, specify the host and port of an existing redis host
+  deploy: true
+  host: ""
+  port: 6379
+  # Values for redis subchart; used when deploy is true
+  serviceAccount:
+    create: false
+    name: ibm-aspera-hsts-icp4i
+  persistence:
+    enabled: false
+    useDynamicProvisioning: false
+    existingClaimName: ""
+    accessMode: ReadWriteMany
+    storageClassName: ""
+  image:
+    name: aspera-redis
+    tag: 4.0.12-rhel-amd64
+    pullPolicy: IfNotPresent
+  rbac:
+    create: false
+  serviceAccount:
+    create: false
+    name: ibm-aspera-hsts-icp4i
+  resources:
+    server:
+      requests:
+        memory: 100Mi
+        cpu: ".2"
+      limits:
+        memory: 5Gi
+        cpu: "1"
+    sentinel:
+      requests:
+        memory: 5Mi
+        cpu: ".05"
+      limits:
+        memory: 100Mi
+        cpu: '.2'
+
+tls:
+  issuer: ""
+
+ingress:
+  hostname: null
+  tlsSecret: ""
+
+# asconfigurator commands to be run on each aspera.conf
+asperaconfig: []
+
+# Optional secret containing server sshd public/private keys
+# Secret keys used:
+# - ssh_host_rsa_key
+# - ssh_host_rsa_key.pub
+sshdKeysSecret: ""
+
+securityContext:
+  fsGroup: 1001
+
+persistence:
+  - useDynamicProvisioning: true
+    storageClassName: null
+    size: 10Gi
+    claimName: ''
+    mountPath: /data
+
+dashboard:
+  enabled: true
+
+# shared
+
+aej:
+  replicas: null
+  image:
+    repository: ""
+    name: aspera-hsts-aej
+    tag: 3.9.6-rhel-amd64
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+  config:
+    queueCapacity: 1000
+
+ascp:
+  image:
+    repository: ""
+    name: aspera-hsts-ascp-server
+    tag: 3.9.6-rhel-amd64
+    pullPolicy: IfNotPresent
+
+asperanode:
+  replicas: null
+  clusterId: ""
+  httpsPort: 9092
+  asperaLicense: null
+  tokenEncryptionKeySecret: null
+  nodeAdminSecret: null
+  image:
+    repository: ""
+    name: aspera-hsts-asperanode
+    tag: 3.9.6-rhel-amd64
+    pullPolicy: IfNotPresent
+  autoscale:
+    api:
+      enabled: false
+      minReplicas: 3
+      maxReplicas: 5
+      cpuAverageUtilization: 50
+
+election:
+  image:
+    repository: ""
+    name: aspera-hsts-election
+    tag: 1.3.0-rhel-amd64
+    pullPolicy: IfNotPresent
+
+lifecycle:
+  replicas: null
+  image:
+    repository: ""
+    name: aspera-hsts-lifecycle
+    tag: 1.3.0-rhel-amd64
+    pullPolicy: IfNotPresent
+  service:
+    api:
+      type: ClusterIP
+      port: 80
+
+loadbalancer:
+  image:
+    repository: ""
+    name: aspera-hsts-loadbalancer
+    tag: 1.3.0-rhel-amd64
+    pullPolicy: IfNotPresent
+
+stats:
+  replicas: null
+  image:
+    repository: ""
+    name: aspera-hsts-stats
+    tag: 1.3.0-rhel-amd64
+    pullPolicy: IfNotPresent
+  service:
+    api:
+      type: ClusterIP
+      port: 80
+
+swarm:
+  image:
+    repository: ""
+    name: aspera-hsts-swarm
+    tag: 1.3.0-rhel-amd64
+    pullPolicy: IfNotPresent
+
+# ascp
+
+ascpLoadbalancer:
+  replicas: null
+  strategy: MIN_SESSIONS
+  service:
+    type: ClusterIP
+    port: 80
+
+tcpProxy:
+  replicas: null
+  image:
+    repository: ""
+    name: aspera-hsts-tcp-proxy
+    tag: 1.3.0-rhel-amd64
+    pullPolicy: IfNotPresent
+  listenAddr: ":8022"
+  service:
+    type: LoadBalancer
+    port: 33001
+
+ascpSwarm:
+  replicas: null
+  service:
+    type: ClusterIP
+    port: 80
+  config:
+    hostPortMin: 34001
+    hostPortMax: 34101
+    minAvailable: 1
+    maxRunning: 3
+    member:
+      name:
+        prefix: ""
+    nodeLabels:
+      - node-role.kubernetes.io/worker=
+
+# node
+
+nodedLoadbalancer:
+  replicas: null
+  strategy: MIN_SESSIONS
+  service:
+    type: ClusterIP
+    port: 80
+
+httpProxy:
+  replicas: null
+  image:
+    repository: ""
+    name: aspera-hsts-http-proxy
+    tag: 1.3.0-rhel-amd64
+    pullPolicy: IfNotPresent
+  listenAddr: ":8000"
+  service:
+    api:
+      type: ClusterIP
+      port: 9092
+
+nodedSwarm:
+  replicas: null
+  service:
+    type: ClusterIP
+    port: 80
+  config:
+    minAvailable: 1
+    maxRunning: 3
+    member:
+      name:
+        prefix: ""
+    nodeLabels:
+      - node-role.kubernetes.io/worker=
+
+# misc
+
+firstboot:
+  image:
+    repository: ""
+    name: aspera-hsts-firstboot
+    tag: 3.9.6-rhel-amd64
+    pullPolicy: IfNotPresent
+
+probe:
+  image:
+    repository: ""
+    name: aspera-hsts-probe
+    tag: 1.3.0-rhel-amd64
+    pullPolicy: IfNotPresent
+
+prometheusEndpoint:
+  replicas: null
+  image:
+    repository: ""
+    name: aspera-hsts-prometheus-endpoint
+    tag: 1.3.0-rhel-amd64
+    pullPolicy: IfNotPresent
+  service:
+    api:
+      type: ClusterIP
+      port: 2112
+  config:
+    listenAddr: ":2112"
+
+utils:
+  image:
+    repository: ""
+    name: aspera-hsts-utils
+    tag: 1.3.0-rhel-amd64
+    pullPolicy: IfNotPresent
+
+rproxy:
+  address: ""
+
+sch:
+  rbac:
+    serviceAccountName: ibm-sch-secret-gen
+  image:
+    name: aspera-hsts-utils
+    tag: 1.3.0-rhel-amd64
+    pullPolicy: IfNotPresent
+  global:
+    image:
+      repository: ""
+      pullSecret: ""
+
+authorizedKeys: []
+vlinks: []
+
+# Not intended to be changed
+# Ensures that ibm-sch secret generation works when using an appName override
+nameOverride: aspera-hsts

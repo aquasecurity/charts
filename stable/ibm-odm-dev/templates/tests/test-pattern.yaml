@@ -7,16 +7,58 @@ metadata:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
+{{ include "odm-additional-labels" . | indent 4 }}
   annotations:
-    "helm.sh/hook": test-success
+    helm.sh/hook: test-success
 spec:
+{{ include "odm-serviceAccountName" . | indent 2 }}
+  hostNetwork: false
+  hostPID: false
+  hostIPC: false
+  securityContext:
+    runAsNonRoot: true
+    {{- if and (.Values.customization.runAsUser) (not (.Capabilities.APIVersions.Has "route.openshift.io/v1/Route")) }}
+    runAsUser: 1000
+    fsGroup: 10000
+    {{- end }}
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: beta.kubernetes.io/arch
+            operator: In
+            values:
+            {{- if .Values.image.arch }}
+            - {{ .Values.image.arch }}
+            {{- else }}
+            - {{ template "arch" . }}
+            {{- end }}
   containers:
   - name: {{ template "odm.test.fullname" . }}
-    image: "radial/busyboxplus:curl"
+{{ include "image.tagOrDigest" (dict "containerName" "odm" "root" .) | indent 4  }}
+    resources:
+      requests:
+        cpu: 500m
+        memory: 512Mi
+      limits:
+        cpu: 2
+        memory: 4096Mi
+    securityContext:
+      {{- if and (.Values.customization.runAsUser) (not (.Capabilities.APIVersions.Has "route.openshift.io/v1/Route")) }}
+      runAsUser: 1000
+      {{- end }}
+      runAsNonRoot: true
+      privileged: false
+      readOnlyRootFilesystem: false
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
     env:
       - name: ODMSERVER
         value: {{ template "fullname" . }}
-    command: ["sh", "-c", "/tests/suite.sh"]
+    command: ["/bin/bash", "-c", "/tests/suite.sh"]
     volumeMounts:
       - name: tests
         mountPath: /tests
@@ -26,3 +68,7 @@ spec:
         defaultMode: 0755
         name: {{ template "odm.test-configmap.fullname" . }}
   restartPolicy: Never
+  {{- if (not (empty .Values.image.pullSecrets )) }}
+  imagePullSecrets:
+  - name: {{ .Values.image.pullSecrets }}
+  {{- end }}

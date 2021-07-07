@@ -1,0 +1,95 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ .Values.environment.name }}-terminating-pod-cleanup-cron
+  labels: 
+    name: {{ .Values.environment.name }}-terminating-pod-cleanup-cron
+    app: {{ .Values.environment.name }}-terminating-pod-cleanup-cron
+{{- include "helm.labels" . | indent 4 }}
+{{- include "cloudpak.labels" . | indent 4 }}
+  annotations:
+{{- include "zenhelper.annotations" . | indent 4 }}
+spec:
+  schedule: "{{ .Values.terminatingPodCleanupCron.schedule }}"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 0
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      activeDeadlineSeconds: 1800
+      template:
+        metadata:
+          annotations:
+{{- include "zenhelper.annotations" . | indent 12 }}
+          labels: 
+            name: {{ .Values.environment.name }}-terminating-pod-cleanup-cron
+            app: {{ .Values.environment.name }}-terminating-pod-cleanup-cron
+{{- include "helm.labels" . | indent 12 }}
+{{- include "cloudpak.labels" . | indent 12 }}
+        spec:
+            securityContext:
+              runAsUser: {{ .Values.user.uid }}
+            affinity:
+              nodeAffinity:
+                requiredDuringSchedulingIgnoredDuringExecution:
+                  nodeSelectorTerms:
+                    - matchExpressions:
+                      - key: beta.kubernetes.io/arch
+                        operator: In
+                        values:
+                          - {{ .Values.global.architecture }}
+            hostNetwork: false
+            hostPID: false
+            hostIPC: false     
+            containers:
+            - name: {{ .Values.environment.name }}-terminating-pod-cleanup-cron
+              image: "{{ .Values.global.dockerRegistryPrefix }}/{{ .Values.trustStore.image }}:{{ .Values.spark.image.tag }}"
+              imagePullPolicy: {{ .Values.microService.pullPolicy }}
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                  - ALL 
+                runAsUser: {{ .Values.user.uid }}
+                runAsNonRoot: true
+                privileged: false
+                readOnlyRootFilesystem: false
+              resources:
+                requests:
+                  cpu: {{ .Values.terminatingPodCleanupCron.requests.cpu }}
+                  memory: {{ .Values.terminatingPodCleanupCron.requests.memory }}
+                limits:
+                  cpu: {{ .Values.terminatingPodCleanupCron.limits.cpu }}
+                  memory: {{ .Values.terminatingPodCleanupCron.limits.memory }}
+              command: ["/bin/sh", "-c"]
+              args : ["bash {{ .Values.cleanupCron.scriptPath }}/cleanup-terminating-pod.sh"]
+              volumeMounts:
+              - name: "{{ .Values.environment.name }}-cleanup-scripts"
+                mountPath: "{{ .Values.cleanupCron.scriptPath }}"
+              readinessProbe:
+                exec:
+                  command:
+                  - ls
+                  - {{ .Values.cleanupCron.scriptPath }}/cleanup-terminating-pod.sh
+                initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+                periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+                failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+                timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+              livenessProbe:
+                exec:
+                  command:
+                  - ls
+                  - {{ .Values.cleanupCron.scriptPath }}/cleanup-terminating-pod.sh
+                initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+                periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+                failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+                timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+            restartPolicy: "Never"
+            serviceAccount: {{ .Values.sa.editor }}
+            serviceAccountName: {{ .Values.sa.editor }}
+            volumes:
+            - name: "{{ .Values.environment.name }}-cleanup-scripts"
+              configMap:
+                name: "{{ .Values.environment.name }}-cleanup-scripts"

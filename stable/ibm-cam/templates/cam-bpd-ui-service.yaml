@@ -13,18 +13,20 @@ kind: Service
 metadata:
   annotations:
     prometheus.io/scrape: 'true'
+    prometheus.io/scheme: 'https'
   name: cam-bpd-ui
   labels:
     name: cam-bpd-ui
-    app: {{ template "name" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    "app.kubernetes.io/name": {{ template "name" . }}
+    "helm.sh/chart": "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
     release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-  namespace: {{ .Values.service.namespace }}
+    "app.kubernetes.io/instance": "{{ .Release.Name }}"
+    "app.kubernetes.io/managed-by": {{ .Release.Service }}
+  namespace: {{ .Release.Namespace }}
 spec:
   ports:
-    - port: 8080
-      targetPort: 8080
+    - port: 8443
+      targetPort: 8443
       name: cam-bpd-ui
   selector:
     name: cam-bpd-ui

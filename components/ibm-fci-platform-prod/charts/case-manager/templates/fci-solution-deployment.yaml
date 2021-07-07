@@ -1,0 +1,253 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "case.fullname" . }}-fci-solution
+  labels:
+{{- include "common.label.metadata" (list . (printf "%s-%s" (include "case.name" .) "fci-solution") (include "case.chart" .) .Release.Name .Release.Service ) | indent 4 }}
+spec:
+  progressDeadlineSeconds: 1800
+{{ include "common.scaleDownIfDisabled" . | indent 2 }}
+  selector:
+    matchLabels:
+{{- include "common.selector.labels" (list . (printf "%s-%s" (include "case.name" .) "fci-solution") .Release.Name ) | indent 6 }}
+  template:
+    metadata:
+      annotations:
+{{ include "common.meteringAnnotations" . | indent 8 }}
+      labels:
+{{- include "common.label.metadata" (list . (printf "%s-%s" (include "case.name" .) "fci-solution") (include "case.chart" .) .Release.Name .Release.Service ) | indent 8 }}
+{{- include "common.using-secrets" (list "db2" "mqm" "platform") | indent 8 }}
+    spec:
+{{ include "common.configureHostAliases" . | indent 6 }}
+{{ include "common.PodHostConfig" . | indent 6 }}
+      securityContext:
+{{ include "common.PodSecurityContextConfig" . | indent 8 }}
+      affinity:
+{{ include "common.ArchNodeAffinity" . | indent 8 }}
+      {{- if .Values.global.pvRequiresPermissionsFix }}
+      serviceAccountName: fci-kube-api-fowner
+      serviceAccount: fci-kube-api-fowner
+      {{- else }}
+      serviceAccountName: fci-common-scripts
+      serviceAccount: fci-common-scripts
+      {{- end }}
+      volumes:
+      - name: config-volume
+        configMap:
+          name: {{ .Release.Name }}-platform-config-files
+      - name: file-secrets
+        secret:
+          secretName: {{ .Release.Name }}-platform-secret-files
+      - name: fci-solution-volume
+        persistentVolumeClaim:
+          claimName: {{ template "case.fullname" . }}-fci-solution
+      - name: logs
+        emptyDir: {}
+      - name: shared-data
+        emptyDir: {}
+      - name: keytab-file
+        secret:
+          secretName: {{ .Release.Name }}-case-keytab
+      initContainers:
+      - name: init-svc-depend
+        resources:
+{{ toYaml .Values.sideCarContainers.resources | indent 10 }}
+        securityContext:
+{{ include "common.RestrictedContainerSecurityContext" . | indent 10 }}
+        image: "{{ required "global.dockerRegistryPrefix must specify from which repository the docker image should be fetched." .Values.global.dockerRegistryPrefix }}/{{ .Values.global.commonScripts.image.repository }}:{{ .Values.global.commonScripts.image.tag }}"
+        command: [ "/common-scripts/init-container-svc-depend.sh" ]
+{{ if eq .Values.global.DB2_PROVISIONER "CLOUD_PAK" }}
+        args: [ "{{ .Release.Namespace }}/{{ template "case.fullname" . }}-fci-messaging", {{ .Release.Namespace }}/{{ .Release.Name }}-security-auth-nodejs, {{ .Release.Namespace }}/{{ .Release.Name }}-cedm-integration ]
+{{ else }}
+        args: [ "{{ .Release.Namespace }}/{{ template "case.fullname" . }}-fci-messaging", "{{ .Release.Namespace }}/{{ .Release.Name }}-db2-datastore-0", {{ .Release.Namespace }}/{{ .Release.Name }}-security-auth-nodejs, {{ .Release.Namespace }}/{{ .Release.Name }}-cedm-integration ]
+{{ end }}
+      {{- if .Values.global.pvRequiresPermissionsFix }}
+      - name: pv-permissions
+        image: "{{ required "global.dockerRegistryPrefix must specify from which repository the docker image should be fetched." .Values.global.dockerRegistryPrefix }}/{{ .Values.global.commonScripts.image.repository }}:{{ .Values.global.commonScripts.image.tag }}"
+        resources:
+{{ toYaml .Values.sideCarContainers.resources | indent 12 }}
+        securityContext:
+{{ include "common.RootFownerContainerSecurityContext" . | indent 12 }}
+        args:
+        - chmod -R g+w /mount;
+        command:
+        - /bin/sh
+        - -c
+        volumeMounts:
+        - mountPath: /mount
+          name: fci-solution-volume
+      {{- end }}
+      containers:
+      - image: {{ required "global.dockerRegistryPrefix must specify from which repository the docker image should be fetched." .Values.global.dockerRegistryPrefix }}/{{ .Values.liberty.image.repository }}:{{ .Values.liberty.image.tag }}
+        imagePullPolicy: {{ .Values.liberty.image.pullPolicy }}
+        name: fci-solution
+        resources:
+{{ toYaml .Values.liberty.resources | indent 10 }}
+{{- with .Values.liberty.nodeSelector }}
+        nodeSelector:
+{{ toYaml . | indent 10 }}
+{{- end }}
+{{- with .Values.liberty.affinity }}
+        affinity:
+{{ toYaml . | indent 10 }}
+{{- end }}
+{{- with .Values.liberty.tolerations }}
+        tolerations:
+{{ toYaml . | indent 10 }}
+{{- end }}
+        securityContext:
+{{ include "common.RestrictedContainerSecurityContext" . | indent 10 }}
+          {{- if .Values.global.pvRequiresPermissionsFix }}
+          runAsUser: {{ .Values.liberty.runAsUser}}
+          {{- end }}
+        livenessProbe:
+{{ toYaml .Values.liberty.livenessProbe | indent 10 }}
+        readinessProbe:
+{{ toYaml .Values.liberty.readinessProbe | indent 10 }}
+        envFrom:
+        - configMapRef:
+            name: {{ template "case.fullname" . }}
+        - configMapRef:
+            name: {{ template "case.fullname" . }}-krb
+        env:
+{{- if .Values.global.passwords.env_fci_batch_password }}
+{{-     include "common.import-secret" (list . "com_fci_batch_password" "platform" "batch_password") | indent 8 }}
+{{- end  }}
+{{- include "common.import-secret" (list . "com_fci_mq_password" "mqm" "mqm_password") | indent 8 }}
+{{- include "common.import-secret" (list . "com_fci_password" "platform" "com_fci_password") | indent 8 }}
+{{- include "common.import-secret" (list . "com_spss_password" "platform" "com_spss_password") | indent 8 }}
+{{- include "common.import-secret" (list . "SSL_TRUSTSTORE_PASSWORD_CONFIG" "platform" "FCI_JKS_PASSWORD") | indent 8 }}
+{{- include "common.import-secret" (list . "SSL_KEYSTORE_PASSWORD_CONFIG" "platform" "FCI_JKS_PASSWORD") | indent 8 }}
+{{- include "common.import-secret" (list . "SSL_KEY_PASSWORD_CONFIG" "platform" "FCI_JKS_PASSWORD") | indent 8 }}
+{{- include "common.import-secret" (list . "FCI_KAFKA_MSG_KS_ALIASNAME" "platform" "FCI_KAFKA_MSG_JKS_ALIASNAME") | indent 8 }}
+{{- include "common.import-secret" (list . "FCI_KAFKA_MSG_KS_PASSWORD" "platform" "FCI_KAFKA_MSG_JKS_PASSWORD") | indent 8 }}
+{{- include "common.import-secret" (list . "com_fci_keystore_password" "platform" "FCI_JKS_PASSWORD") | indent 8 }}
+{{ if eq .Values.global.DB2_PROVISIONER "CLOUD_PAK" }}
+{{- include "common.import-secret" (list . "com_fci_db2_password" "db2" "db2_password") | indent 8 }}
+{{ else }}
+{{- include "common.import-secret" (list . "com_fci_db2_password" "db2" "FCIAUTHID_PASSWORD") | indent 8 }}
+{{ end }}
+{{- include "common.import-secret" (list . "JWT_KEY" "platform" "JWT_KEY") | indent 8 }}
+        - name: HDP_SHARED_DIR
+          value: /home/wlpadmin
+{{ if eq .Values.global.DB2_PROVISIONER "CLOUD_PAK" }}
+        - name: com_fci_db2_userid
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-db2
+              key: db_userid
+        - name: com_fci_db2_server
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-db2
+              key: db_host
+        - name: com_isii_db2_server
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-db2
+              key: db_host
+        - name: db2_service
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-db2
+              key: db_host
+        - name: com_fci_db2_ssl_port
+          value: "50001"
+{{ else }}
+        - name: com_fci_db2_userid
+          value: fciauthid
+        - name: com_fci_db2_server
+          value: fci-db2-datastore-0
+        - name: com_isii_db2_server
+          value: fci-db2-datastore-0
+        - name: db2_service
+          value: fci-db2-datastore-0
+        - name: com_fci_db2_ssl_port
+          value: "56000"
+{{ end }}
+        ports:
+        - containerPort: 9080
+        - containerPort: 9443
+        volumeMounts:
+        - name: config-volume
+          mountPath: /opt/ibm/wlp/usr/servers/fciServer/server_basic_registry.xml
+          subPath: server_basic_registry.xml
+        - name: file-secrets
+          mountPath: /opt/ibm/wlp/usr/servers/fciServer/resources/security/kafka.client.truststore.jks
+          subPath: fci_universal_ks.jks
+        - name: file-secrets
+          mountPath: /opt/ibm/wlp/usr/servers/fciServer/resources/security/kafka.client.keystore.jks
+          subPath: fci_universal_ks.jks
+        - name: file-secrets
+          mountPath: /opt/ibm/wlp/usr/servers/fciServer/resources/security/fci_kafka_msg.p12
+          subPath: fci_kafka_msg.p12
+        - name: file-secrets
+          mountPath: /opt/ibm/wlp/usr/servers/fciServer/resources/security/fci_universal_ks.jks
+          subPath: fci_universal_ks.jks
+        - mountPath: /fci-shared
+          name: fci-solution-volume
+        - mountPath: /opt/ibm/wlp/usr/servers/fciServer/logs
+          name: logs
+        - name: shared-data
+          mountPath: /home/wlpadmin
+        - mountPath: /etc/security/keytabs
+          name: keytab-file
+      - envFrom:
+        - configMapRef:
+            name: {{ .Release.Name }}-ibm-fci-platform-prod-krb
+        - configMapRef:
+            name: {{ template "case.fullname" . }}-krb
+        image: "{{ required "global.dockerRegistryPrefix must specify from which repository the docker image should be fetched." .Values.global.dockerRegistryPrefix }}/{{ .Values.kerberosClient.image.repository }}:{{ .Values.kerberosClient.image.tag }}"
+        imagePullPolicy: {{ .Values.kerberosClient.image.pullPolicy }}
+        livenessProbe:
+{{ toYaml .Values.kerberosClient.livenessProbe | indent 10 }}
+        readinessProbe:
+{{ toYaml .Values.kerberosClient.readinessProbe | indent 10 }}
+        name: hdp-client
+        resources:
+{{ toYaml .Values.global.kerberos.resources | indent 10 }}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          privileged: false
+          readOnlyRootFilesystem: false
+          runAsNonRoot: true
+          {{- if .Values.global.pvRequiresPermissionsFix }}
+          runAsUser: {{ .Values.global.kerberos.runAsUser }}
+          {{- end }}
+        volumeMounts:
+        - mountPath: /etc/security/keytabs
+          name: keytab-file
+        - name: shared-data
+          mountPath: /home/wlpadmin
+      - image: "{{ required "global.dockerRegistryPrefix must specify from which repository the docker image should be fetched." .Values.global.dockerRegistryPrefix }}/{{ .Values.global.commonScripts.image.repository }}:{{ .Values.global.commonScripts.image.tag }}"
+        name: message-log
+        resources:
+{{ toYaml .Values.sideCarContainers.resources | indent 10 }}
+        args: [/bin/sh, -c, 'tail -n+1 -F /logs/messages.log']
+{{ include "common.sideCarHealthCheck" . | indent 8 }}
+        securityContext:
+{{ include "common.RestrictedContainerSecurityContext" . | indent 10 }}
+          {{- if .Values.global.pvRequiresPermissionsFix }}
+          runAsUser:  {{ .Values.liberty.runAsUser}}
+          {{- end }}
+        volumeMounts:
+        - name: logs
+          mountPath: /logs
+      - image: "{{ required "global.dockerRegistryPrefix must specify from which repository the docker image should be fetched." .Values.global.dockerRegistryPrefix }}/{{ .Values.global.commonScripts.image.repository }}:{{ .Values.global.commonScripts.image.tag }}"
+        name: trace-log
+        resources:
+{{ toYaml .Values.sideCarContainers.resources | indent 10 }}
+        args: [/bin/sh, -c, 'tail -n+1 -F /logs/trace.log']
+{{ include "common.sideCarHealthCheck" . | indent 8 }}
+        securityContext:
+{{ include "common.RestrictedContainerSecurityContext" . | indent 10 }}
+          {{- if .Values.global.pvRequiresPermissionsFix }}
+          runAsUser:  {{ .Values.liberty.runAsUser}}
+          {{- end }}
+        volumeMounts:
+        - name: logs
+          mountPath: /logs
+      restartPolicy: Always

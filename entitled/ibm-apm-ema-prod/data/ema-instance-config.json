@@ -1,0 +1,25 @@
+{
+  "serviceInstanceDisplayName": "instance01",
+  "parameters": {
+    "domain": "",
+    "couchdb": {
+      "username": "",
+      "password": "",
+      "serviceInstance": "",
+      "certificate": ""
+    },
+    "objectStorage": {
+      "username": "",
+      "password": "",
+      "serviceInstance": "",
+      "certificate": ""
+    },
+    "discovery": {
+      "username": "",
+      "password": "",
+      "version": "",
+      "serviceInstance": "",
+      "certificate": ""
+    }
+  }
+}

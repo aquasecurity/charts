@@ -1,0 +1,91 @@
+{{- include "sch.config.init" (list . "hsts.sch.chart.config.values") -}}
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: {{ include "sch.names.fullCompName" (list . .sch.chart.components.aej.compName) | quote }}
+  labels:
+{{  include "sch.metadata.labels.standard" (list . .sch.chart.components.aej.compName) | indent 4 }}
+spec:
+  replicas: {{ include "hsts.replicas.aej" . }}
+  selector:
+    matchLabels:
+{{  include "sch.metadata.labels.standard" (list . .sch.chart.components.aej.compName) | indent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/aej-configmap: {{ include (print $.Template.BasePath "/aej/aej-configmap.yaml") . |  sha256sum | trunc 63 }}
+        {{- if .Values.productionDeployment }}
+{{- include "sch.metadata.annotations.metering" (list . .sch.chart.meteringProd) | indent 8 }}
+        {{- else }}
+{{- include "sch.metadata.annotations.metering" (list . .sch.chart.meteringNonProd) | indent 8 }}
+        {{- end }}
+      labels:
+{{  include "sch.metadata.labels.standard" (list . .sch.chart.components.aej.compName) | indent 8 }}
+        service: {{ include "sch.names.fullCompName" (list . .sch.chart.components.aej.compName ) | quote }}
+    spec:
+      affinity:
+{{- include "sch.affinity.nodeAffinity" (list .) | indent 8 }}
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: service
+                  operator: In
+                  values:
+                  - {{ include "sch.names.fullCompName" (list . .sch.chart.components.aej.compName ) | quote }}
+              topologyKey: "kubernetes.io/hostname"
+      hostNetwork: false
+      hostPID: false
+      hostIPC: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 8000
+      {{- if .Values.global.image.pullSecret }}
+      imagePullSecrets:
+      - name: {{ .Values.global.image.pullSecret }}
+      {{- end }}
+      initContainers:
+{{ include "hsts.spec.init.probe.redis" . | indent 6 }}
+      containers:
+      - name: aej
+        securityContext:
+          privileged: false
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 8000
+          capabilities:
+            drop:
+            - ALL
+        image: {{ include "hsts.image.aej" . }}
+        imagePullPolicy: {{ .Values.aej.image.pullPolicy }}
+        resources:
+          requests:
+            memory: 20Mi
+            cpu: "0.2"
+          limits:
+            memory: 400Mi
+            cpu: "1"
+        ports:
+        - name: aej-port
+          containerPort: 28000
+        readinessProbe:
+          initialDelaySeconds: 2
+          tcpSocket:
+            port: aej-port
+        livenessProbe:
+          initialDelaySeconds: 2
+          tcpSocket:
+            port: aej-port
+        volumeMounts:
+        - name: aej-configmap
+          mountPath: /opt/aspera/etc/aejd.json
+          subPath: aejd.json
+      volumes:
+      - name: aej-configmap
+        configMap:
+          name:	{{ include "sch.names.fullCompName" (list . .sch.chart.components.aej.compName ) | quote }}
+      - name: aej-conf
+        emptyDir: {}

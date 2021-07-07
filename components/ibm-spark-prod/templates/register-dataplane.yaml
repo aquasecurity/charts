@@ -1,0 +1,108 @@
+# This is a YAML-formatted file.
+
+apiVersion: apps/v1 # for versions before 1.8.0 use apps/v1beta1
+kind: Deployment
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: "{{ .Values.environment.name }}-register-hb-dataplane"
+  labels:
+    app: "{{ .Values.environment.name }}-register-hb-dataplane"
+{{- include "helm.labels" . | indent 4 }}
+{{- include "cloudpak.labels" . | indent 4 }}
+  annotations:
+{{- include "zenhelper.annotations" . | indent 8 }}
+spec:
+  selector:
+    matchLabels:
+      app: "{{ .Values.environment.name }}-register-hb-dataplane"
+{{- include "helm.labels" . | indent 6 }}
+{{- include "cloudpak.labels" . | indent 6 }}
+  template: # create pods using pod definition in this template
+    metadata:
+      annotations:
+{{- include "zenhelper.annotations" . | indent 8 }}
+      # the name is not included in the meta data as a unique name is
+      # generated from the deployment name
+      labels:
+        app: "{{ .Values.environment.name }}-register-hb-dataplane"
+{{- include "helm.labels" . | indent 8 }}
+{{- include "cloudpak.labels" . | indent 8 }}
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: beta.kubernetes.io/arch
+                operator: In
+                values:
+                - {{ .Values.global.architecture }}
+      serviceAccount: {{ .Values.sa.viewer }}
+      serviceAccountName: {{ .Values.sa.viewer }}
+      securityContext:
+        runAsUser: {{ .Values.user.uid }}
+      hostNetwork: false
+      hostPID: false
+      hostIPC: false
+      containers:
+      - name: "{{ .Values.environment.name }}-register-hb-dataplane"
+        env:
+        - name: TEMPLATE_LIST
+          valueFrom:
+            configMapKeyRef:
+               name: "{{ .Values.environment.name }}-{{ .Values.dataplaneReg.name }}-script"
+               key: template-list
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          runAsUser: {{ .Values.user.uid }}
+          runAsNonRoot: true
+          privileged: false
+          readOnlyRootFilesystem: false
+        image: "{{ .Values.global.dockerRegistryPrefix }}/{{ .Values.dataplaneReg.image }}:{{ .Values.spark.image.tag }}"
+        imagePullPolicy: {{ .Values.microService.pullPolicy }}
+        readinessProbe:
+          exec:
+            command:
+            - ls
+            - /tmp/_SUCCESS
+          initialDelaySeconds: {{ .Values.dataplaneReg.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.dataplaneReg.readinessProbe.periodSeconds }}
+          failureThreshold: {{ .Values.dataplaneReg.readinessProbe.failureThreshold }}
+        livenessProbe:
+          exec:
+            command:
+            - ls
+            - /tmp/_SUCCESS
+          initialDelaySeconds: {{ .Values.dataplaneReg.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.dataplaneReg.livenessProbe.periodSeconds }}
+          failureThreshold: {{ .Values.dataplaneReg.livenessProbe.failureThreshold }}
+        resources:
+          requests:
+            cpu: {{ .Values.dataplaneReg.requests.cpu }}
+            memory: {{ .Values.dataplaneReg.requests.memory }}
+          limits:
+            cpu: {{ .Values.dataplaneReg.limits.cpu }}
+            memory: {{ .Values.dataplaneReg.limits.memory }}
+        command: ["/bin/bash", "-c"]
+        args:
+          - "bash {{ .Values.dataplaneReg.scriptPath }}register-dataplane.sh {{ .Values.dataplaneReg.name }} {{ .Values.nginx.scheme }}://{{ .Values.environment.name }}-{{ .Values.nginx.name }}-external {{ .Values.microService.scheme }}://{{ .Values.environment.name }}-control-plane:{{ .Values.microService.port }} {{ .Values.dataPlaneManagerService.path }} {{ .Values.helmBasedService.path }} {{ .Values.nfs.path }} {{ .Values.nfs.server }} {{ .Values.icp4d.nginxUrl }} {{ .Values.dataplaneReg.scriptPath }} {{ .Release.Namespace }} {{ .Values.nginx.containerPort }} {{ .Values.cleanupCron.scriptPath }} {{ .Values.cleanupCron.configPath }}"
+        volumeMounts:
+        - name: "{{ .Values.environment.name }}-{{ .Values.dataplaneReg.name }}-script"
+          mountPath: "{{ .Values.dataplaneReg.scriptPath }}"
+        - name: "{{ .Values.environment.name }}-cleanup-scripts"
+          mountPath: "{{ .Values.cleanupCron.scriptPath }}"
+        - name: "{{ .Values.environment.name }}-cleanup-configs"
+          mountPath: "{{ .Values.cleanupCron.configPath }}"
+      volumes:
+        - name: "{{ .Values.environment.name }}-{{ .Values.dataplaneReg.name }}-script"
+          configMap:
+            name: "{{ .Values.environment.name }}-{{ .Values.dataplaneReg.name }}-script"
+        - name: "{{ .Values.environment.name }}-cleanup-scripts"
+          configMap:
+            name: "{{ .Values.environment.name }}-cleanup-scripts"
+        - name: "{{ .Values.environment.name }}-cleanup-configs"
+          configMap:
+            name: "{{ .Values.environment.name }}-cleanup-configs"

@@ -14,12 +14,14 @@ metadata:
   name: cam-tenant-api
   labels:
     name: cam-tenant-api
-    app: {{ template "fullname" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    "app.kubernetes.io/name": {{ template "fullname" . }}
+    "helm.sh/chart": "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
-  namespace: {{ .Values.service.namespace }}
+    "app.kubernetes.io/instance": "{{ .Release.Name }}"
+    "app.kubernetes.io/managed-by": "{{ .Release.Service }}"
+  namespace: {{ .Release.Namespace }}
 spec:
+  progressDeadlineSeconds: 1800
   replicas: {{ .Values.camAPI.replicaCount }}
   selector:
     matchLabels:
@@ -34,15 +36,25 @@ spec:
     metadata:
       labels:
         name: cam-tenant-api
-        app: {{ template "fullname" . }}
-        chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+        "app.kubernetes.io/name": {{ template "fullname" . }}
+        "helm.sh/chart": "{{ .Chart.Name }}-{{ .Chart.Version }}"
         release: "{{ .Release.Name }}"
-        heritage: "{{ .Release.Service }}"
+        "app.kubernetes.io/instance": "{{ .Release.Name }}"
+        "app.kubernetes.io/managed-by": "{{ .Release.Service }}"
       annotations:
         productName: "Cloud Automation Manager"
         productID: "{{ .Values.global.id.productID }}"
         productVersion: "{{ .Chart.AppVersion }}"
     spec:
+      hostNetwork: false
+      hostPID: false
+      hostIPC: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+        supplementalGroups:
+          - 1000
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -54,6 +66,11 @@ spec:
                 - {{ .Values.arch }}
       hostname: cam-tenant-api
       volumes:
+      - name: tmp-empty 
+        emptyDir: {}
+      - name: cam-cert
+        secret:
+          secretName: {{ .Values.camAPI.certificate.certName }}
       - name:  {{ .Values.camLogsPV.name }}
       {{- if .Values.camLogsPV.persistence.enabled }}
         persistentVolumeClaim:
@@ -65,6 +82,11 @@ spec:
       {{- else }}
         emptyDir: {}
       {{- end }}
+      {{- if eq .Values.platform "mcmp"}}
+      - name: mcmp-cert
+        secret:
+          secretName: mcmp-certificate-secret
+      {{- end}}
       {{- if .Values.global.image.secretName }}
       {{- if ne .Values.global.image.secretName "default"}}
       imagePullSecrets:
@@ -73,6 +95,13 @@ spec:
       {{- end }}
       containers:
       - name: cam-tenant-api
+        securityContext:
+          privileged: false
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - MKNOD
         image: "{{ .Values.image.repository }}icam-tenant-api:{{ .Values.image.tag }}{{ template "platform" . }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
@@ -82,25 +111,37 @@ spec:
           httpGet:
             path: /api/v1/health
             port: liveness-port
+            scheme: HTTPS
           initialDelaySeconds: 300
           periodSeconds: 20
         readinessProbe:
           httpGet:
-            path: /api/v1/health
+            path: /api/v1/ready
             port: liveness-port
+            scheme: HTTPS
           initialDelaySeconds: 5
           periodSeconds: 20
         resources:
 {{ toYaml .Values.resources | indent 10 }}
         volumeMounts:
+          - name: tmp-empty
+            mountPath: /tmp
+          - name: cam-cert
+            mountPath: /usr/src/app/certs
+            readOnly: true
           - name:  {{ .Values.camLogsPV.name }}
             mountPath: /var/camlog
-            subPath: cam-tenant-api
+          {{- if eq .Values.platform "mcmp"}}
+          - name: mcmp-cert
+            mountPath: /usr/src/app/mcmpcerts
+          {{- end}}
         envFrom:
         - configMapRef:
             name: common-config
+{{- if .Capabilities.APIVersions.Has "security.openshift.io/v1" }}
         - configMapRef:
-            name: redis-config
+            name: router-config
+{{- end}}
         env:
         - name: MONGODB_PASSWORD
           valueFrom:
@@ -130,12 +171,36 @@ spec:
             configMapKeyRef:
               name: oauth-client-map
               key: MASTER_IP
+        - name: ICP_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: common-config
+              key: ICP_PORT
+        - name: ICP_PROXY_IP
+          valueFrom:
+            configMapKeyRef:
+              name: oauth-client-map
+              key: PROXY_IP
+        - name: ICP_CLUSTER_CA_DOMAIN
+          valueFrom:
+            configMapKeyRef:
+              name: oauth-client-map
+              key: CLUSTER_CA_DOMAIN
         - name: ICP_ENDPOINT
-          value: https://$(ICP_MASTER_IP):8443
-        - name: ORPHEUS_IDENTITY_API_URL
-          value: $(ICP_ENDPOINT)/idprovider
+          value: https://$(ICP_MASTER_IP):$(ICP_PORT)
+        - name: ORPHEUS_IDENTITY_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              name: common-config
+              key: ORPHEUS_TENANT_URL
         - name: ORPHEUS_IDENTITY_URL
+          {{- if ne .Values.platform "icp"}}
+          value: $(ORPHEUS_IDENTITY_ENDPOINT)/api
+          {{- else }}
           value: $(ICP_ENDPOINT)/idprovider
+          {{- end }}
+        - name: ORPHEUS_IDENTITY_API_URL
+          value: $(ORPHEUS_IDENTITY_URL)
         - name: ORPHEUS_AUTH_DIRECTORY_URL
           value: http://cam-auth-service:3100
         - name: ICP_DEFAULT_ADMIN_USER
@@ -143,19 +208,54 @@ spec:
             secretKeyRef:
               name: oauth-client-secret
               key: DEFAULT_ADMIN_USER
+        - name: CAM_HELM_RELEASE_NAME
+          value: {{ .Release.Name }}
         - name: POD_NAME
           valueFrom:
             fieldRef:
               fieldPath: metadata.name
-      initContainers:
-      - name: cam-tenant-api-init
-        image: "{{ .Values.image.repository }}icam-busybox:{{ .Values.image.tag }}{{ template "platform" . }}"
-        imagePullPolicy:  {{ .Values.image.pullPolicy }}
-        securityContext:
-          runAsUser: 0
-        command: ["/bin/sh", "-c"]
-        args:
-          - mkdir -p /var/camlog/cam-tenant-api && chown -R 1000:1000 /var/camlog/cam-tenant-api;
-        volumeMounts:
-        - name: {{ .Values.camLogsPV.name }}
-          mountPath: /var/camlog
+        - name: LOG_LEVEL
+          value: {{ .Values.camLoggingPolicies.logLevel }}
+        - name: WLP_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.camAPI.camSecret.secretName }}
+              key: wlp_client_id
+        - name: WLP_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.camAPI.camSecret.secretName }}
+              key: wlp_client_secret
+        - name: IAM_DEPLOY_API_KEY
+          value: {{ .Values.global.iam.deployApiKey }}
+        - name: ICP_WLP_CLIENT_REGISTRATION_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: oauth-client-secret
+              key: WLP_CLIENT_REGISTRATION_SECRET
+        {{- if eq .Values.platform "mcmp" }}
+        - name: MCMP_GATEWAY_URL
+          value: {{ .Values.mcmp.gatewayUrl }}
+        - name: MCMP_SYSTEM_USER_ID
+          valueFrom:
+            secretKeyRef:
+              {{- if .Values.secureValues.secretName }}
+              name: {{ .Values.secureValues.secretName }}
+              {{- else }}
+              name: cam-secure-values-secret
+              {{- end }}
+              key: mcmpSystemUserId
+        - name: MCMP_SYSTEM_USER_API_KEY
+          valueFrom:
+            secretKeyRef:
+              {{- if .Values.secureValues.secretName }}
+              name: {{ .Values.secureValues.secretName }}
+              {{- else }}
+              name: cam-secure-values-secret
+              {{- end }}
+              key: mcmpSystemUserAPIKey
+        - name: CAM_HOSTNAME
+          value: "{{ .Values.mcmp.camHostName }}"
+        - name: CAM_PORT
+          value: "{{ .Values.mcmp.camPort }}"
+        {{- end }}

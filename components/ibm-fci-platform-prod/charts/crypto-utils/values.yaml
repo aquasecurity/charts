@@ -1,0 +1,24 @@
+# Default values for fci-security-auth.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+global:
+  dockerRegistryPrefix:
+
+image:
+  repository: ibmcom/fci-crypto-utils
+  tag: 6.6.0
+  pullPolicy: IfNotPresent
+  
+#Crypto Utils container
+resources:
+  requests:
+    memory: "16Mi"
+    cpu: "0.01"
+  limits:
+    memory: "512Mi"
+    cpu: "0.2"
+
+arch: amd64
+
+enabled: False

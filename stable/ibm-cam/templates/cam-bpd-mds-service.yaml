@@ -13,14 +13,16 @@ kind: Service
 metadata:
   annotations:
     prometheus.io/scrape: 'true'
+    prometheus.io/scheme: 'https'
   name: cam-bpd-mds
   labels:
     name: cam-bpd-mds
-    app: {{ template "fullname" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    "app.kubernetes.io/name": {{ template "fullname" . }}
+    "helm.sh/chart": {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-  namespace: {{ .Values.service.namespace }}
+    "app.kubernetes.io/instance": "{{ .Release.Name }}"
+    "app.kubernetes.io/managed-by": {{ .Release.Service }}
+  namespace: {{ .Release.Namespace }}
 spec:
   ports:
     - port: 7578

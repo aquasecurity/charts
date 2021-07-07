@@ -5,13 +5,13 @@
 global:
   __metadata:
     label: "Global"
-    description: ""
+    description: "Values applicable to all components in the chart"
   image:
     secretName:
       __metadata:
-        name: "Image pull secret name"
-        label: "Image pull secret name (see help -->)"
-        description: "global.image.secretname: Type `default` to use your namespace default service account image pull secret or enter your image pull secret name here. See the 'Add ImagePullSecrets to a service account' kubernetes documentation for more information on generating image pull secrets and how to patch the namespace default service account with an image pull secret. See install instructions for more details."
+        name: "Docker image pull secret"
+        label: "Docker image pull secret (see help -->)"
+        description: "global.image.secretname: Type `default` to use your namespace default service account docker image pull secret or enter the name of your docker image pull secret here. See the 'Add ImagePullSecrets to a service account' kubernetes documentation for more information on generating docker image pull secrets and how to patch the namespace default service account with an image pull secret. See install instructions for more details."
         type: "string"
         immutable: false
         required: true
@@ -27,9 +27,9 @@ global:
   iam:
     deployApiKey:
       __metadata:
-        name: "Deploy API key"
-        label: "Deploy API key (see help -->)"
-        description: "global.iam.deployApiKey: Deploy API Key used by CAM to generate CAM specific Service ID and API Key for platform authorization. See install instructions for more details."
+        name: "IAM service API key"
+        label: "IAM service API key (see help -->)"
+        description: "global.iam.deployApiKey: IAM service API Key used by CAM to generate CAM specific Service ID and API Key for platform authorization. See install instructions for more details."
         type: "string"
         immutable: false
         required: true
@@ -39,10 +39,28 @@ global:
       description: "Select to optimize the installation for offline.  For example, skip attempting to access the internet for public starter templates"
       type: "boolean"
       required: true
+  enableFIPS:
+    __metadata:
+      label: "Enable FIPS for CAM"
+      description: "Select to enable FIPS for CAM,  ICP must be FIPS enabled"
+      type: "boolean"
+      required: true    
   audit:
     __metadata:
       label: "Enable audit"
       description: "Select to enable the audit feature. It requires the management logging service to be installed."
+      type: "boolean"
+      required: true
+  legacyAudit:
+    __metadata:
+      label: "Enable legacy audit"
+      description: "Select to enable root audit side car for the legacy release before ICP 3.2"
+      type: "boolean"
+      required: true
+  ICP32:
+    __metadata:
+      label: "Deploy Cloud Automation Manager on IBM cloud private 3.2"
+      description: "Select to deploy Cloud Automation Manager on IBM cloud private 3.2"
       type: "boolean"
       required: true
 
@@ -51,7 +69,7 @@ arch:
   __metadata:
     name: "Architecture"
     label: "Worker node architecture"
-    description: "arch: Worker node architecture to deploy to. amd64 = intel (default), ppc64le = power"
+    description: "arch: Worker node architecture to deploy to. amd64 = intel (default), ppc64le = power, s390x = z/linux"
     type: "string"
     immutable: false
     required: false
@@ -60,17 +78,41 @@ arch:
         value: "amd64"
       - label: "ppc64le"
         value: "ppc64le"
+      - label: "s390x"
+        value: "s390x"
 
-## Namespace for CAM installation
-service:
+## Platform metadata for CAM installation
+platform:
   __metadata:
-    label: "Service"
-    description: ""
-  namespace:
+    name: "Platform"
+    label: "Platform"
+    description: "platform: The platform in which Cloud Automation Manager is integrated with. Default is icp."
+    type: "string"
+    immutable: false
+    required: false
+    options:
+      - label: "icp"
+        value: "icp"
+      - label: "mcmp"
+        value: "mcmp"
+
+icp:
+  __metadata:
+    label: "IBM Cloud Private"
+    description: "icp: IBM Cloud Private platform information."
+  port:
     __metadata:
-      name: "namespace"
-      label: "Namespace"
-      description: "service.namespace: Namespace for CAM installation (default is `services`)"
+      name: "port"
+      label: "Port"
+      description: "icp.port: Port for accessing IBM Cloud Private. This is used to communicate with the services in IBM Cloud Private. For Cloud Automation Manager standalone, use port 8443."
+      type: "string"
+      immutable: false
+      required: true
+  cluster_name:
+    __metadata:
+      name: "cluster_name"
+      label: "Cluster name"
+      description: "cluster_name: Cluster Name of your IBM Cloud Private installation."
       type: "string"
       immutable: false
       required: true
@@ -79,7 +121,7 @@ service:
 managementConsole:
   __metadata:
     label: "Management Console"
-    description: ""
+    description: "Configuration for the management console"
   port:
     __metadata:
       name: "port"
@@ -89,12 +131,21 @@ managementConsole:
       immutable: false
       required: false
       validation: "^$|3[0-1][0-9][0-9][0-9]|32[0-6][0-9][0-9]|327[0-5][0-9]|3276[0-7]"
+  hostname:
+    __metadata:
+      name: "hostname"
+      label: "Hostname"
+      description: "managementConsole.hostname: Prefix for the hostname of CAM management console on OCP systems (default is Helm release name). Characters used must be valid URL characters."
+      type: "string"
+      required: false
+      immutable: true
+      validation: "^$|[a-zA-Z0-9-_]+"
 
 ## Optionally use a secret to set secrue values
 secureValues:
   __metadata:
     label: "Secure Values"
-    description: ""
+    description: "The secret details where secure values are provided to the chart including custom database credentials, encryption details and proxy credentials"
   secretName:
     __metadata:
       name: "secretName"
@@ -108,7 +159,7 @@ secureValues:
 database:
   __metadata:
     label: "Database"
-    description: ""
+    description: "Configuration for the MongoDB"
   bundled:
     __metadata:
       label: "Use the internal MongoDB"
@@ -116,39 +167,23 @@ database:
       type: "boolean"
       required: true
 
-## Optionally use an external Redis
-redis:
+## Used for mutliple installations of CAM
+install:
   __metadata:
-    label: "Redis"
-    description: ""
-  bundled:
+    label: "Installation"
+    description: "Configuration for the Template CRD"
+  controller:
     __metadata:
-      label: "Use the internal Redis"
-      description: "redis.bundled: Use internal Redis. Set to false for external. For more information, see Using an external Redis in the IBM Knowledge Center"
+      label: "Install CAM Controller on this cluster"
+      description: "install.controller: Install the CAM Controller. Set to true to install the CAM Controller. The CAM Template CRD must be installed on this cluster."
       type: "boolean"
-      required: true
-  host:
-    __metadata:
-      name: "Hostname"
-      label: "Hostname"
-      description: "redis.host: External Redis host (when `Use the internal Redis` is false)"
-      type: "string"
-      immutable: false
-      required: true
-  port:
-    __metadata:
-      name: "Port"
-      label: "Port"
-      description: "redis.port: External Redis port (when `Use the internal Redis` is false)"
-      type: "string"
-      immutable: false
-      required: true
+      required: false
 
 ## Image parameters
 image:
   __metadata:
     label: "Image"
-    description: ""
+    description: "Configuration for the images used during the installation"
   repository:
     __metadata:
       label: "Repository"
@@ -182,11 +217,11 @@ image:
 proxy:
   __metadata:
     label: "Proxy"
-    description: ""
+    description: "Configuration for a proxy used with Cloud Automation Manager.  Supply details in the secure values secret. "
   useProxy:
     __metadata:
       label: "Use a proxy"
-      description: "Select to use a proxy with CAM and fill out the following proxy fields"
+      description: "Select to use a proxy with CAM and fill out the fields in the Secure Values secret (see the Knowledge Center install instructions for more details)"
       type: "boolean"
       required: true    
       
@@ -194,7 +229,7 @@ proxy:
 camMongoPV:
   __metadata:
     label: "MongoDB Volume"
-    description: ""
+    description: "Volume where the MongoDB data is stored"
   name:
     __metadata:
       label: "MongoDB Volume Name"
@@ -205,6 +240,7 @@ camMongoPV:
   persistence:
     __metadata:
       label: "MongoDB Persistant Volume"
+      description: "camMongoPV.persistence: MongoDB Persistant Volume"
     enabled:
       __metadata:
         label: "Enable persistance"
@@ -246,7 +282,7 @@ camMongoPV:
 camLogsPV:
   __metadata:
     label: "Logs Volume"
-    description: ""
+    description: "Volume where Cloud Automation Manager logs are stored"
   name:
     __metadata:
       label: "Logs Volume Name"
@@ -257,6 +293,7 @@ camLogsPV:
   persistence:
     __metadata:
       label: "Logs Persistant Volume"
+      description: "camLogsPV.persistence: Logs Persistant Volume"
     enabled:
       __metadata:
         label: "Enable persistance"
@@ -298,7 +335,7 @@ camLogsPV:
 camTerraformPV:
   __metadata:
     label: "Terrafom Volume"
-    description: ""
+    description: "Volume where the terraform plugins and data is stored"
   name:
     __metadata:
       label: "Terrafom Volume Name"
@@ -309,6 +346,7 @@ camTerraformPV:
   persistence:
     __metadata:
       label: "Terrafom Persistant Volume"
+      description: "camTerraformPV.persistence: Terrafom Persistant Volume"
     enabled:
       __metadata:
         label: "Enable persistance"
@@ -350,7 +388,7 @@ camTerraformPV:
 camBPDAppDataPV:
   __metadata:
     label: "Template Designer Volume"
-    description: ""
+    description: "Volume where Template designer data is stored"
   name:
     __metadata:
       label: "Template Designer Volume Name"
@@ -361,6 +399,7 @@ camBPDAppDataPV:
   persistence:
     __metadata:
       label: "Template Designer Persistant Volume"
+      description: "camBPDAppDataPV.persistence: Template Designer Persistant Volume"
     enabled:
       __metadata:
         label: "Enable persistance"
@@ -402,7 +441,7 @@ camBPDAppDataPV:
 camBroker:
   __metadata:
     label: "Broker"
-    description: ""
+    description: "Cloud Automation Manager Broker service configuration details"
   replicaCount:
     __metadata:
       label: "Replica Count"
@@ -414,7 +453,7 @@ camBroker:
 camProxy:
   __metadata:
     label: "Proxy"
-    description: ""
+    description: "Proxy for routing traffic to Cloud Automation Manager microservices"
   replicaCount:
     __metadata:
       label: "Replica Count"
@@ -426,7 +465,7 @@ camProxy:
 camAPI:
   __metadata:
     label: "APIs"
-    description: ""
+    description: "Configuration for Cloud Automation Manager API microservices"
   replicaCount:
     __metadata:
       label: "Replica Count"
@@ -436,18 +475,29 @@ camAPI:
   camSecret:
     __metadata:
       label: "APIs Secret"
+      description: "camAPI.camSecret: APIs Secret"
     secretName:
       __metadata:
         label: "Secret Name"
         description: "camAPI.camSecret.secretName: Secret Name"
         type: "string"
         required: false
+  certificate:
+    __metadata:
+      label: "SSL certificate for https server"
+      description: "camAPI.certificate: SSL certificate for https server"
+    certName:
+      __metadata:
+        label: "Certificate name"
+        description: "camAPI.certificate.certName: Certificate name"
+        type: "string"
+        required: true
 
 ## UI Configuration
 camUI:
   __metadata:
     label: "UI"
-    description: ""
+    description: "Configuration for Cloud Automation Manager UI microservices"
   replicaCount:
     __metadata:
       label: "Replica Count"
@@ -457,6 +507,7 @@ camUI:
   camUISecret:
     __metadata:
       label: "UI Secret"
+      description: "camUI.camUISecret: User Interface Secret"
     secretName:
       __metadata:
         label: "Secret Name"
@@ -469,12 +520,18 @@ camUI:
         description: "camUI.camUISecret.sessionKey.Session Key"
         type: "string"
         required: false
+    sessionTTL:
+      __metadata:
+        label: "Session TTL"
+        description: "camUI.camUISecret.sessionTTL: Session timeout in seconds"
+        type: "string"
+        required: false
 
 ## CAM Resources Config
 resources:
   __metadata:
     label: "Resources"
-    description: ""
+    description: "Amount of memory and CPU to assign to Cloud Automation Manager microservices"
   requests:
     memory:
       __metadata:
@@ -506,7 +563,7 @@ resources:
 camBPDUI:
   __metadata:
     label: "Template Designer UI"
-    description: ""
+    description: "Configuration for the Template Designer UI"
   bundled:
     __metadata:
       label: "Use the internal Template Designer"
@@ -518,7 +575,7 @@ camBPDUI:
 camBPDCDS:
   __metadata:
     label: "Template Designer CDS"
-    description: ""
+    description: "Configuration for the Template Designer Cloud Discovery Service"
   replicaCount:
     __metadata:
       label: "Replica Count"
@@ -528,6 +585,7 @@ camBPDCDS:
   resources:
     __metadata:
       label: "Resources"
+      description: "camBPDCDS.resources: Resources"
     requests:
       memory:
         __metadata:
@@ -557,6 +615,7 @@ camBPDCDS:
   options:
     __metadata:
       label: "Options"
+      description: "camBPDCDS.options: Options"
     debug:
       enabled:
         __metadata:
@@ -575,7 +634,7 @@ camBPDCDS:
 camBPDMDS:
   __metadata:
     label: "Template Designer MDS"
-    description: ""
+    description: "Configuration for the Template Designer Module Discovery Service"
   replicaCount:
     __metadata:
       label: "Replica Count"
@@ -585,6 +644,7 @@ camBPDMDS:
   resources:
     __metadata:
       label: "Resources"
+      description: "camBPDMDS.resources: Resources"
     requests:
       memory:
         __metadata:
@@ -616,7 +676,7 @@ camBPDMDS:
 camBPDDatabase:
   __metadata:
     label: "Template Designer Database"
-    description: ""
+    description: "Configuration for the Template Designer MariaDB Database"
   bundled:
     __metadata:
       label: "Use the internal MariaDB Database for Template Designer"
@@ -626,6 +686,7 @@ camBPDDatabase:
   resources:
     __metadata:
       label: "Resources"
+      description: "camBPDDatabase.resources: Resources"
     requests:
       memory:
         __metadata:
@@ -639,12 +700,25 @@ camBPDDatabase:
           description: "camBPDDatabase.resources.cpu: The requested CPU"
           type: "string"
           required: true
+    limits:
+      memory:
+        __metadata:
+          label: "Memory limit"
+          description: "camBPDDatabase.resources.limits.memory: The memory limit"
+          type: "string"
+          required: true
+      cpu:
+        __metadata:
+          label: "CPU limit"
+          description: "camBPDDatabase.resources.limits.cpu: The CPU limit"
+          type: "string"
+          required: true    
 
 ## Template Designer External Database Config
 camBPDExternalDatabase:
   __metadata:
     label: "Template Designer External Database"
-    description: ""
+    description: "Configuration for using an external MariaDB with Template Designer"
   type:
     __metadata:
       label: "Type"
@@ -669,6 +743,12 @@ camBPDExternalDatabase:
       description: "camBPDExternalDatabase.port: Template Designer External Database Port"
       type: "string"
       required: false
+  secure:
+    __metadata:
+      label: "Secure"
+      description: "camBPDExternalDatabase.secure: Template Designer External Database Secure Connection"
+      type: "string"
+      required: false
   secret:
     __metadata:
       label: "Secret"
@@ -687,7 +767,7 @@ camBPDExternalDatabase:
 camBPDResources:
   __metadata:
     label: "Template Designer Resources"
-    description: ""
+    description: "Amount of memory and CPU to assign to the Template Designer microservices"
   requests:
     memory:
       __metadata:
@@ -719,10 +799,11 @@ camBPDResources:
 auditService:
   __metadata:
     label: "Audit service parameters"
-    description: ""
+    description: "Configuration for the audit sidecar in Cloud Automation Manager microservices"
   image:
     __metadata:
       label: "Audit image"
+      description: "auditService.image: Audit image"
     repository:
       __metadata:
         label: "Repository"
@@ -736,7 +817,7 @@ auditService:
         description: "auditService.image.tag: Tag for the audit image"
         type: "string"
         immutable: false
-        required: true
+        required: false
     pullPolicy:
       __metadata:
         label: "Pull Policy"
@@ -744,9 +825,17 @@ auditService:
         type: "string"
         immutable: false
         required: true
+    pullSecret:
+      __metadata:
+        label: "Audit Image Pull Secret"
+        description: "auditService.image.pullSecret: Image pull secret for the audit image"
+        type: "string"
+        immutable: false
+        required: false
   resources:
     __metadata:
       label: "Resources"
+      description: "auditService.resources: Resources"
     requests:
       memory:
         __metadata:
@@ -776,9 +865,122 @@ auditService:
   config:
     __metadata:
       label: "Configuration"
+      description: "auditService.config: Configuration"
     journalPath:
       __metadata:
           label: "Journal path "
           description: "auditService.config.journalPath: The journal path"
           type: "string"
           required: true
+
+## CAM Provider Terraform configuration
+camProviderTerraform:
+  __metadata:
+    label: "CAM Provider Terraform"
+    description: "Configuration for Cloud Automation Manager Provider Terraform"
+  isolateRuntime:
+    __metadata:
+      label: "CAM Provider Terraform Isolate Runtime"
+      description: "Select to enable isolation mode for Provider Terraform runtime. In this mode, the runtime runs in separate pods and have read only access to the cam-terraform-pv."
+      type: "boolean"
+      required: true
+  runtime:
+    __metadata:
+      label: "CAM Provider Terraform Runtime"
+      description: "camProviderTerraform.runtime: Configuration for Cloud Automation Manager Provider Terraform runtime"
+    replicaCount:
+      __metadata:
+        label: "Replica Count"
+        description: "camProviderTerraform.runtime.replicaCount: Number of replicas for Provider Terraform Runtime. This value is only applicable when camProviderTerraform.isolateRuntime is enabled"
+        type: "number"
+        required: true
+    resources:
+      __metadata:
+        label: "Resources"
+        description: "camProviderTerraform.runtime.resources: Resources"
+      requests:
+        memory:
+          __metadata:
+            label: "Memory request"
+            description: "camProviderTerraform.runtime.resources.requests.memory: The memory request"
+            type: "string"
+            required: true
+        cpu:
+          __metadata:
+            label: "CPU request"
+            description: "camProviderTerraform.runtime.resources.requests.cpu: The requested CPU"
+            type: "string"
+            required: true
+      limits:
+        memory:
+          __metadata:
+            label: "Memory limit"
+            description: "camProviderTerraform.runtime.resources.limits.memory: The memory limit"
+            type: "string"
+            required: true
+        cpu:
+          __metadata:
+            label: "CPU limit"
+            description: "camProviderTerraform.runtime.resources.limits.cpu: The CPU limit"
+            type: "string"
+            required: true
+  
+# Logging policies Configuration
+camLoggingPolicies:
+  __metadata:
+    label: "CAM Logging policies parameters"
+    description: "Configuration for the logging level used with Cloud Automation Manager microservices"
+  logLevel:
+    __metadata:
+      label: "Log Level"
+      description: "Log Level for logging"
+      type: "string"
+      required: true
+
+## BPM configuration
+camBpmProvider:
+  __metadata:
+    label: "BPM"
+    description: "BPM provider"
+  replicaCount:
+    __metadata:
+      label: "Replica Count"
+      description: "camBpmProvider.replicaCount: Number of replicas for BPM provider"
+      type: "number"
+      required: true
+
+## ANSIBLE configuration
+camAnsibleProvider:
+  __metadata:
+    label: "ANSIBLE"
+    description: "ANSIBLE provider"
+  replicaCount:
+    __metadata:
+      label: "Replica Count"
+      description: "camAnsibleProvider.replicaCount: Number of replicas for ANSIBLE provider"
+      type: "number"
+      required: true
+
+## ICO configuration
+camIcoProvider:
+  __metadata:
+    label: "ICO"
+    description: "ICO provider"
+  replicaCount:
+    __metadata:
+      label: "Replica Count"
+      description: "camIcoProvider.replicaCount: Number of replicas for ICO provider"
+      type: "number"
+      required: true
+
+## Broker configuration
+camBrokerProvider:
+  __metadata:
+    label: "Broker"
+    description: "Broker provider"
+  replicaCount:
+    __metadata:
+      label: "Replica Count"
+      description: "camBrokerProvider.replicaCount: Number of replicas for Broker provider"
+      type: "number"
+      required: true

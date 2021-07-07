@@ -1,0 +1,31 @@
+{{- if .Values.global.nginx.enabled }}
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "modeler-flow-api.fullname" . }}
+  labels:
+    icpdsupport/app: {{ template "modeler-flow-api.name" . }}
+    icpdsupport/addOnId: {{ .Release.Name }}
+    app.kubernetes.io/name: {{ template "modeler-flow-api.name" . }}
+    app.kubernetes.io/managed-by: {{.Release.Service | quote }}
+    helm.sh/chart: {{ template "modeler-flow-api.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    # Apparently, we need this for every configMap associated with our addon,
+    # not just the top level one which declares our addon metadata.
+    icpdata_addon: "true"
+    icpdata_addon_version: {{.Chart.AppVersion | quote }}
+data:
+  nginx.conf: |
+    location /{{ .Values.global.modelerFlowApi.nginxPath }}/v1/modeler_flows {
+      proxy_set_header Host $host:31843;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "upgrade";
+      proxy_http_version 1.1;
+      set $url "https://{{ template "modeler-flow-api.fullname" . }}.{{ .Release.Namespace }}.{{ .Values.global.clusterDomain }}:{{ .Values.service.port }}";
+      proxy_pass $url;
+      rewrite /{{ .Values.global.modelerFlowApi.nginxPath }}(.*) $1 break;
+    }
+{{- end }}

@@ -1,0 +1,445 @@
+###############################################################################
+#
+# Licensed Materials - Property of IBM
+#
+# 5737-H33
+#
+# (C) Copyright IBM Corp. 2018, 2019  All Rights Reserved.
+#
+# US Government Users Restricted Rights - Use, duplication or
+# disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+#
+###############################################################################
+###############################################################################
+############################# IBM EVENT STREAMS ###############################
+###############################################################################
+
+
+###############################################################################
+# Values that are needed for all Event Streams charts and sub-charts
+###############################################################################
+global:
+  # Whether the application is running production workloads
+  production: false
+
+  # Whether the application is running as a supporting program
+  supportingProgram: false
+  #
+  # settings for how Docker images are pulled
+  image:
+    # repository is the container repository to use, which must contain the IBM Event Streams images
+    repository: cp.icr.io/cp/icp4i/es
+    # pullSecret is the secret to use when pulling the image from a private registry
+    #  optional when pulling from Docker registries that don't require authentication
+    pullSecret:
+    # pullPolicy is either IfNotPresent or Always
+    #  (https://kubernetes.io/docs/concepts/containers/images/)
+    pullPolicy: IfNotPresent
+    imageTags:
+      accessControllerTag: 2020-07-20-07.39.34-b9db3d8-exp
+      avroTag: 2020-07-20-07.59.23-9e56fdd
+      certGenTag: 2020-07-20-08.16.16-322086a
+      clientauthProxyTag: 2020-07-23-09.47.18-f77a18d
+      codegenTag: 2020-07-24-10.02.54-48304ac
+      collectorTag: 2020-07-20-08.27.17-7e3e71f
+      databaseTag: 2020-07-21-08.19.14-27478ca
+      elasticSearchTag: 2020-07-20-08.32.37-6970f8d
+      healthcheckTag: 2020-07-20-08.42.33-35fde36-exp
+      indexmgrTag: 2020-07-20-08.46.49-a758d29
+      initTag: 2020-07-20-08.55.17-d8d0f89
+      kafkaMetricsProxyTag: 2020-07-20-09.07.53-d58da77
+      kafkaProxyTag: 2020-07-20-14.28.15-c0be28c
+      kafkaTag: 2020-07-20-09.01.03-1ec6a54
+      kubectlTag: 2020-07-29-10.35.22-547743a
+      metricsReporterTag: 2020-07-20-10.56.42-1b79abb
+      oauthTag: 2020-07-20-11.02.51-f814806
+      proxyTag: 2020-07-20-14.35.41-47d5a0e
+      registryTag: 2020-07-20-13.33.38-7f35939
+      replicatorTag: 2020-07-24-08.47.09-3e2ed48
+      restProducerTag: 2020-07-20-11.14.26-e8bf16b
+      restProxyTag: 2020-07-24-10.17.45-89d253f
+      restTag: 2020-07-24-10.09.55-edb972f
+      roleMappingsTag: 2020-07-20-12.28.50-0995c12
+      telemetryTag: 2020-07-20-12.34.08-8b211e8
+      uiTag: 2020-07-24-10.14.23-b291beb
+      vanillaTag: 2020-07-20-13.02.34-6ee11a8
+      zookeeperTag: 2020-07-20-13.11.58-382efb4-exp
+      
+
+  # gid for the secondary group the containers should run in so that they can access NFS storage.
+  fsGroupGid:
+  # Architecture of worker nodes that IBM Event Streams will be deployed to
+  arch: amd64
+
+  security:
+    # A flag to enable/disable all internal TLS endpoints.
+    tlsInternal: "disabled"
+    # Certificate labels - initialized with a unique string
+    # Change these strings on upgrade to regenerate certs
+    externalCertificateLabel: "external-cert-initial-id"
+    internalCertificateLabel: "internal-cert-initial-id"
+  # settings for kubernetes level configuration which will affect multiple components
+  k8s:
+    # Allow the kubernetes internal DNS name to be configured
+    clusterName: "cluster.local"
+
+  zones:
+    # Number of Zones
+    count: 1
+    # safe set to true to stop unsafe multi-zone
+    safe: true
+    # List of zone labels, if non zone-aware cluster
+    labels: ["my-zone-label"]
+    # the key for the zone label
+    apiLabel: "failure-domain.beta.kubernetes.io/zone"
+    # Zookeeper label for mapping zk to specific nodes
+    zooKeeperLabel: "node-role.kubernetes.io/zk"
+    # kafka label for mapping kafka to specific nodes
+    kafkaLabel: "node-role.kubernetes.io/kafka"
+    # Access controller Replicas for each zone
+    accessControllerReplicas: 1
+    # Rest Proxy Replicas for each zone
+    restProxyReplicas: 1
+    # Rest Producer Replicas for each zone
+    restProducerReplicas: 1
+    # Rest Replicas for each zone
+    restReplicas: 1
+    # Proxy Replicas for each zone
+    proxyReplicas: 1
+
+  generateClusterRoles: false
+
+  resources:
+    accessController:
+      requests:
+        cpu: 300m
+        memory: 250Mi
+      limits:
+        cpu: 300m
+        memory: 250Mi
+    codegen:
+      requests:
+        cpu: 200m
+        memory: 300Mi
+      limits:
+        cpu: 500m
+        memory: 500Mi
+    collector:
+      requests:
+        cpu: 100m
+        memory: 50Mi
+      limits:
+        cpu: 100m
+        memory: 50Mi
+    database:
+      requests:
+        cpu: 100m
+        memory: 100Mi
+      limits:
+        cpu: 100m
+        memory: 100Mi
+    indexManager:
+      requests:
+        cpu: 200m
+        memory: 100Mi
+      limits:
+        cpu: 200m
+        memory: 100Mi
+    proxy:
+      requests:
+        cpu: 1000m
+        memory: 100Mi
+      limits:
+        cpu: 1000m
+        memory: 100Mi
+    rest:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        cpu: 4000m
+        memory: 1Gi
+    restProducer:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        cpu: 4000m
+        memory: 2Gi
+    restProxy:
+      requests:
+        cpu: 500m
+        memory: 250Mi
+      limits:
+        cpu: 500m
+        memory: 250Mi
+    # Used for all tls proxy containers except the proxy in the Kafka pod which has
+    # specific resource requests/limits
+    tlsProxy:
+      requests:
+        cpu: 100m
+        memory: 100Mi
+      limits:
+        cpu: 100m
+        memory: 100Mi
+    ui:
+      requests:
+        cpu: 1000m
+        memory: 1Gi
+      limits:
+        cpu: 1000m
+        memory: 1Gi
+###############################################################################
+# ICP4I configuration
+###############################################################################
+icp4i:
+  # The namespace that the ICP4I Platform Navigator has been installed into
+  icp4iPlatformNamespace:
+
+###############################################################################
+# Dashboard configuration
+###############################################################################
+# must be enabled for dashboard to be deployed (true for ICP4I)
+dashboard:
+  enabled: true
+
+
+###############################################################################
+# Telemetry configuration
+###############################################################################
+# must be set to 'enable' for install to be tracked
+telemetry:
+  enabled: false
+
+###############################################################################
+# Kafka configuration
+###############################################################################
+kafka:
+  # resource limits to apply to the Kafka broker containers
+  # ref: http://kubernetes.io/docs/user-guide/compute-resources/
+  resources:
+    requests:
+      cpu: 1000m
+      memory: 2Gi
+    limits:
+      cpu: 1000m
+      memory: 2Gi
+  # resource limits to apply to the Kafka metrics-reporter containers
+  metricsReporterResources:
+    requests:
+      cpu: 400m
+      memory: 1500Mi
+    limits:
+      cpu: 600m
+      memory: 1500Mi
+  # resource limits to apply to the Kafka healthcheck containers
+  healthcheckResources:
+    requests:
+      cpu: 200m
+      memory: 100Mi
+    limits:
+      cpu: 200m
+      memory: 100Mi
+  # resource limits to apply to the Kafka metrics-proxy containers
+  metricsProxyResources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      cpu: 500m
+      memory: 1Gi
+  # resource limits to apply to the Kafka tls-proxy containers
+  tlsProxyResources:
+    requests:
+      cpu: 100m
+      memory: 100Mi
+    limits:
+      cpu: 500m
+      memory: 100Mi
+
+  # Number of Kafka brokers in the cluster
+  brokers: 3
+  # Name of configmap containing equivalent key=value to kafka's server.properties
+  configMapName: ""
+  # Any extra arguments to pass to the JVM when running Kafka brokers
+  heapOpts: "-XX:+UseContainerSupport"
+  # Whether to open kafka to JMX connections from cluster
+  openJMX: false
+
+#
+# Persistence settings which apply to the Kafka broker pods
+persistence:
+  # whether to use Persistent Volumes for the Kafka pods
+  enabled: false
+  # whether to use Storage Classes to dynamically create Persistent Volumes for the Kafka pods
+  useDynamicProvisioning: false
+  #
+  # settings for the Kafka pod Persistent Volume Claims,
+  #   which each pod uses for data in /var/data
+  dataPVC:
+    # prefix for names for this Persistent Volume Claim
+    name: "datadir"
+    # name of the Storage Class to use, or an empty string for no Storage Class
+    storageClassName: ""
+    # minimum size of the Persistent Volume
+    size: 4Gi
+
+
+
+###############################################################################
+# ZooKeeper configuration
+###############################################################################
+zookeeper:
+  # resource limits to apply to the ZooKeeper pods
+  # ref: http://kubernetes.io/docs/user-guide/compute-resources/
+  resources:
+    requests:
+      cpu: 100m
+      memory: 750Mi
+    limits:
+      cpu: 100m
+      memory: 1Gi
+
+  #
+  # Persistence settings which apply to the ZooKeeper pods
+  persistence:
+    # whether to use Persistent Volumes for the ZooKeeper pods
+    enabled: false
+    # whether to use Storage Classes to dynamically create Persistent Volumes for the ZooKeeper pods
+    useDynamicProvisioning: false
+
+  #
+  # settings for the ZooKeeper Persistent Volume Claims
+  #  which each pod uses for data in /var/lib/zookeeper
+  dataPVC:
+    # prefix for names for this Persistent Volume Claim
+    name: "datadir"
+    # name of the Storage Class to use, or an empty string for no Storage Class
+    storageClassName: ""
+    # minimum size of the Persistent Volume
+    size: 2Gi
+
+
+
+###############################################################################
+# Kafka external access configuration
+###############################################################################
+proxy:
+  # external IP address for access that the proxy should use
+  # Domain for routes can be found in OCP 4.x using the command
+  # oc get --namespace=openshift-ingress-operator ingresscontroller/default -o yaml | grep "domain: " | tr -d ' ' | cut -d ':' -f2
+  externalEndpoint: ""
+  upgradeToRoutes: false
+
+# Secure connection settings for the proxy
+tls:
+  type: "selfsigned"
+  # Name of the secret to read the provided certificates from
+  secretName:
+  # These values are retained for upgrade purposes but are hidden in the UI
+  key:
+  cert:
+  cacert:
+
+###############################################################################
+# Message Indexing configuration
+###############################################################################
+messageIndexing:
+  # Whether to enable indexing of messages to enhance viewing
+  messageIndexingEnabled: true
+  # Resource limits for elastic search containers
+  resources:
+    requests:
+      cpu: 500m
+      memory: 2Gi
+    limits:
+      cpu: 1000m
+      memory: 4Gi
+###############################################################################
+# Geo-replicator configuration
+###############################################################################
+replicator:
+  replicas: 0
+  # resource requests/limits to apply to the geo-replicator replicator containers
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+  # resource requests/limits to apply to the geo-replicator metrics-reporter containers
+  metricsReporterResources:
+    requests:
+      cpu: 400m
+      memory: 1500Mi
+    limits:
+      cpu: 600m
+      memory: 1500Mi
+
+###############################################################################
+# Schema Registry Configuration
+###############################################################################
+schema-registry:
+  #
+  # Persistence settings for the Schema Registry API server pods
+  persistence:
+    # whether to use Persistent Volumes for the Schema Registry API server pods
+    enabled: false
+    # whether to use Storage Classes to dynamically create Persistent Volumes for the Schema Registry pods
+    useDynamicProvisioning: false
+    # Storage mode
+    mode: "ReadWriteMany"
+  resources:
+    requests:
+      cpu: 500m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+  avroServiceResources:
+    requests:
+      cpu: 500m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+
+  #
+  # settings for the Schema Registry Persistent Volume Claims
+  #  which each pod uses for data in /var/lib/schemas
+  dataPVC:
+    # prefix for names for this Persistent Volume Claim
+    name: "datadir"
+    # name of the Storage Class to use, or an empty string for no Storage Class
+    storageClassName: ""
+    # minimum size of the Persistent Volume
+    size: 100Mi
+  #
+  # Schema registry pod replicas
+  # Value replaced in template with default values if not changed on install
+  replicas: 0
+
+###############################################################################
+# REST producer configuration
+###############################################################################
+rest-producer:
+  maxKeySize: 4096
+  maxMessageSize: 65536
+
+###############################################################################
+# External monitoring configuration
+###############################################################################
+externalMonitoring:
+  datadog: {}
+
+###############################################################################
+# Check chart is being installed on a supported platform
+# If this is set to false you could be installing an unsupported version of Event Streams
+###############################################################################
+checkSupportedPlatform: true
+
+###############################################################################
+# license must be set to "accept" to accept the terms of the IBM license
+###############################################################################
+license: "not_accepted"

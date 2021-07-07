@@ -1,0 +1,24 @@
+{{- if .Values.replicaSet.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "mongodb.fullname" . }}
+  labels:
+{{- include "common.label.metadata" (list . (include "mongodb.name" .) (include "mongodb.chart" .) .Release.Name .Release.Service ) | indent 4 }}
+{{- if .Values.service.annotations }}
+  annotations:
+{{ toYaml .Values.service.annotations | indent 4 }}
+{{- end }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+  - name: mongodb
+    port: 27017
+    targetPort: 27017
+{{- if .Values.service.nodePort }}
+    nodePort: {{ .Values.service.nodePort }}
+{{- end }}
+  selector:
+{{- include "common.selector.labels" (list . (include "mongodb.name" .) .Release.Name ) | indent 4 }}
+    component: primary
+{{- end }}

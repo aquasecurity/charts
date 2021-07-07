@@ -1,0 +1,61 @@
+###############################################################################
+# Licensed Materials - Property of IBM
+# 5737-E67
+# (C) Copyright IBM Corporation 2016, 2018 All Rights Reserved
+# US Government Users Restricted Rights - Use, duplication or disclosure
+# restricted by GSA ADP Schedule Contract with IBM Corp.
+################################################################################
+
+{{- include "sch.config.init" (list . "glusterfs.sch.chart.config.values") }}
+{{- $heketicertjobName :=  .sch.chart.components.heketicertjob.name }}
+{{- $heketicertcmName :=  .sch.chart.components.heketicertcm.name }}
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "sch.names.fullCompName" (list . $heketicertjobName) }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "sch.metadata.labels.standard" (list . $heketicertjobName) | indent 4 }}
+    glusterfs-heketicert: "job"
+  annotations:
+    description: Defines how to get heketi service IP and patch the same to heketi cert
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 300
+  template:
+    metadata:
+      name: {{ include "sch.names.fullCompName" (list . $heketicertjobName) }}
+      labels:
+{{ include "sch.metadata.labels.standard" (list . $heketicertjobName) | indent 8 }}
+        glusterfs-heketicert: "pod"
+      annotations:
+        scheduler.alpha.kubernetes.io/critical-pod: ""
+    spec:
+      restartPolicy: Never
+      {{- if .Values.podPriorityClass }}
+      priorityClassName: "{{ .Values.podPriorityClass }}"
+      {{- end }}
+      containers:
+        - name: glusterfs-heketicert-job
+          image: "{{ .Values.preValidation.image.repository }}:{{ .Values.preValidation.image.tag }}"
+          imagePullPolicy: "{{ .Values.preValidation.image.pullPolicy }}"
+
+          command: ["/heketicert/heketicert_job.sh"]
+
+          volumeMounts:
+            - name: glusterfs-heketicert
+              mountPath: "/heketicert"
+
+      volumes:
+        - name: glusterfs-heketicert
+          configMap:
+            name: {{ include "sch.names.fullCompName" (list . $heketicertcmName) }}
+            defaultMode: 0777
+      affinity:
+      {{- include "nodeaffinity" . | indent 6 }}
+      tolerations:
+        - key: dedicated
+          operator: Exists
+        - key: CriticalAddonsOnly
+          operator: Exists

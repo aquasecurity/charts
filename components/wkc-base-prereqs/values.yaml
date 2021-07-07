@@ -1,0 +1,247 @@
+enabled:
+  rabbitmq: true
+  redis: true
+  elastic_search: true
+  couchdb: true
+
+## Add arch value
+archx86_64: amd64
+archppc64le: ppc64le
+
+global:
+  persistence:
+    useDynamicProvisioning: true
+    storageClassName: ""
+  installCerts: true
+  ibmProduct: "zen"
+  deploymentTarget: "icp4data"
+  podLabels:
+    icpdsupport/addOnId: "ccs"
+    icpdsupport/app: "api"
+  podAnnotations:
+    productName: "IBM Cloud Pak for Data Common Core Services"
+    productID: "eb9998dcc5d24e3eb5b6fb488f750fe2"
+    productVersion: "3.5.1"
+    productMetric: "VIRTUAL_PROCESSOR_CORE"
+    productChargedContainers: "All"
+    cloudpakName: "IBM Cloud Pak for Data"
+    cloudpakId: "eb9998dcc5d24e3eb5b6fb488f750fe2"
+    cloudpakInstanceId: "{{ .Values.global.cloudpakInstanceId }}"
+    productCloudpakRatio: "1:1"
+
+env:
+  redisUrl: redis://redis-ha-master-svc:6379
+  rabbitmqUrl: amqps://%s:%s@rabbitmq-ha:5671
+  cloudantUrl: https://%s:%s@wdp-cloudant.%s.svc.cluster.local:443
+
+couchdb:
+  fullnameOverride: wdp
+  createCloudantArtifacts: true
+  serviceAccountName: "cpd-norbac-sa"
+  useExistingCertificates:
+    secretName: "wdp-cloudant-cert"
+  image:
+    repository: couchdb3
+    tag: 3.1.1-94
+  resources:
+    requests:
+      cpu: 1
+      memory: 512Mi
+    limits:
+      cpu: 8
+      memory: 4Gi
+  persistentVolume:
+    size: 30Gi
+  jobImage:
+    repository: wkc-init-container
+    tag: 1.0.111
+  initImage:
+    repository: wkc-init-container
+    tag: 1.0.111
+  secretGeneration:
+    serviceAccountName: "cpd-editor-sa"
+    image:
+      repository: wkc-init-container
+      tag: 1.0.111
+
+# secret generation
+secretGeneration:
+  serviceAccountName: "cpd-editor-sa"
+  image:
+    repository: wkc-init-container
+    tag: 1.0.111
+    imagePullSecrets: ""
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+# rabbitmq
+wdp-rabbitmq:
+  updateStrategy: RollingUpdate
+  fullnameOverride: rabbitmq-ha
+  replicaCount: 3
+  rabbitmqAmqpsSupport:
+    nodePortService: false
+  serviceAccount:
+    create: false
+    name: cpd-viewer-sa
+  rbac:
+    create: false
+  securityContext:
+    fsGroup: ""
+    runAsUser: ""
+  rabbitmqUsername: "admin"
+  rabbitmqPassword: ""
+  persistentVolume:
+    enabled: true
+    storageClass: wdp-rabbitmq-class
+  image:
+    repository: rabbitmq
+    tag: 3.8.5-112
+    pullSecrets: ""
+  resources:
+    requests:
+      cpu: 300m
+      memory: 256Mi
+    limits:
+      cpu: 1
+      memory: 2Gi
+  busybox:
+    image:
+      repository: wkc-init-container
+      tag: 1.0.111
+  secretGeneration:
+    serviceAccountName: "cpd-editor-sa"
+    image:
+      repository: wkc-init-container
+      tag: 1.0.111
+
+
+redis-ha:
+  fullnameOverride: redis-ha
+  serviceAccount:
+    name: "cpd-norbac-sa"
+  rbac:
+    create: false
+  ssl:
+    enabled: true
+    disableNonSSL: false
+  image:
+    repository: redis
+    tag: 6.0.8-113
+    pullSecret: ""
+  replicas: 3
+  persistentVolume:
+    enabled: true
+    storageClass: "redis"
+  securityContext:
+    runAsUser: ""
+    fsGroup: ""
+  redis:
+    config:
+      min-slaves-to-write: 1
+      maxmemory: "2147483648"
+    resources:
+      requests:
+        memory: 400Mi
+        cpu: 200m
+      limits:
+        memory: 2Gi
+        cpu: 1
+  sentinel:
+    quorum: 2
+    resources:
+      requests:
+        memory: 50Mi
+        cpu: 20m
+      limits:
+        memory: 512Mi
+        cpu: 300m
+  secretGeneration:
+    serviceAccountName: "cpd-editor-sa"
+    image:
+      repository: wkc-init-container
+      tag: 1.0.111
+  initContainer:
+    image:
+      repository: wkc-init-container
+      tag: 1.0.111
+  haproxy:
+    image:
+      repository: haproxy
+      tag: 2.0.14-31
+      pullSecret: ""
+    securityContext:
+      runAsUser: ""
+    resources:
+      requests:
+        memory: 64Mi
+        cpu: 200m
+      limits:
+        memory: 1Gi
+        cpu: 1
+
+elasticsearch:
+  fullnameOverride: wdp-elasticsearch
+  nameOverride: wdp-elasticsearch
+  serviceAccount:
+    name: "cpd-norbac-sa"
+  persistence:
+    enabled: true
+  image:
+    repository: elasticsearch
+    tag: 7.8.1-114
+  antiAffinity: "off"
+  imagePullSecrets: ""
+  replicas: 3
+  minimumMasterNodes: 2
+  fsGroup: ""
+  resources:
+    requests:
+      cpu: 200m
+      memory: 1Gi
+    limits:
+      cpu: 1
+      memory: 2Gi
+  secretGeneration:
+    serviceAccountName: "cpd-editor-sa"
+    image:
+      repository: wkc-init-container
+      tag: 1.0.111
+  initContainer:
+    initImage:
+      repository: wkc-init-container
+      tag: 1.0.111
+  sysCtlsJobContainer:
+    initImage:
+      repository: wkc-init-container
+      tag: 1.0.111
+  haproxy:
+    image:
+      repository: haproxy
+      tag: 2.0.14-31
+    securityContext:
+      runAsUser: ""
+    resources:
+      requests:
+        memory: 256Mi
+        cpu: 200m
+      limits:
+        memory: 1Gi
+        cpu: 1
+  nodeLabel: wkc-privileged-node
+
+ccHomePVC:
+  persistentVolume:
+    accessModes:
+      - ReadWriteMany
+    size: 50Gi
+    storageClass: cc-home-class
+    annotations: {}
+
+## Kubernetes Cluster Domain
+clusterDomain: cluster.local

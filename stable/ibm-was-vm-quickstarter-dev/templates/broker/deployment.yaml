@@ -38,8 +38,8 @@ spec:
       {{- if .Values.migration.enabled }}
       initContainers:
         - name: init
-          image: busybox
-          command: ['sh', '-c', 'chmod -R g+rwX /migration']
+          image: "{{ .Values.devops.image.repository }}:{{ .Values.devops.image.tag }}"
+          command: ['sh', '-c', 'chown 1001:0 /migration']
           {{- include "wasaas.security.container.init" . | indent 10 }}
           volumeMounts:
           - name: migrationvolume
@@ -52,19 +52,19 @@ spec:
           readinessProbe:
             tcpSocket:
               port: 9443
-            initialDelaySeconds: 75
-            periodSeconds: 15
-            failureThreshold: 12
-            timeoutSeconds: 30
+            initialDelaySeconds: 50
+            periodSeconds: 10
+            failureThreshold: 8
+            timeoutSeconds: 20
           livenessProbe:
             httpGet:
               path: "/wasaas-broker/public/documentation.html"
               port: 9443
               scheme: HTTPS
-            initialDelaySeconds: 90
-            periodSeconds: 30
-            failureThreshold: 6
-            timeoutSeconds: 30
+            initialDelaySeconds: 60
+            periodSeconds: 20
+            failureThreshold: 4
+            timeoutSeconds: 20
           env:
             - name: WLP_LOGGING_CONSOLE_FORMAT
               value: "json"
@@ -121,6 +121,8 @@ spec:
               value: {{ .Values.iam.endpoint | quote }}
           {{- include "wasaas.security.container.nonroot" . | indent 10 }}
           volumeMounts:
+            - name: logs
+              mountPath: /logs
             {{- if .Values.migration.enabled }}
             - name: migrationvolume
               mountPath: /migration
@@ -128,9 +130,6 @@ spec:
             - name: {{ include "sch.names.fullCompName" (list . $compName) | quote }}
               mountPath: /opt/ibm/wlp/usr/servers/defaultServer/wasaas.properties
               subPath: wasaas.properties
-            - name: {{ include "sch.names.fullCompName" (list . $compName) | quote }}
-              mountPath: /opt/ibm/wlp/usr/servers/defaultServer/catalog.properties
-              subPath: catalog.properties
             - name: {{ include "sch.names.fullCompName" (list . $compName) | quote }}
               mountPath: /opt/ibm/wlp/usr/servers/defaultServer/mockGroups.json
               subPath: mockGroups.json
@@ -143,9 +142,17 @@ spec:
             - name: {{ include "sch.names.fullCompName" (list . $commonName) | quote }}
               mountPath: /opt/ibm/wlp/usr/servers/defaultServer/region.properties
               subPath: region.properties
+            - name: {{ include "sch.names.fullCompName" (list . $commonName) | quote }}
+              mountPath: /opt/ibm/wlp/usr/servers/defaultServer/killjava.sh
+              subPath: killjava.sh
+            - name: {{ include "sch.names.fullCompName" (list . $commonName) | quote }}
+              mountPath: /opt/ibm/wlp/usr/servers/defaultServer/catalog.properties
+              subPath: catalog.properties
             - name: {{ include "sch.names.fullCompName" (list . $secretGeneratorName) | quote }}
               mountPath: /etc/wlp/config
       volumes:
+        - name: logs
+          emptyDir: {}
         {{- if .Values.migration.enabled }}
         - name: migrationvolume
           persistentVolumeClaim:
@@ -154,6 +161,8 @@ spec:
         - name: {{ include "sch.names.fullCompName" (list . $commonName) | quote }}
           configMap:
             name: {{ include "sch.names.fullCompName" (list . $commonName) | quote }}
+            # must be group executable
+            defaultMode: 0750
         - name: {{ include "sch.names.fullCompName" (list . $compName) | quote }}
           configMap:
             name: {{ include "sch.names.fullCompName" (list . $compName) | quote }}

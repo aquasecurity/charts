@@ -1,0 +1,106 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.environment.name }}-{{ .Values.nginx.name }}-external
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: "{{ .Values.environment.name }}-{{ .Values.nginx.name }}-external"
+{{- include "helm.labels" . | indent 4 }}
+{{- include "cloudpak.labels" . | indent 4 }}
+spec:
+  ports:
+  - name: proxy
+    port: {{ .Values.nginx.containerPort }}
+    protocol: TCP
+    targetPort: {{ .Values.nginx.port }}
+  selector:
+    app: {{ .Values.environment.name }}-{{ .Values.nginx.name }}-external
+---
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.environment.name }}-{{ .Values.nginx.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: "{{ .Values.environment.name }}-{{ .Values.nginx.name }}-external"
+{{- include "helm.labels" . | indent 4 }}
+{{- include "cloudpak.labels" . | indent 4 }}
+  annotations:
+{{- include "zenhelper.annotations" . | indent 4 }}
+spec:
+  selector:
+    matchLabels:
+      app: "{{ .Values.environment.name }}-{{ .Values.nginx.name }}-external"
+{{- include "helm.labels" . | indent 6 }}
+{{- include "cloudpak.labels" . | indent 6 }}
+  replicas: {{ default 1 .Values.global.replicaCount }}
+  template:
+    metadata:
+      annotations:
+{{- include "zenhelper.annotations" . | indent 8 }}
+      labels:
+        app: {{ .Values.environment.name }}-{{ .Values.nginx.name }}-external
+{{- include "helm.labels" . | indent 8 }}
+{{- include "cloudpak.labels" . | indent 8 }}
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: beta.kubernetes.io/arch
+                operator: In
+                values:
+                - {{ .Values.global.architecture }}
+      serviceAccount: {{ .Values.sa.viewer }}
+      serviceAccountName: {{ .Values.sa.viewer }}
+      securityContext:
+        runAsUser: {{ .Values.user.uid }}
+      hostNetwork: false
+      hostPID: false
+      hostIPC: false
+      containers:
+      - name : {{ .Values.environment.name }}-{{ .Values.nginx.name }}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          runAsUser: {{ .Values.user.uid }}
+          runAsNonRoot: true
+          privileged: false
+          readOnlyRootFilesystem: false
+        imagePullPolicy: {{ .Values.microService.pullPolicy }}
+        image: {{ .Values.global.dockerRegistryPrefix }}/{{ .Values.nginx.image }}:{{ .Values.spark.image.tag }}
+        ports:
+        - containerPort: {{ .Values.nginx.containerPort }}
+          protocol: TCP
+        command: ["/bin/bash", "-c"]
+        args: ["/tmp/nginx-resolver.sh {{ .Values.nginxRepo.nginxConfPath }};/usr/sbin/nginx"]
+        readinessProbe:
+          tcpSocket:
+            port: {{ .Values.nginx.containerPort }}
+          initialDelaySeconds: {{ .Values.nginx.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.nginx.readinessProbe.periodSeconds }}
+          failureThreshold: {{ .Values.nginx.readinessProbe.failureThreshold }}
+        livenessProbe:
+          tcpSocket:
+            port: {{ .Values.nginx.containerPort }}
+          initialDelaySeconds: {{ .Values.nginx.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.nginx.livenessProbe.periodSeconds }}
+        resources:
+          requests:
+            cpu: {{ .Values.nginx.requestCpu }}
+            memory: {{ .Values.nginx.requestMemory }}
+          limits:
+            cpu: {{ .Values.nginx.limitCpu }}
+            memory: {{ .Values.nginx.limitMemory }}
+        volumeMounts:
+        - name: {{ .Values.environment.name }}-{{ .Values.nginx.name }}-configmap
+          mountPath: {{ .Values.nginxRepo.nginxConfPath }}
+      volumes:
+        - name: {{ .Values.environment.name }}-{{ .Values.nginx.name }}-configmap
+          configMap:
+            name: {{ .Values.environment.name }}-{{ .Values.nginx.name }}-configmap

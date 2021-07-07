@@ -1,0 +1,101 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  labels:
+    app.kubernetes.io/name: paw
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    name: pa-test
+    release: 3.5.1
+    paw_instance_name: {{ .Values.paw_instance_name }}
+    
+  name: pa-test
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  template:
+    metadata:
+      annotations:
+        cloudpakName: "IBM Planning Analytics Extension for IBM Cloud Pak for Data"
+        cloudpakId: "27646a3a52bb43408a3156180def3775"
+        productCloudpakRatio: "1:1"
+        productID: "27646a3a52bb43408a3156180def3775"
+        productName: "IBM Planning Analytics Workspace"
+        productMetric: "VIRTUAL_PROCESSOR_CORE"
+        productVersion: 3.5.1
+        productChargedContainers: "All"
+        
+      labels:
+        app.kubernetes.io/name: paw
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/managed-by: {{ .Release.Service }}
+        icpdsupport/addOnId: pa
+        icpdsupport/app: "pa-workspace" 
+        cloudpakInstanceId: "{{ .Values.zenCloudPakInstanceId }}"
+        {{- include "planning-analytics.serviceid" . | indent 8 }}
+        {{- if ( .Values.createdBy )  }}
+        icpdsupport/createdBy: {{ .Values.createdBy | quote }}
+        {{- end }} 
+        helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+        name: pa-test
+        release: 3.5.1
+        version: "1.0.9-ubi7-3"
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: beta.kubernetes.io/arch
+                operator: In
+                values:
+                - {{ .Values.arch }}
+      containers:
+        - name: pa-test
+          image: {{ .Values.docker_registry_prefix }}/pa-k8s-config:1.0.40-ubi7-3
+          command: ["/bin/bash"]
+          args: ["-c", "/opt/harmony/start.sh"]
+          resources:
+            limits:
+              cpu: "1000m"
+              memory: "50M"
+            requests:
+              cpu: "225m"
+              memory: "30M"
+          securityContext:
+            runAsNonRoot: true
+{{- if not (.Capabilities.APIVersions.Has "security.openshift.io/v1") }} 
+            runAsUser: 2000
+{{- end }} 
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            readOnlyRootFilesystem: false
+            allowPrivilegeEscalation: false
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            exec:
+              command:
+                - date
+            initialDelaySeconds: 5
+            periodSeconds: 60
+          readinessProbe:
+            exec:
+              command:
+                - date
+            initialDelaySeconds: 0
+            periodSeconds: 60
+      hostNetwork: false
+      hostIPC: false
+      hostPID: false
+      restartPolicy: Never
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      schedulerName: default-scheduler
+

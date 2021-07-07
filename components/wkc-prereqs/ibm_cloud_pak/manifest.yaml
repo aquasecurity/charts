@@ -1,0 +1,19 @@
+images:
+- image: wdp-db2:3.1.62
+  references:
+  - repository: wdp-db2:3.1.62
+    pull-repository: cp.icr.io/cp/cpd/wdp-db2:3.1.62
+    pull-authorization:
+      username:
+        env: ARTIFACTORY_USERNAME
+      password:
+        env: ARTIFACTORY_PASSWORD
+- image: wkc-init-container:1.0.123
+  references:
+  - repository: wkc-init-container:1.0.123
+    pull-repository: cp.icr.io/cp/cpd/wkc-init-container:1.0.123
+    pull-authorization:
+      username:
+        env: ARTIFACTORY_USERNAME
+      password:
+        env: ARTIFACTORY_PASSWORD

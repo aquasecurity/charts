@@ -1,0 +1,73 @@
+global:
+  license: not accepted
+  environmentSize: size0
+  image:
+    repository: ''
+    secret: ''
+    pullPolicy: Always
+    useTag: true
+  urlDelimiter: .
+  cluster:
+    fqdn: ''
+  ingress:
+    domain: ''
+    prefixWithReleaseName: false
+    tlsSecret: ''
+    port: 443
+    api:
+      enabled: false
+      prefix: nginx.ingress.kubernetes.io
+      class: nginx
+  hybrid:
+    disabled: true
+  integrations:
+    cemUsers:
+      releaseName: ''
+      urlTemplate: http://%s-ibm-cem-cem-users:6002
+      url: ''
+    cassandra:
+      releaseName: ''
+      authSecretTemplate: '%s-cassandra-auth-secret'
+      authSecret: ''
+      urlTemplate: '%s-cassandra'
+      url: ''
+    systemAuth:
+      releaseName: ''
+      authSecretTemplate: '%s-systemauth-secret'
+      authSecret: ''
+image:
+  repository: 
+  name: alert-details-service
+  tag: 4.0.16-20201125161330GMT
+  digest: sha256:64d20720a0a57492e57c3445d03232238368d3b9dab27fbdc472ce948f34c72f
+ingress:
+  enabled: true
+  prefix: netcool
+  path: /api/alert_details
+swagger: false
+logLevel: 30
+payloadSizeLimit: 1048576
+detailsTtl: 1814400
+common:
+  restApi:
+    port: 5600
+    portSsl: 5601
+  keyspaces:
+    alertdetails:
+      name: noi_alertdetails
+      replicationFactor: 0
+  authentication:
+    scheme: cemusers
+  services:
+    uagUrl: ''
+    noiDashAuthUrl: ''
+readiness:
+  initialDelaySeconds: 30
+  periodSeconds: 60
+  timeoutSeconds: 60
+  failureThreshold: 3
+liveness:
+  initialDelaySeconds: 60
+  periodSeconds: 60
+  timeoutSeconds: 60
+  failureThreshold: 3

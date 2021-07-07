@@ -1,0 +1,10 @@
+images:
+- image: dataconn-engine-opdiscovery:3.0.146
+  references:
+  - repository: dataconn-engine-opdiscovery:3.0.146
+    pull-repository: ${DOCKER_REGISTRY}/dataconn-engine-opdiscovery:3.0.146
+    pull-authorization:
+      username:
+        env: ARTIFACTORY_USERNAME
+      password:
+        env: ARTIFACTORY_PASSWORD

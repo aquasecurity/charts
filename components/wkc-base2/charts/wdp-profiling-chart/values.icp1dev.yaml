@@ -1,0 +1,18 @@
+secret_object_name: secret-wdp-profiling
+global:
+  deploymentTarget: "icp4data"
+  installCerts: true
+image:
+  repository: "${DOCKER_REGISTRY}/ubi/wdp-profiling"
+  tag: ${BM_APP_VERSION}
+  pullPolicy: "IfNotPresent"
+repository:
+  secret:
+    name: "dr-docker-registry-cred"
+environment:
+  ENVIRONMENT_NAME: "icp1dev"
+  ENVIRONMENT_TYPE: "icp"
+  DEPLOY_TARGET: "icp4data"
+  DEPLOYMENT_TARGET: "icp4data"
+  TRUST_ALL_SSL_CERT : "\"false\""
+  MQ_DATAPROFILE_QUEUE: "wdpprofiling-queue-icp4data"

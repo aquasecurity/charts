@@ -1,0 +1,1427 @@
+arch:
+  __metadata:
+    label: "Architecture scheduling preferences"
+    description: "Architecture label for configuration"
+atlas:
+  __metadata:
+    label: "PA Atlas service"
+    description: "PA Atlas service description"
+  cpuLimit:
+    __metadata:
+      label: "CPU limit description"
+      description: "The CPU limit description"
+      type: "string"
+      required: true
+  cpuRequestLimit:
+    __metadata:
+      label: "CPU request limit description"
+      description: "The CPU request limit description"
+      type: "string"
+      required: true
+  memoryLimit:
+    __metadata:
+      label: "Memory limit description"
+      description: "The memory limit description"
+      type: "string"
+      required: true
+  memoryRequestLimit:
+    __metadata:
+      label: "Memory request description"
+      description: "The memory request description"
+      type: "string"
+      required: true
+  replicas:
+    __metadata:
+      label: "Numbers of replicas"
+      description: "Replicas description"
+      required: true
+asyncService:
+  __metadata:
+    label: "PA Async service"
+    description: "PA Async service description"
+  cpuLimit:
+    __metadata:
+      label: "CPU limit description"
+      description: "The CPU limit description"
+      type: "string"
+      required: true
+  cpuRequestLimit:
+    __metadata:
+      label: "CPU request limit description"
+      description: "The CPU request limit description"
+      type: "string"
+      required: true
+  memoryLimit:
+    __metadata:
+      label: "Memory limit description"
+      description: "The memory limit description"
+      type: "string"
+      required: true
+  memoryRequestLimit:
+    __metadata:
+      label: "Memory request description"
+      description: "The memory request description"
+      type: "string"
+      required: true
+  replicas:
+    __metadata:
+      label: "Numbers of replicas"
+      description: "Replicas description"
+      required: true
+bss:
+  __metadata:
+    label: "BSS service"
+    description: "BSS service description"
+  cpuLimit:
+    __metadata:
+      label: "CPU limit description"
+      description: "The CPU limit description"
+      type: "string"
+      required: true
+  cpuRequestLimit:
+    __metadata:
+      label: "CPU request limit description"
+      description: "The CPU request limit description"
+      type: "string"
+      required: true    
+  memoryLimit:
+    __metadata:
+      label: "Memory limit description"
+      description: "The memory limit description"
+      type: "string"
+      required: true
+  memoryRequestLimit:
+    __metadata:
+      label: "Memory request description"
+      description: "The memory request description"
+      type: "string"
+      required: true
+  replicas:
+    __metadata:
+      label: "Numbers of replicas"
+      description: "Replicas description"
+      required: true
+bssInit:
+  __metadata:
+    label: "BSS init service"
+    description: "BSS init service description"
+  cpuLimit:
+    __metadata:
+      label: "CPU limit description"
+      description: "The CPU limit description"
+      type: "string"
+      required: true
+  cpuRequestLimit:
+    __metadata:
+      label: "CPU request limit description"
+      description: "The CPU request limit description"
+      type: "string"
+      required: true    
+  enableEditMdxView:
+    __metadata:
+      label: "Enable edit mdx view"
+      description: "Enable edit mdx view description"
+  enableIntentBar:
+    __metadata:
+      label: "Enable intent bar"
+      description: "Enable intent bar description"
+  enablePAA:
+    __metadata:
+      label: "Enable paa"
+      description: "Enable paa description"
+  enablePasteSpecial:
+    __metadata:
+      label: "Enable paste special"
+      description: "Enable paste special description"
+  memoryLimit:
+    __metadata:
+      label: "Memory limit description"
+      description: "The memory limit description"
+      type: "string"
+      required: true
+  memoryRequestLimit:
+    __metadata:
+      label: "Memory request description"
+      description: "The memory request description"
+      type: "string"
+      required: true
+cdn:
+  __metadata:
+    label: "PA CDN service"
+    description: "PA CDN service description"
+  cpuLimit:
+    __metadata:
+      label: "CPU limit description"
+      description: "The CPU limit description"
+      type: "string"
+      required: true
+  cpuRequestLimit:
+    __metadata:
+      label: "CPU request limit description"
+      description: "The CPU request limit description"
+      type: "string"
+      required: true       
+  memoryLimit:
+    __metadata:
+      label: "Memory limit description"
+      description: "The memory limit description"
+      type: "string"
+      required: true
+  memoryRequestLimit:
+    __metadata:
+      label: "Memory request description"
+      description: "The memory request description"
+      type: "string"
+      required: true
+  replicas:
+    __metadata:
+      label: "Numbers of replicas"
+      description: "Replicas description"
+      required: true
+common:
+  __metadata:
+    label: "Common parameters"
+    description: "Common parameters description"
+  appName:
+    __metadata:
+      label: "App name"
+      description: "The App name description"
+  cpuLimit:
+    __metadata:
+      label: "CPU limit description"
+      description: "The CPU limit description"
+  cpuRequestLimit:
+    __metadata:
+      label: "CPU request limit description"
+      description: "The CPU request limit description"
+  ibmCognosServlet:
+    __metadata:
+      label: "IBM Cognos Servlet URL"
+      description: "IBM Cognos Servlet URL description"
+  internalDomainName:
+    __metadata:
+      label: "Kubernetes internal domain name"
+      description: "Kubernetes internal domain name description"    
+  memoryLimit:
+    __metadata:
+      label: "Memory limit description"
+      description: "The memory limit description"
+      type: "string"
+      required: true
+  memoryRequestLimit:
+    __metadata:
+      label: "Memory request description"
+      description: "The memory request description"
+      type: "string"
+      required: true  
+  proxyTimeoutSeconds:
+    __metadata:
+      label: "Proxy timeout in seconds"
+      description: "Proxy timeout in seconds description"
+  secureSessionCookie:
+    __metadata:
+      label: "Secure the session cookie"
+      description: "Secure the session cookie description"
+  tm1APIPort:
+    __metadata:
+      label: "TM1 api port"
+      description: "TM1 api port description"
+  tm1ApplicationsLocation:
+    __metadata:
+      label: "TM1 applications URL"
+      description: "TM1 applications URL description"
+  tm1Location:
+    __metadata:
+      label: "TM1 Server URL(s)"
+      description: "TM1 Server URL(s) description"
+  tm1InternalType:
+    __metadata:
+      label: "TM1 Internal Type"
+      description: "If tm1 is internal or not"
+      type: "boolean"
+      required: true
+  webappsEnabled:
+    __metadata:
+      label: "Web Apps Enabled"
+      description: "If web apps are enabled or not"
+      type: "boolean"
+      required: true
+couchdb:
+  __metadata:
+    label: "Couchdb service"
+    description: "Couchdb service description"
+  cpuLimit:
+    __metadata:
+      label: "CPU limit description"
+      description: "The CPU limit description"
+      type: "string"
+      required: true
+  cpuRequestLimit:
+    __metadata:
+      label: "CPU request limit description"
+      description: "The CPU request limit description"
+      type: "string"
+      required: true       
+  memoryLimit:
+    __metadata:
+      label: "Memory limit description"
+      description: "The memory limit description"
+      type: "string"
+      required: true
+  memoryRequestLimit:
+    __metadata:
+      label: "Memory request description"
+      description: "The memory request description"
+      type: "string"
+      required: true
+evalservice:
+  __metadata:
+    label: "tm1 evalservice"
+    description: "evalservice description"
+  cpuLimit:
+    __metadata:
+      label: "CPU limit description"
+      description: "The cpu limit description"
+      type: "string"
+      required: true
+  cpuRequest:
+    __metadata:
+      label: "CPU request description"
+      description: "The cpu request description"
+      type: "string"
+      required: true
+  memoryLimit:
+    __metadata:
+      label: "Memory limit description"
+      description: "The memory limit description"
+      type: "string"
+      required: true
+  memoryRequest:
+    __metadata:
+      label: "Memory request description"
+      description: "The memory request description"
+      type: "string"
+      required: true
+gateway:
+  __metadata:
+    label: "Gateway service"
+    description: "Gateway service description"
+  cpuLimit:
+    __metadata:
+      label: "CPU limit description"
+      description: "The CPU limit description"
+      type: "string"
+      required: true
+  cpuRequestLimit:
+    __metadata:
+      label: "CPU request limit description"
+      description: "The CPU request limit description"
+      type: "string"
+      required: true       
+  memoryLimit:
+    __metadata:
+      label: "Memory limit description"
+      description: "The memory limit description"
+      type: "string"
+      required: true
+  memoryRequestLimit:
+    __metadata:
+      label: "Memory request description"
+      description: "The memory request description"
+      type: "string"
+      required: true
+  replicas:
+    __metadata:
+      label: "Numbers of replicas"
+      description: "Replicas description"
+      required: true
+glass:
+  __metadata:
+    label: "Glass service"
+    description: "Glass service description"
+  cpuLimit:
+    __metadata:
+      label: "CPU limit description"
+      description: "The CPU limit description"
+      type: "string"
+      required: true
+  cpuRequestLimit:
+    __metadata:
+      label: "CPU request limit description"
+      description: "The CPU request limit description"
+      type: "string"
+      required: true       
+  memoryLimit:
+    __metadata:
+      label: "Memory limit description"
+      description: "The memory limit description"
+      type: "string"
+      required: true
+  memoryRequestLimit:
+    __metadata:
+      label: "Memory request description"
+      description: "The memory request description"
+      type: "string"
+      required: true
+  replicas:
+    __metadata:
+      label: "Numbers of replicas"
+      description: "Replicas description"
+      required: true
+ingress:
+  __metadata:
+    label: "Ingress controller"
+    description: "Ingress controller description"
+  host:
+    __metadata:
+      label: "Ingress host name"
+      description: "Ingress host name description"
+mongo:
+  __metadata:
+    label: "Mongo service"
+    description: "Mongo service description"
+  cpuLimit:
+    __metadata:
+      label: "CPU limit description"
+      description: "The CPU limit description"
+      type: "string"
+      required: true
+  cpuRequestLimit:
+    __metadata:
+      label: "CPU request limit description"
+      description: "The CPU request limit description"
+      type: "string"
+      required: true       
+  emptyDirMedium:
+    __metadata:
+      label: "Empty Dir Medium"
+      description: "The medium to use fo the emptyDir PVC"
+      type: "string"
+      required: true
+  emptyDirSizeLimit:
+    __metadata:
+      label: "Empty Dir size limit"
+      description: "The size limit to use fo the emptyDir PVC"
+      type: "string"
+      required: true
+  memoryLimit:
+    __metadata:
+      label: "Memory limit description"
+      description: "The memory limit description"
+      type: "string"
+      required: true
+  memoryRequestLimit:
+    __metadata:
+      label: "Memory request description"
+      description: "The memory request description"
+      type: "string"
+      required: true
+monitor:
+  __metadata:
+    label: "Monitor service"
+    description: "Monitor service description"
+  cpuLimit:
+    __metadata:
+      label: "CPU limit description"
+      description: "The CPU limit description"
+      type: "string"
+      required: true
+  cpuRequestLimit:
+    __metadata:
+      label: "CPU request limit description"
+      description: "The CPU request limit description"
+      type: "string"
+      required: true       
+  memoryLimit:
+    __metadata:
+      label: "Memory limit description"
+      description: "The memory limit description"
+      type: "string"
+      required: true
+  memoryRequestLimit:
+    __metadata:
+      label: "Memory request description"
+      description: "The memory request description"
+      type: "string"
+      required: true
+  adminAgentAPIKey: 
+    __metadata:
+      label: "Admin agent apikey description"
+      description: "The Admin agent apikey description"
+  replicas:
+    __metadata:
+      label: "Numbers of replicas"
+      description: "Replicas description"
+      required: true
+mysqlCluster:
+  __metadata:
+    label: "Mysql image"
+    description: "Mysql image description"
+  emptyDirMedium:
+    __metadata:
+      label: "Empty Dir Medium"
+      description: "The medium to use fo the emptyDir PVC"
+      type: "string"
+      required: true
+  emptyDirSizeLimit:
+    __metadata:
+      label: "Empty Dir size limit"
+      description: "The size limit to use fo the emptyDir PVC"
+      type: "string"
+      required: true    
+mysqlData:
+  __metadata:
+    label: "Mysql data service"
+    description: "Mysql data service description"
+  cpuLimit:
+    __metadata:
+      label: "CPU limit description"
+      description: "The CPU limit description"
+      type: "string"
+      required: true
+  cpuRequestLimit:
+    __metadata:
+      label: "CPU request limit description"
+      description: "The CPU request limit description"
+      type: "string"
+      required: true         
+  memoryLimit:
+    __metadata:
+      label: "Memory limit description"
+      description: "The memory limit description"
+      type: "string"
+      required: true
+  memoryRequestLimit:
+    __metadata:
+      label: "Memory request description"
+      description: "The memory request description"
+      type: "string"
+      required: true
+mysqlDataStunnel:
+  __metadata:
+    label: "Mysql data stunnel service"
+    description: "Mysql data stunnel service description"
+  cpuLimit:
+    __metadata:
+      label: "CPU limit description"
+      description: "The CPU limit description"
+      type: "string"
+      required: true
+  cpuRequestLimit:
+    __metadata:
+      label: "CPU request limit description"
+      description: "The CPU request limit description"
+      type: "string"
+      required: true         
+  memoryLimit:
+    __metadata:
+      label: "Memory limit description"
+      description: "The memory limit description"
+      type: "string"
+      required: true
+  memoryRequestLimit:
+    __metadata:
+      label: "Memory request description"
+      description: "The memory request description"
+      type: "string"
+      required: true
+mysqlMgmt:
+  __metadata:
+    label: "Mysql management service"
+    description: "Mysql management service description"
+  cpuLimit:
+    __metadata:
+      label: "CPU limit description"
+      description: "The CPU limit description"
+      type: "string"
+      required: true
+  cpuRequestLimit:
+    __metadata:
+      label: "CPU request limit description"
+      description: "The CPU request limit description"
+      type: "string"
+      required: true       
+  emptyDirMedium:
+    __metadata:
+      label: "Empty Dir Medium"
+      description: "The medium to use fo the emptyDir PVC"
+      type: "string"
+      required: true
+  emptyDirSizeLimit:
+    __metadata:
+      label: "Empty Dir size limit"
+      description: "The size limit to use fo the emptyDir PVC"
+      type: "string"
+      required: true
+  memoryLimit:
+    __metadata:
+      label: "Memory limit description"
+      description: "The memory limit description"
+      type: "string"
+      required: true
+  memoryRequestLimit:
+    __metadata:
+      label: "Memory request description"
+      description: "The memory request description"
+      type: "string"
+      required: true
+mysqlMgmtStunnel:
+  __metadata:
+    label: "Mysql management stunnel service"
+    description: "Mysql management stunnel service description"
+  cpuLimit:
+    __metadata:
+      label: "CPU limit description"
+      description: "The CPU limit description"
+      type: "string"
+      required: true
+  cpuRequestLimit:
+    __metadata:
+      label: "CPU request limit description"
+      description: "The CPU request limit description"
+      type: "string"
+      required: true       
+  memoryLimit:
+    __metadata:
+      label: "Memory limit description"
+      description: "The memory limit description"
+      type: "string"
+      required: true
+  memoryRequestLimit:
+    __metadata:
+      label: "Memory request description"
+      description: "The memory request description"
+      type: "string"
+      required: true
+mysqlServer:
+  __metadata:
+    label: "Mysql service"
+    description: "Mysql service description"
+  cpuLimit:
+    __metadata:
+      label: "CPU limit description"
+      description: "The CPU limit description"
+      type: "string"
+      required: true
+  cpuRequestLimit:
+    __metadata:
+      label: "CPU request limit description"
+      description: "The CPU request limit description"
+      type: "string"
+      required: true       
+  memoryLimit:
+    __metadata:
+      label: "Memory limit description"
+      description: "The memory limit description"
+      type: "string"
+      required: true
+  memoryRequestLimit:
+    __metadata:
+      label: "Memory request description"
+      description: "The memory request description"
+      type: "string"
+      required: true
+mysqlServerStunnel:
+  __metadata:
+    label: "Mysql stunnel service"
+    description: "Mysql stunnel service description"
+  cpuLimit:
+    __metadata:
+      label: "CPU limit description"
+      description: "The CPU limit description"
+      type: "string"
+      required: true
+  cpuRequestLimit:
+    __metadata:
+      label: "CPU request limit description"
+      description: "The CPU request limit description"
+      type: "string"
+      required: true       
+  memoryLimit:
+    __metadata:
+      label: "Memory limit description"
+      description: "The memory limit description"
+      type: "string"
+      required: true
+  memoryRequestLimit:
+    __metadata:
+      label: "Memory request description"
+      description: "The memory request description"
+      type: "string"
+      required: true
+instanceIdWithinNamespace:
+  __metadata:
+    label: "instanceId within namespace service"
+    description: "The instanceId within namespace description"
+neoIdviz:
+  __metadata:
+    label: "Neo idvisualization service"
+    description: "Neo idvisualization service description"
+  cpuLimit:
+    __metadata:
+      label: "CPU limit description"
+      description: "The CPU limit description"
+      type: "string"
+      required: true
+  cpuRequestLimit:
+    __metadata:
+      label: "CPU request limit description"
+      description: "The CPU request limit description"
+      type: "string"
+      required: true       
+  memoryLimit:
+    __metadata:
+      label: "Memory limit description"
+      description: "The memory limit description"
+      type: "string"
+      required: true
+  memoryRequestLimit:
+    __metadata:
+      label: "Memory request description"
+      description: "The memory request description"
+      type: "string"
+      required: true
+neoProvision:
+  __metadata:
+    label: "Neo provisioning service"
+    description: "Neo provisioning service description"
+  cpuLimit:
+    __metadata:
+      label: "CPU limit description"
+      description: "The CPU limit description"
+      type: "string"
+      required: true
+  cpuRequestLimit:
+    __metadata:
+      label: "CPU request limit description"
+      description: "The CPU request limit description"
+      type: "string"
+      required: true       
+  memoryLimit:
+    __metadata:
+      label: "Memory limit description"
+      description: "The memory limit description"
+      type: "string"
+      required: true
+  memoryRequestLimit:
+    __metadata:
+      label: "Memory request description"
+      description: "The memory request description"
+      type: "string"
+      required: true
+paContent:
+  __metadata:
+    label: "PA content service"
+    description: "PA content service description"
+  cpuLimit:
+    __metadata:
+      label: "CPU limit description"
+      description: "The CPU limit description"
+      type: "string"
+      required: true
+  cpuRequestLimit:
+    __metadata:
+      label: "CPU request limit description"
+      description: "The CPU request limit description"
+      type: "string"
+      required: true       
+  memoryLimit:
+    __metadata:
+      label: "Memory limit description"
+      description: "The memory limit description"
+      type: "string"
+      required: true
+  memoryRequestLimit:
+    __metadata:
+      label: "Memory request description"
+      description: "The memory request description"
+      type: "string"
+      required: true
+  replicas:
+    __metadata:
+      label: "Numbers of replicas"
+      description: "Replicas description"
+      required: true
+paPredict:
+  __metadata:
+    label: "PA predict service"
+    description: "PA predict service description"
+  cpuLimit:
+    __metadata:
+      label: "CPU limit description"
+      description: "The CPU limit description"
+      type: "string"
+      required: true
+  cpuRequestLimit:
+    __metadata:
+      label: "CPU request limit description"
+      description: "The CPU request limit description"
+      type: "string"
+      required: true       
+  memoryLimit:
+    __metadata:
+      label: "Memory limit description"
+      description: "The memory limit description"
+      type: "string"
+      required: true
+  memoryRequestLimit:
+    __metadata:
+      label: "Memory request description"
+      description: "The memory request description"
+      type: "string"
+      required: true
+  replicas:
+    __metadata:
+      label: "Numbers of replicas"
+      description: "Replicas description"
+      required: true
+pawUiApi:
+  __metadata:
+    label: "PAW UI API service"
+    description: "PAW UI API service description"
+  cpuLimit:
+    __metadata:
+      label: "CPU limit description"
+      description: "The CPU limit description"
+      type: "string"
+      required: true
+  cpuRequestLimit:
+    __metadata:
+      label: "CPU request limit description"
+      description: "The CPU request limit description"
+      type: "string"
+      required: true       
+  memoryLimit:
+    __metadata:
+      label: "Memory limit description"
+      description: "The memory limit description"
+      type: "string"
+      required: true
+  memoryRequestLimit:
+    __metadata:
+      label: "Memory request description"
+      description: "The memory request description"
+      type: "string"
+      required: true
+  replicas:
+    __metadata:
+      label: "Numbers of replicas"
+      description: "Replicas description"
+      required: true
+persistence:
+  __metadata:
+    label: "Storage configuration"
+    description: "Storage configuration description"
+  class:
+    __metadata:
+      label: "Storage class"
+      description: "Storage class description"
+  podScheduler:
+    __metadata:
+      label: "Pod scheduler description"
+      description: "The pod scheduler description"
+      type: "string"
+      required: true
+  size:
+    __metadata:
+      label: "Volume size"
+      description: "The volume size description"
+      type: "string"
+      required: true      
+  useDynamicProvisioning:
+    __metadata:
+      label: "Use dynamic provisioning"
+      description: "Use dynamic provisioning description"
+planService:
+  __metadata:
+    label: "PA plan service"
+    description: "PA plan service description"
+  cpuLimit:
+    __metadata:
+      label: "CPU limit description"
+      description: "The CPU limit description"
+      type: "string"
+      required: true
+  cpuRequestLimit:
+    __metadata:
+      label: "CPU request limit description"
+      description: "The CPU request limit description"
+      type: "string"
+      required: true       
+  memoryLimit:
+    __metadata:
+      label: "Memory limit description"
+      description: "The memory limit description"
+      type: "string"
+      required: true
+  memoryRequestLimit:
+    __metadata:
+      label: "Memory request description"
+      description: "The memory request description"
+      type: "string"
+      required: true
+  replicas:
+    __metadata:
+      label: "Numbers of replicas"
+      description: "Replicas description"
+      required: true
+prismApp:
+  __metadata:
+    label: "Prism app service"
+    description: "Prism app service description"
+  cpuLimit:
+    __metadata:
+      label: "CPU limit description"
+      description: "The CPU limit description"
+      type: "string"
+      required: true
+  cpuRequestLimit:
+    __metadata:
+      label: "CPU request limit description"
+      description: "The CPU request limit description"
+      type: "string"
+      required: true       
+  memoryLimit:
+    __metadata:
+      label: "Memory limit description"
+      description: "The memory limit description"
+      type: "string"
+      required: true
+  memoryRequestLimit:
+    __metadata:
+      label: "Memory request description"
+      description: "The memory request description"
+      type: "string"
+      required: true
+  replicas:
+    __metadata:
+      label: "Numbers of replicas"
+      description: "Replicas description"
+      required: true
+prismPlatform:
+  __metadata:
+    label: "Prism platform service"
+    description: "Prism platform service description"
+  cpuLimit:
+    __metadata:
+      label: "CPU limit description"
+      description: "The CPU limit description"
+      type: "string"
+      required: true
+  cpuRequestLimit:
+    __metadata:
+      label: "CPU request limit description"
+      description: "The CPU request limit description"
+      type: "string"
+      required: true       
+  memoryLimit:
+    __metadata:
+      label: "Memory limit description"
+      description: "The memory limit description"
+      type: "string"
+      required: true
+  memoryRequestLimit:
+    __metadata:
+      label: "Memory request description"
+      description: "The memory request description"
+      type: "string"
+      required: true
+  jvmArgs:
+    __metadata:
+      label: "JVM startup arguments"
+      description: "Custom JVM startup arguments (to override memory max)"
+      type: "string"
+  replicas:
+    __metadata:
+      label: "Numbers of replicas"
+      description: "Replicas description"
+      required: true
+prismProxy:
+  __metadata:
+    label: "Prism proxy service"
+    description: "Prism proxy service description"
+  cpuLimit:
+    __metadata:
+      label: "CPU limit description"
+      description: "The CPU limit description"
+      type: "string"
+      required: true
+  cpuRequestLimit:
+    __metadata:
+      label: "CPU request limit description"
+      description: "The CPU request limit description"
+      type: "string"
+      required: true       
+  memoryLimit:
+    __metadata:
+      label: "Memory limit description"
+      description: "The memory limit description"
+      type: "string"
+      required: true
+  memoryRequestLimit:
+    __metadata:
+      label: "Memory request description"
+      description: "The memory request description"
+      type: "string"
+      required: true
+  replicas:
+    __metadata:
+      label: "Numbers of replicas"
+      description: "Replicas description"
+      required: true
+productName:
+  __metadata:
+    label: "Product name"
+    description: "Product name description"
+  PAWorkSpace:
+    __metadata:
+      label: "PA WorkSpace description"
+      description: "The PA WorkSpace description"
+      type: "string"
+      required: true
+  PASpreadsheet:
+    __metadata:
+      label: "PA Spreadsheet description"
+      description: "The PA Spreadsheet description"
+      type: "string"
+      required: true
+  PATM1Server:
+    __metadata:
+      label: "PA TM1Server description"
+      description: "The PA TM1Server description"
+      type: "string"
+      required: true
+redis:
+  __metadata:
+    label: "Redis service"
+    description: "Redis service description"
+  cpuLimit:
+    __metadata:
+      label: "CPU limit description"
+      description: "The CPU limit description"
+      type: "string"
+      required: true
+  cpuRequestLimit:
+    __metadata:
+      label: "CPU request limit description"
+      description: "The CPU request limit description"
+      type: "string"
+      required: true       
+  memoryLimit:
+    __metadata:
+      label: "Memory limit description"
+      description: "The memory limit description"
+      type: "string"
+      required: true
+  memoryRequestLimit:
+    __metadata:
+      label: "Memory request description"
+      description: "The memory request description"
+      type: "string"
+      required: true
+secrets:
+  __metadata:
+    label: "Gateway service"
+    description: "Gateway service description"
+  cacertVersion:
+    __metadata:
+      label: "Version of the ca certificate list"
+      description: "The version of the ca certificate list"
+      type: "string"
+      required: true
+  cpuLimit:
+    __metadata:
+      label: "CPU limit description"
+      description: "The CPU limit description"
+      type: "string"
+      required: true
+  cpuRequestLimit:
+    __metadata:
+      label: "CPU request limit description"
+      description: "The CPU request limit description"
+      type: "string"
+      required: true    
+  memoryLimit:
+    __metadata:
+      label: "Memory limit description"
+      description: "The memory limit description"
+      type: "string"
+      required: true
+  memoryRequestLimit:
+    __metadata:
+      label: "Memory request description"
+      description: "The memory request description"
+      type: "string"
+      required: true
+  pawSecretVersion:
+    __metadata:
+      label: "Version of the cookie and credential store keys"
+      description: "The version of the cookie and credential store keys"
+      type: "string"
+      required: true
+                            
+sentinel:
+  __metadata:
+    label: "Redis sentinel service"
+    description: "Redis sentinel service description"
+  cpuLimit:
+    __metadata:
+      label: "CPU limit description"
+      description: "The CPU limit description"
+      type: "string"
+      required: true
+  cpuRequestLimit:
+    __metadata:
+      label: "CPU request limit description"
+      description: "The CPU request limit description"
+      type: "string"
+      required: true       
+  memoryLimit:
+    __metadata:
+      label: "Memory limit description"
+      description: "The memory limit description"
+      type: "string"
+      required: true
+  memoryRequestLimit:
+    __metadata:
+      label: "Memory request description"
+      description: "The memory request description"
+      type: "string"
+      required: true
+shareApp:
+  __metadata:
+    label: "Share app service"
+    description: "Share app service description"
+  cpuLimit:
+    __metadata:
+      label: "CPU limit description"
+      description: "The CPU limit description"
+      type: "string"
+      required: true
+  cpuRequestLimit:
+    __metadata:
+      label: "CPU request limit description"
+      description: "The CPU request limit description"
+      type: "string"
+      required: true       
+  memoryLimit:
+    __metadata:
+      label: "Memory limit description"
+      description: "The memory limit description"
+      type: "string"
+      required: true
+  memoryRequestLimit:
+    __metadata:
+      label: "Memory request description"
+      description: "The memory request description"
+      type: "string"
+      required: true
+  replicas:
+    __metadata:
+      label: "Numbers of replicas"
+      description: "Replicas description"
+      required: true
+sharePlatform:
+  __metadata:
+    label: "Share platform service"
+    description: "Share platform service description"
+  cpuLimit:
+    __metadata:
+      label: "CPU limit description"
+      description: "The CPU limit description"
+      type: "string"
+      required: true
+  cpuRequestLimit:
+    __metadata:
+      label: "CPU request limit description"
+      description: "The CPU request limit description"
+      type: "string"
+      required: true       
+  memoryLimit:
+    __metadata:
+      label: "Memory limit description"
+      description: "The memory limit description"
+      type: "string"
+      required: true
+  memoryRequestLimit:
+    __metadata:
+      label: "Memory request description"
+      description: "The memory request description"
+      type: "string"
+      required: true
+  replicas:
+    __metadata:
+      label: "Numbers of replicas"
+      description: "Replicas description"
+      required: true
+shareProxy:
+  __metadata:
+    label: "Share proxy service"
+    description: "Share proxy service description"
+  cpuLimit:
+    __metadata:
+      label: "CPU limit description"
+      description: "The CPU limit description"
+      type: "string"
+      required: true
+  cpuRequestLimit:
+    __metadata:
+      label: "CPU request limit description"
+      description: "The CPU request limit description"
+      type: "string"
+      required: true       
+  memoryLimit:
+    __metadata:
+      label: "Memory limit description"
+      description: "The memory limit description"
+      type: "string"
+      required: true
+  memoryRequestLimit:
+    __metadata:
+      label: "Memory request description"
+      description: "The memory request description"
+      type: "string"
+      required: true
+  replicas:
+    __metadata:
+      label: "Numbers of replicas"
+      description: "Replicas description"
+      required: true
+tm1proxy:
+  __metadata:
+    label: "TM1 proxy service"
+    description: "The TM1 Proxy Service"
+  cpuLimit:
+    __metadata:
+      label: "CPU limit description"
+      description: "The CPU limit description"
+      type: "string"
+      required: true
+  cpuRequestLimit:
+    __metadata:
+      label: "CPU request limit description"
+      description: "The CPU request limit description"
+      type: "string"
+      required: true       
+    description: "TM1 proxy service description"
+  memoryLimit:
+    __metadata:
+      label: "Memory limit description"
+      description: "The memory limit description"
+      type: "string"
+      required: true
+  memoryRequestLimit:
+    __metadata:
+      label: "Memory request description"
+      description: "The memory request description"
+      type: "string"
+      required: true
+  replicas:
+    __metadata:
+      label: "Numbers of replicas"
+      description: "Replicas description"
+      required: true
+tm1web:
+  __metadata:
+    label: "TM1 websheets"
+    description: "TM1 websheets description"
+  cpuLimit:
+    __metadata:
+      label: "CPU limit description"
+      description: "The cpu limit description"
+      type: "string"
+      required: true
+  cpuRequest:
+    __metadata:
+      label: "CPU request description"
+      description: "The cpu request description"
+      type: "string"
+      required: true
+  memoryLimit:
+    __metadata:
+      label: "Memory limit description"
+      description: "The memory limit description"
+      type: "string"
+      required: true
+  memoryRequest:
+    __metadata:
+      label: "Memory request description"
+      description: "The memory request description"
+      type: "string"
+      required: true
+userAdmin:
+  __metadata:
+    label: "User admin service"
+    description: "User admin service description"
+  cpuLimit:
+    __metadata:
+      label: "CPU limit description"
+      description: "The CPU limit description"
+      type: "string"
+      required: true
+  cpuRequestLimit:
+    __metadata:
+      label: "CPU request limit description"
+      description: "The CPU request limit description"
+      type: "string"
+      required: true       
+  memoryLimit:
+    __metadata:
+      label: "Memory limit description"
+      description: "The memory limit description"
+      type: "string"
+      required: true
+  memoryRequestLimit:
+    __metadata:
+      label: "Memory request description"
+      description: "The memory request description"
+      type: "string"
+      required: true
+  replicas:
+    __metadata:
+      label: "Numbers of replicas"
+      description: "Replicas description"
+      required: true
+waProxy:
+  __metadata:
+    label: "WA proxy service"
+    description: "WA proxy service description"
+  apiAllowOrigins:
+    __metadata:
+      label: "Allow origins"
+      description: "Allow origins description"
+  camLoginNamespace:
+    __metadata:
+      label: "CAM login namespace"
+      description: "CAM login namespace description"  
+  cpuLimit:
+    __metadata:
+      label: "CPU limit description"
+      description: "The CPU limit description"
+      type: "string"
+      required: true
+  cpuRequestLimit:
+    __metadata:
+      label: "CPU request limit description"
+      description: "The CPU request limit description"
+      type: "string"
+      required: true         
+  cspFrameAncestors:
+    __metadata:
+      label: "Allow CSP frame ancestors"
+      description: "Allow CSP frame ancestors description"
+  emptyDirMedium:
+    __metadata:
+      label: "Empty Dir Medium"
+      description: "The medium to use fo the emptyDir PVC"
+      type: "string"
+      required: true
+  emptyDirSizeLimit:
+    __metadata:
+      label: "Empty Dir size limit"
+      description: "The size limit to use fo the emptyDir PVC"
+      type: "string"
+      required: true
+  enableUserImport:
+    __metadata:
+      label: "Enable user import"
+      description: "Enable user import description"
+  enableViewExchange:
+    __metadata:
+      label: "Enable view exchange"
+      description: "Enable view exchange description"
+  ibmCognosGatewayUrl:
+    __metadata:
+      label: "IBM Cognos gateway URL"
+      description: "IBM Cognos gateway URL description"
+  memoryLimit:
+    __metadata:
+      label: "Memory limit description"
+      description: "The memory limit description"
+      type: "string"
+      required: true
+  paLoginMode:
+    __metadata:
+      label: "TM1 Server authentication mode"
+      description: "TM1 Server authentication mode description"
+  replicas:
+    __metadata:
+      label: "Numbers of replicas"
+      description: "Replicas description"
+      required: true
+  memoryRequestLimit:
+    __metadata:
+      label: "Memory request description"
+      description: "The memory request description"
+      type: "string"
+      required: true
+  sessionTimeout:
+    __metadata:
+      label: "Session timeout"
+      description: "Session timeout description"
+  tm1LoginUrl:
+    __metadata:
+      label: "TM1 Server login URL"
+      description: "TM1 Server login URL description"
+  xFrameOptions:
+    __metadata:
+      label: "X frame options"
+      description: "X frame options description"
+  jwtRedirectURL:
+    __metadata:
+      label: "The JWT Redirect URL"
+      description: "The URL to redirect to for a JWT"
+
+paw_instance_name:
+  __metadata:
+    label: "PAW instance name"
+    description: "Used for tracking the paw instance in CP4D"
+tm1:
+  __metadata:
+    label: "TM1"
+    description: "The TM1 server"
+  name:
+    __metadata:
+      label: "TM1 Name"
+      description: "The Name assigned TM1"
+  cpu:
+    __metadata:
+      label: "TM1 CPU"
+      description: "The allocated CPU to TM1"
+  memory: 
+    __metadata:
+      label: "TM1 Memory"
+      description: "The allocated memory to TM1"
+  maxMemoryDisplayPAAGB:
+    __metadata:
+      label: "Max Memory to display in PAA"
+      description: "What PAA should display as the max memory for the server"
+  storageClass:
+    __metadata:
+      label: "Storage class for TM1"
+      description: "Which storageclass TM1 should use"
+  storageSize:
+    __metadata:
+      label: "Tm1 Storage Size"
+      description: "How much storage Tm1 should get" 
+
+cloudpakAnnotations:
+  __metadata:
+    label: "Cloudpak Annotations"
+    description: "The annotations of CP4D"
+  cloudpakName:
+    __metadata:
+      label: "CP4D name"
+      description: "The CP4D name"
+  cloudpakId:
+    __metadata:
+      label: "CP4D Id"
+      description: "The CP4D Id"
+  productCloudpakRatio:
+    __metadata:
+      label: "product CP4D ratio"
+      description: "The product CP4D ratio"
+  productID:
+    __metadata:
+      label: "product Id"
+      description: "The product Id"

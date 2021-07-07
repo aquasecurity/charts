@@ -1,0 +1,10 @@
+images:
+- image: cassandra-ubi7-x86_64:3.11.8_b820_bca3c97bb844
+  references:
+  - repository: cassandra-ubi7-x86_64:3.11.8_b820_bca3c97bb844
+    pull-repository: ${DOCKER_REGISTRY}/cassandra-ubi7-x86_64:3.11.8_b820_bca3c97bb844
+    pull-authorization:
+      username:
+        env: ARTIFACTORY_USERNAME
+      password:
+        env: ARTIFACTORY_PASSWORD

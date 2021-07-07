@@ -1,0 +1,62 @@
+arch:
+- amd64
+- ppc64le
+- s390x
+serviceAccountName: ''
+global:
+  rbac:
+    create: true
+    serviceAccountName: ''
+  networkpolicies:
+    enabled: true
+  environmentSize: size0
+  privileged: false
+  arbitraryUids: true
+  persistence:
+    enabled: true
+    supplementalGroups: null
+    storageSize:
+      kafkadata: 512Mi
+    storageClassName: ''
+    storageClassOption:
+      kafkadata: default
+  internalCaCertificate:
+    secretName: null
+    certificateName: tls.crt
+    certificateKeyName: tls.key
+  image:
+    pullSecret: ''
+    repository: ''
+    useTag: true
+  kafka:
+    clusterSize: null
+    clientEncryption: null
+    allowInsecure: true
+    clientUserSecret: null
+    secret:
+      create: true
+  zookeeper:
+    kafkaClientUserSecret: null
+image:
+  name: kafka
+  tag: 1.4.6-202011201314L-TKAI-BTYDF9
+  digest: sha256:31bc4f3efaac4474dffceb8fb8ad5cf258efae88a4395d3103a152ea5f093a98
+  pullPolicy: IfNotPresent
+pdb:
+  enabled: true
+  minAvailable: 55%
+advertisedListeners: null
+clusterSize: 1
+defaultTopicPartitions: 6
+adminUserSecret: null
+logLevel: INFO
+requestLogLevel: WARN
+zkLogLevel: INFO
+kafkarest:
+  enabled: true
+  enablePrivilegedPorts: false
+  image:
+    name: kafkarest
+    tag: 1.4.6-202011201314L-TKAI-BTYDF9
+    digest: sha256:ffd68cf59a6fa1716c3fbb2c097597970e63634280f5766b8e41053bda0ff384
+    pullPolicy: IfNotPresent

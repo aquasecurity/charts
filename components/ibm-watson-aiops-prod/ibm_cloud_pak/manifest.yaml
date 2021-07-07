@@ -1,0 +1,656 @@
+revision: "1.0"
+output-filename: "ibm-watson-aiops-prod-ppa-archive-2.0.0.tgz"
+charts:
+- archive: file:ibm-watson-aiops-prod-2.0.0.tgz
+images:
+# Watson AI Ops Images
+- image: lifecycle-manager-service:rhubi-PR-1370-1
+  references:
+  - repository: cp.icr.io/cp/cpd/lifecycle-manager-service:rhubi-PR-1370-1
+    pull-repository: cp.icr.io/cp/cpd/lifecycle-manager-service:rhubi-PR-1370-1
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: opencontent-common-utils:1.1.5
+  references:
+  - repository: cp.icr.io/cp/cpd/opencontent-common-utils:1.1.5
+    pull-repository: cp.icr.io/cp/cpd/opencontent-common-utils:1.1.5
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: opencontent-elasticsearch-7:7.5.2-amd64
+  references:
+  - repository: cp.icr.io/cp/cpd/opencontent-elasticsearch-7:7.5.2-amd64
+    pull-repository: cp.icr.io/cp/cpd/opencontent-elasticsearch-7:7.5.2-amd64
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: opencontent-elasticsearch-init-container-1:1.0.59-amd64
+  references:
+  - repository: cp.icr.io/cp/cpd/opencontent-elasticsearch-init-container-1:1.0.59-amd64
+    pull-repository: cp.icr.io/cp/cpd/opencontent-elasticsearch-init-container-1:1.0.59-amd64
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: opencontent-haproxy-1:1.9.17-2
+  references:
+  - repository: cp.icr.io/cp/cpd/opencontent-haproxy-1:1.9.17-2
+    pull-repository: cp.icr.io/cp/cpd/opencontent-haproxy-1:1.9.17-2
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: opencontent-icp-cert-gen-1:1.1.3
+  references:
+  - repository: cp.icr.io/cp/cpd/opencontent-icp-cert-gen-1:1.1.3
+    pull-repository: cp.icr.io/cp/cpd/opencontent-icp-cert-gen-1:1.1.3
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: opencontent-icp-cert-gen-1:1.1.4
+  references:
+  - repository: cp.icr.io/cp/cpd/opencontent-icp-cert-gen-1:1.1.4
+    pull-repository: cp.icr.io/cp/cpd/opencontent-icp-cert-gen-1:1.1.4
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: opencontent-minio:1.1.4
+  references:
+  - repository: cp.icr.io/cp/cpd/opencontent-minio:1.1.4
+    pull-repository: cp.icr.io/cp/cpd/opencontent-minio:1.1.4
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: opencontent-minio-client:1.0.4
+  references:
+  - repository: cp.icr.io/cp/cpd/opencontent-minio-client:1.0.4
+    pull-repository: cp.icr.io/cp/cpd/opencontent-minio-client:1.0.4
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: opencontent-postgres-stolon:2.0.2
+  references:
+  - repository: cp.icr.io/cp/cpd/opencontent-postgres-stolon:2.0.2
+    pull-repository: cp.icr.io/cp/cpd/opencontent-postgres-stolon:2.0.2
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: ratelimiter:rhubi-master-162
+  references:
+  - repository: cp.icr.io/cp/cpd/ratelimiter:rhubi-master-162
+    pull-repository: cp.icr.io/cp/cpd/ratelimiter:rhubi-master-162
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: trainer-v2-service:rhubi-PR-448-3
+  references:
+  - repository: cp.icr.io/cp/cpd/trainer-v2-service:rhubi-PR-448-3
+    pull-repository: cp.icr.io/cp/cpd/trainer-v2-service:rhubi-PR-448-3
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: alert-localization:6695404.20-09-09-142253.main
+  references:
+  - repository: cp.icr.io/cp/cpd/alert-localization:6695404.20-09-09-142253.main
+    pull-repository: cp.icr.io/cp/cpd/alert-localization:6695404.20-09-09-142253.main
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: chatops-orchestrator:aa66b4a.20-09-17-174245.main
+  references:
+  - repository: cp.icr.io/cp/cpd/chatops-orchestrator:aa66b4a.20-09-17-174245.main
+    pull-repository: cp.icr.io/cp/cpd/chatops-orchestrator:aa66b4a.20-09-17-174245.main
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: chatops-slack-integrator:558e22a.20-09-13-022911.main
+  references:
+  - repository: cp.icr.io/cp/cpd/chatops-slack-integrator:558e22a.20-09-13-022911.main
+    pull-repository: cp.icr.io/cp/cpd/chatops-slack-integrator:558e22a.20-09-13-022911.main
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: connection-manager:7402879.20-09-15-130454.main
+  references:
+  - repository: cp.icr.io/cp/cpd/connection-manager:7402879.20-09-15-130454.main
+    pull-repository: cp.icr.io/cp/cpd/connection-manager:7402879.20-09-15-130454.main
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: core-tests:29615e7.20-09-15-173249.main
+  references:
+  - repository: cp.icr.io/cp/cpd/core-tests:29615e7.20-09-15-173249.main
+    pull-repository: cp.icr.io/cp/cpd/core-tests:29615e7.20-09-15-173249.main
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: cpd-addon:a93b09b.20-09-14-011027.main
+  references:
+  - repository: cp.icr.io/cp/cpd/cpd-addon:a93b09b.20-09-14-011027.main
+    pull-repository: cp.icr.io/cp/cpd/cpd-addon:a93b09b.20-09-14-011027.main
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: data-preprocessing-mtworkflow:200907
+  references:
+  - repository: cp.icr.io/cp/cpd/data-preprocessing-mtworkflow:200907
+    pull-repository: cp.icr.io/cp/cpd/data-preprocessing-mtworkflow:200907
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: elasticsearch-curator:aa600a6.20-09-12-040031.main
+  references:
+  - repository: cp.icr.io/cp/cpd/elasticsearch-curator:aa600a6.20-09-12-040031.main
+    pull-repository: cp.icr.io/cp/cpd/elasticsearch-curator:aa600a6.20-09-12-040031.main
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: event-grouping:2645087.20-09-16-141128.main
+  references:
+  - repository: cp.icr.io/cp/cpd/event-grouping:2645087.20-09-16-141128.main
+    pull-repository: cp.icr.io/cp/cpd/event-grouping:2645087.20-09-16-141128.main
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: event-grouping-mtworkflow:200914
+  references:
+  - repository: cp.icr.io/cp/cpd/event-grouping-mtworkflow:200914
+    pull-repository: cp.icr.io/cp/cpd/event-grouping-mtworkflow:200914
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: flink-core:e0c1f5b.20-09-15-170508.main
+  references:
+  - repository: cp.icr.io/cp/cpd/flink-core:e0c1f5b.20-09-15-170508.main
+    pull-repository: cp.icr.io/cp/cpd/flink-core:e0c1f5b.20-09-15-170508.main
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: log-anomaly:91959a0
+  references:
+  - repository: cp.icr.io/cp/cpd/log-anomaly:91959a0
+    pull-repository: cp.icr.io/cp/cpd/log-anomaly:91959a0
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: log-anomaly-training:200912
+  references:
+  - repository: cp.icr.io/cp/cpd/log-anomaly-training:200912
+    pull-repository: cp.icr.io/cp/cpd/log-anomaly-training:200912
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: mock-server:d85d4b7.20-09-01-151144.main
+  references:
+  - repository: cp.icr.io/cp/cpd/mock-server:d85d4b7.20-09-01-151144.main
+    pull-repository: cp.icr.io/cp/cpd/mock-server:d85d4b7.20-09-01-151144.main
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: model-train-console:d069908.20-09-12-040052.main
+  references:
+  - repository: cp.icr.io/cp/cpd/model-train-console:d069908.20-09-12-040052.main
+    pull-repository: cp.icr.io/cp/cpd/model-train-console:d069908.20-09-12-040052.main
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: persistence-service:d57a74d.20-09-13-183846.main
+  references:
+  - repository: cp.icr.io/cp/cpd/persistence-service:d57a74d.20-09-13-183846.main
+    pull-repository: cp.icr.io/cp/cpd/persistence-service:d57a74d.20-09-13-183846.main
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: similar-incidents-service:06a2728.20-09-12-040026.main
+  references:
+  - repository: cp.icr.io/cp/cpd/similar-incidents-service:06a2728.20-09-12-040026.main
+    pull-repository: cp.icr.io/cp/cpd/similar-incidents-service:06a2728.20-09-12-040026.main
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: topology:815e111.20-09-12-040708.main
+  references:
+  - repository: cp.icr.io/cp/cpd/topology:815e111.20-09-12-040708.main
+    pull-repository: cp.icr.io/cp/cpd/topology:815e111.20-09-12-040708.main
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: coordinator:rhubi-PR-1370-1
+  references:
+  - repository: cp.icr.io/cp/cpd/coordinator:rhubi-PR-1370-1
+    pull-repository: cp.icr.io/cp/cpd/coordinator:rhubi-PR-1370-1
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: jobmonitor:rhubi-PR-1370-1
+  references:
+  - repository: cp.icr.io/cp/cpd/jobmonitor:rhubi-PR-1370-1
+    pull-repository: cp.icr.io/cp/cpd/jobmonitor:rhubi-PR-1370-1
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: databroker-s3:rhubi-PR-1370-1
+  references:
+  - repository: cp.icr.io/cp/cpd/databroker-s3:rhubi-PR-1370-1
+    pull-repository: cp.icr.io/cp/cpd/databroker-s3:rhubi-PR-1370-1
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: pod-coordinator:rhubi-PR-1370-1
+  references:
+  - repository: cp.icr.io/cp/cpd/pod-coordinator:rhubi-PR-1370-1
+    pull-repository: cp.icr.io/cp/cpd/pod-coordinator:rhubi-PR-1370-1
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+
+
+- image: zen-meta-couchdb:v3.0.1.0-x86_64-45
+  references:
+  - repository: zen-meta-couchdb:v3.0.1.0-x86_64-45
+    pull-repository: cp.icr.io/cp/cpd/zen-meta-couchdb:v3.0.1.0-x86_64-45
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: privatecloud-usermgmt:v3.0.1.0-x86_64-45
+  references:
+  - repository: privatecloud-usermgmt:v3.0.1.0-x86_64-45
+    pull-repository: cp.icr.io/cp/cpd/privatecloud-usermgmt:v3.0.1.0-x86_64-45
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: privatecloud-redis-repo:v3.0.1.0-x86_64-45
+  references:
+  - repository: privatecloud-redis-repo:v3.0.1.0-x86_64-45
+    pull-repository: cp.icr.io/cp/cpd/privatecloud-redis-repo:v3.0.1.0-x86_64-45
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: zen-metastoredb:v3.0.1.0-x86_64-45
+  references:
+  - repository: zen-metastoredb:v3.0.1.0-x86_64-45
+    pull-repository: cp.icr.io/cp/cpd/zen-metastoredb:v3.0.1.0-x86_64-45
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: influxdb:v3.0.1.0-x86_64-45
+  references:
+  - repository: influxdb:v3.0.1.0-x86_64-45
+    pull-repository: cp.icr.io/cp/cpd/influxdb:v3.0.1.0-x86_64-45
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: zen-audit:v3.0.1.0-x86_64-45
+  references:
+  - repository: zen-audit:v3.0.1.0-x86_64-45
+    pull-repository: cp.icr.io/cp/cpd/zen-audit:v3.0.1.0-x86_64-45
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: zen-meta-couchdb:v3.0.1.0-ppc64le-45
+  references:
+  - repository: zen-meta-couchdb:v3.0.1.0-ppc64le-45
+    pull-repository: cp.icr.io/cp/cpd/zen-meta-couchdb:v3.0.1.0-ppc64le-45
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: privatecloud-usermgmt:v3.0.1.0-ppc64le-45
+  references:
+  - repository: privatecloud-usermgmt:v3.0.1.0-ppc64le-45
+    pull-repository: cp.icr.io/cp/cpd/privatecloud-usermgmt:v3.0.1.0-ppc64le-45
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: privatecloud-redis-repo:v3.0.1.0-ppc64le-45
+  references:
+  - repository: privatecloud-redis-repo:v3.0.1.0-ppc64le-45
+    pull-repository: cp.icr.io/cp/cpd/privatecloud-redis-repo:v3.0.1.0-ppc64le-45
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: zen-metastoredb:v3.0.1.0-ppc64le-45
+  references:
+  - repository: zen-metastoredb:v3.0.1.0-ppc64le-45
+    pull-repository: cp.icr.io/cp/cpd/zen-metastoredb:v3.0.1.0-ppc64le-45
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: influxdb:v3.0.1.0-ppc64le-45
+  references:
+  - repository: influxdb:v3.0.1.0-ppc64le-45
+    pull-repository: cp.icr.io/cp/cpd/influxdb:v3.0.1.0-ppc64le-45
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: zen-audit:v3.0.1.0-ppc64le-45
+  references:
+  - repository: zen-audit:v3.0.1.0-ppc64le-45
+    pull-repository: cp.icr.io/cp/cpd/zen-audit:v3.0.1.0-ppc64le-45
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: icp4data-nginx-repo:v3.0.1.0-x86_64-45
+  references:
+  - repository: icp4data-nginx-repo:v3.0.1.0-x86_64-45
+    pull-repository: cp.icr.io/cp/cpd/icp4data-nginx-repo:v3.0.1.0-x86_64-45
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: icp4data-nginx-repo:v3.0.1.0-ppc64le-45
+  references:
+  - repository: icp4data-nginx-repo:v3.0.1.0-ppc64le-45
+    pull-repository: cp.icr.io/cp/cpd/icp4data-nginx-repo:v3.0.1.0-ppc64le-45
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: zen-admin:v3.0.1.0-x86_64-45
+  references:
+  - repository: zen-admin:v3.0.1.0-x86_64-45
+    pull-repository: cp.icr.io/cp/cpd/zen-admin:v3.0.1.0-x86_64-45
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: zen-content:v3.0.1.0-x86_64-45
+  references:
+  - repository: zen-content:v3.0.1.0-x86_64-45
+    pull-repository: cp.icr.io/cp/cpd/zen-content:v3.0.1.0-x86_64-45
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: zen-core:v3.0.1.0-x86_64-45
+  references:
+  - repository: zen-core:v3.0.1.0-x86_64-45
+    pull-repository: cp.icr.io/cp/cpd/zen-core:v3.0.1.0-x86_64-45
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: zen-core-api:v3.0.1.0-x86_64-45
+  references:
+  - repository: zen-core-api:v3.0.1.0-x86_64-45
+    pull-repository: cp.icr.io/cp/cpd/zen-core-api:v3.0.1.0-x86_64-45
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: zen-core-api:v3.0.1.0-x86_64-45
+  references:
+  - repository: zen-core-api:v3.0.1.0-x86_64-45
+    pull-repository: cp.icr.io/cp/cpd/zen-core-api:v3.0.1.0-x86_64-45
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: icpd-requisite:v3.0.1.0-x86_64-45
+  references:
+  - repository: icpd-requisite:v3.0.1.0-x86_64-45
+    pull-repository: cp.icr.io/cp/cpd/icpd-requisite:v3.0.1.0-x86_64-45
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: zen-watchdog:v3.0.1.0-x86_64-45
+  references:
+  - repository: zen-watchdog:v3.0.1.0-x86_64-45
+    pull-repository: cp.icr.io/cp/cpd/zen-watchdog:v3.0.1.0-x86_64-45
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: zen-data-sorcerer:v3.0.1.0-x86_64-45
+  references:
+  - repository: zen-data-sorcerer:v3.0.1.0-x86_64-45
+    pull-repository: cp.icr.io/cp/cpd/zen-data-sorcerer:v3.0.1.0-x86_64-45
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: zen-audit:v3.0.1.0-x86_64-45
+  references:
+  - repository: zen-audit:v3.0.1.0-x86_64-45
+    pull-repository: cp.icr.io/cp/cpd/zen-audit:v3.0.1.0-x86_64-45
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: zen-admin:v3.0.1.0-ppc64le-45
+  references:
+  - repository: zen-admin:v3.0.1.0-ppc64le-45
+    pull-repository: cp.icr.io/cp/cpd/zen-admin:v3.0.1.0-ppc64le-45
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: zen-content:v3.0.1.0-ppc64le-45
+  references:
+  - repository: zen-content:v3.0.1.0-ppc64le-45
+    pull-repository: cp.icr.io/cp/cpd/zen-content:v3.0.1.0-ppc64le-45
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: zen-core:v3.0.1.0-ppc64le-45
+  references:
+  - repository: zen-core:v3.0.1.0-ppc64le-45
+    pull-repository: cp.icr.io/cp/cpd/zen-core:v3.0.1.0-ppc64le-45
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: zen-core-api:v3.0.1.0-ppc64le-45
+  references:
+  - repository: zen-core-api:v3.0.1.0-ppc64le-45
+    pull-repository: cp.icr.io/cp/cpd/zen-core-api:v3.0.1.0-ppc64le-45
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: zen-core-api:v3.0.1.0-ppc64le-45
+  references:
+  - repository: zen-core-api:v3.0.1.0-ppc64le-45
+    pull-repository: cp.icr.io/cp/cpd/zen-core-api:v3.0.1.0-ppc64le-45
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: icpd-requisite:v3.0.1.0-ppc64le-45
+  references:
+  - repository: icpd-requisite:v3.0.1.0-ppc64le-45
+    pull-repository: cp.icr.io/cp/cpd/icpd-requisite:v3.0.1.0-ppc64le-45
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: zen-watchdog:v3.0.1.0-ppc64le-45
+  references:
+  - repository: zen-watchdog:v3.0.1.0-ppc64le-45
+    pull-repository: cp.icr.io/cp/cpd/zen-watchdog:v3.0.1.0-ppc64le-45
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: zen-data-sorcerer:v3.0.1.0-ppc64le-45
+  references:
+  - repository: zen-data-sorcerer:v3.0.1.0-ppc64le-45
+    pull-repository: cp.icr.io/cp/cpd/zen-data-sorcerer:v3.0.1.0-ppc64le-45
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: zen-audit:v3.0.1.0-ppc64le-45
+  references:
+  - repository: zen-audit:v3.0.1.0-ppc64le-45
+    pull-repository: cp.icr.io/cp/cpd/zen-audit:v3.0.1.0-ppc64le-45
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: cpdoperator:v3.0.1-16-x86_64
+  references:
+  - repository: cpdoperator:v3.0.1-16-x86_64
+    pull-repository: cp.icr.io/cp/cpd/cpdoperator:v3.0.1-16-x86_64
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: cpd-operator-init:v1.0.1-x86_64
+  references:
+  - repository: cpd-operator-init:v1.0.1-x86_64
+    pull-repository: cp.icr.io/cp/cpd/cpd-operator-init:v1.0.1-x86_64
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: cp4d-tiller:v2.16.6-x86_64
+  references:
+  - repository: cp4d-tiller:v2.16.6-x86_64
+    pull-repository: cp.icr.io/cp/cpd/cp4d-tiller:v2.16.6-x86_64
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: cpdoperator:v3.0.1-16-ppc64le
+  references:
+  - repository: cpdoperator:v3.0.1-16-ppc64le
+    pull-repository: cp.icr.io/cp/cpd/cpdoperator:v3.0.1-16-ppc64le
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: cpd-operator-init:v1.0.1-ppc64le
+  references:
+  - repository: cpd-operator-init:v1.0.1-ppc64le
+    pull-repository: cp.icr.io/cp/cpd/cpd-operator-init:v1.0.1-ppc64le
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY
+- image: cp4d-tiller:v2.16.6-ppc64le
+  references:
+  - repository: cp4d-tiller:v2.16.6-ppc64le
+    pull-repository: cp.icr.io/cp/cpd/cp4d-tiller:v2.16.6-ppc64le
+    pull-authorization:
+      username:
+        env: ENTITLED_REGISTRY_USER
+      password:
+        env: ENTITLED_REGISTRY_KEY

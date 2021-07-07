@@ -1,0 +1,29 @@
+{{- $compName := "zen-resource-plans-extensions" -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: zen-resource-plans-extensions
+  labels:
+    {{- include "zenhelper.labels" (list . $compName) | indent 4 }}
+    icpdata_addon: "true"
+    icpdata_addon_version: "3.5.2"
+data:
+  extensions: |
+    [
+      {
+        "extension_point_id": "resource_plans",
+        "extension_name": "zen_resource_plans",
+        "details":{
+          "policies": [
+            {
+              "name": "zen-lite",
+              "enforcementSupported": false
+            },
+            {
+              "name": "*",
+              "enforcementSupported": true
+            }
+          ]
+        }
+      }
+    ]

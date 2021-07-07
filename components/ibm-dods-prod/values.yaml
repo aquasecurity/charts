@@ -1,0 +1,66 @@
+global:
+  # the name of the user-home PVC we mount in our pods
+  userHomePVC:
+    persistence:
+      existingClaimName: 'user-home-pvc'
+  # architecture to run on: this allows to pick the right images
+  architecture: "amd64"
+  # the service account to install our pods: by default use CP4D viewer account
+  serviceAccount: cpd-viewer-sa
+  # specifies the Docker repository for the image, this will be pre-appended to the image.repository name.
+  dockerRegistryPrefix: docker-registry.default.svc:5000/zen
+  # the instance of the CP4D we are installed on. Overriden by CP4D install operator in install
+  cloudpakInstanceId: instance-of-cp4d-to-override
+
+# used by the OCP Helm catalog to present a license
+license: false
+
+image:
+  pullPolicy: IfNotPresent      
+
+ddInit:
+  image:
+    repository: "dd-init"
+    tag: "3.5.15"
+            
+ddScenarioApi:
+  image:
+    repository: "dd-scenario-api"
+    tag: "3.5.21"
+  resources:
+    requests:
+      cpu: "200m"
+      memory: "512Mi"
+    limits:
+      cpu: "1000m"
+      memory: "1024Mi"
+  replicas: 1
+
+ddScenarioUi:
+  image:
+    repository: "dd-scenario-ui"
+    tag: "3.5.47"
+  resources:
+    requests:
+      cpu: "200m"
+      memory: "512Mi"
+    limits:
+      cpu: "500m"
+      memory: "1024Mi"
+  replicas: 1
+  # used in unit tests to disable REDIS to be able to run standalone
+  noRedis: false
+
+ddCognitive:
+  image:
+    repository: "dd-cognitive"
+    tag: "3.5.37"
+  resources:
+    requests:
+      cpu: "500m"
+      memory: "512Mi"
+    limits:
+      cpu: "1000m"
+      memory: "2048Mi"
+  replicas: 1
+

@@ -1,0 +1,49 @@
+# Change license to true to indicate you have read and agree to license agreements
+license: false
+
+global:
+  dockerRegistryPrefix: "set_during_install"
+  cloudpakInstanceId: "set_during_install"
+  replicaCount: "1"
+  currentModuleArch: "set_during_install1"
+
+ibm-wsl-jupyter-notebooks-converter:
+  image:
+    repository: jupyter-notebooks-converter
+    tag: 3.5.3014
+
+ibm-wsl-notebooks-job-manager:
+  image:
+    repository: notebooks
+    tag: 3.5.3014
+
+ibm-wsl-wdp-notebooks-api:
+  image:
+    repository: notebooks
+    tag: 3.5.3014
+
+ibm-wsl-ws-notebooks-ui:
+  image:
+    repository: notebooks
+    tag: 3.5.3014
+
+initJob:
+  image:
+    repository: environments-init-job
+    tag: "3.5.4014.1647"
+  scripts:
+    version: "1647"
+  channels:
+    version: "oce113-py37-x86cpu"
+
+
+uninstallJob:
+  image:
+    repository: environments-init-job
+    tag: "3.5.4014.1647"
+
+versions:
+    notebooksJobManager: "cpd35-main-b75b99ee3bc8e314291ec9652164b6d71e15f39d-ubi"
+    notebooksConverter: "cpd35-main-e2599c459ad591f549800dc62bc8cb78345299eb"
+    wdpNotebooksApi: "cpd35-main-8c521a9f92c3d2fd5f1fb264b7d23677e7753b3c-ubi"
+    wsNotebooksUi: "cpd35-main-c77a14c5e86f2bd9b3563c06d428c9cff610d6ad-ubi"

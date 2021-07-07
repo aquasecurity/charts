@@ -1,0 +1,56 @@
+# Default values for flow-ui.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+flowUiaddOnPodLabels:
+  addOnId: "spss-modeler"
+  app: "ui"
+
+resources:
+  replicaCount: 3
+  memLimits: 1.5Gi
+  memRequests: 1.5Gi
+  cpuLimits: 1500m
+  cpuRequests: 100m
+
+# These values will mostly be over-ridden from above.
+
+service:
+  type: ClusterIP
+  https_port: 9443
+
+container:
+  https_port: 9443
+
+# Control of the node runtime.
+node:
+  env: production
+  modules:
+    cache: false
+
+
+# Make helm lint happy: See https://github.com/helm/helm/issues/3822
+nameOverride: ""
+fullnameOverride: ""
+
+
+# Default values for wml-canvas.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+global:
+  flowUi:
+    nginxPath: "canvas"
+
+flowUiSettings:
+  cache_access_retry_interval: "5000"
+  disable_nonce: "1"
+  max_cache_access_retry: "11"
+  max_cache_retry: "5"
+  nnm_disabled: true
+  session_cache_enabled: false
+  session_not_accessible_retry: "36"
+  use_flow_session: true
+
+flowUiDocumentationUrls:
+  knowledgeCenterApiUrl: "https://www.ibm.com/support/knowledgecenter/v1/{locale}content/SSQNUZ_3.5.0/wsd/nodes/"
+  documentationUrl: "https://www.ibm.com/support/knowledgecenter/SSQNUZ_3.5.0/wsd/spss-modeler.html"

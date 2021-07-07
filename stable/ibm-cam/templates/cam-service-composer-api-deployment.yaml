@@ -14,12 +14,14 @@ metadata:
   name: cam-service-composer-api
   labels:
     name: cam-service-composer-api
-    app: {{ template "fullname" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    "app.kubernetes.io/name": {{ template "fullname" . }}
+    "helm.sh/chart": "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
-  namespace: {{ .Values.service.namespace }}
+    "app.kubernetes.io/instance": "{{ .Release.Name }}"
+    "app.kubernetes.io/managed-by": "{{ .Release.Service }}"
+  namespace: {{ .Release.Namespace }}
 spec:
+  progressDeadlineSeconds: 1800
   replicas: {{ .Values.camAPI.replicaCount }}
   selector:
     matchLabels:
@@ -34,15 +36,29 @@ spec:
     metadata:
       labels:
         name: cam-service-composer-api
-        app: {{ template "fullname" . }}
-        chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+        "app.kubernetes.io/name": {{ template "fullname" . }}
+        "helm.sh/chart": "{{ .Chart.Name }}-{{ .Chart.Version }}"
         release: "{{ .Release.Name }}"
-        heritage: "{{ .Release.Service }}"
+        "app.kubernetes.io/instance": "{{ .Release.Name }}"
+        "app.kubernetes.io/managed-by": "{{ .Release.Service }}"
       annotations:
         productName: "Cloud Automation Manager"
         productID: "{{ .Values.global.id.productID }}"
         productVersion: "{{ .Chart.AppVersion }}"
     spec:
+      hostNetwork: false
+      hostPID: false
+      hostIPC: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+        supplementalGroups:
+          - 1000
+{{- if .Values.global.audit }}
+        seLinuxOptions:
+            type: spc_t
+{{- end }}
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -54,6 +70,11 @@ spec:
                 - {{ .Values.arch }}
       hostname: cam-service-composer-api
       volumes:
+      - name: tmp-empty
+        emptyDir: {}
+      - name: cam-cert
+        secret:
+          secretName: {{ .Values.camAPI.certificate.certName }}
 {{- if .Values.global.audit }}
       - name: shared
         emptyDir: {}
@@ -86,14 +107,36 @@ spec:
       {{- else }}
         emptyDir: {}
       {{- end }}
-      {{- if .Values.global.image.secretName }}
-      {{- if ne .Values.global.image.secretName "default"}}
+      {{- if ne .Values.global.image.secretName "default" }}
       imagePullSecrets:
-      - name: {{ .Values.global.image.secretName }}
+      {{- else }}
+        {{- if ne .Values.auditService.image.pullSecret "" }}
+          {{- if .Values.global.audit }}
+      imagePullSecrets:
+          {{- end }}
+        {{- end }}
       {{- end }}
+      {{- if .Values.global.image.secretName }}
+        {{- if ne .Values.global.image.secretName "default" }}
+      - name: {{ .Values.global.image.secretName }}
+        {{- end }}
+      {{- end }}
+      {{- if .Values.auditService.image.pullSecret }}
+        {{- if ne .Values.auditService.image.pullSecret "" }}
+          {{- if .Values.global.audit }}
+      - name: {{ .Values.auditService.image.pullSecret }}
+          {{- end }}
+        {{- end }}
       {{- end }}
       containers:
       - name: cam-service-composer-api
+        securityContext:
+          privileged: false
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - MKNOD
         image: "{{ .Values.image.repository }}icam-service-composer-api:{{ .Values.image.tag }}{{ template "platform" . }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
@@ -103,20 +146,26 @@ spec:
           httpGet:
             path: /api/v1/health
             port: liveness-port
+            scheme: HTTPS
           initialDelaySeconds: 300
           periodSeconds: 20
         readinessProbe:
           httpGet:
             path: /api/v1/ready
             port: liveness-port
+            scheme: HTTPS
           initialDelaySeconds: 5
           periodSeconds: 20
         resources:
 {{ toYaml .Values.resources | indent 10 }}
         volumeMounts:
+          - name: tmp-empty
+            mountPath: /tmp
+          - name: cam-cert
+            mountPath: /usr/src/app/certs
+            readOnly: true
           - name:  {{ .Values.camLogsPV.name }}
             mountPath: /var/camlog
-            subPath: cam-service-composer-api
 {{- if .Values.global.audit }}
           - name: shared
             mountPath: /var/audit
@@ -124,8 +173,6 @@ spec:
         envFrom:
         - configMapRef:
             name: common-config
-        - configMapRef:
-            name: redis-config
         env:
         - name: MONGODB_PASSWORD
           valueFrom:
@@ -155,6 +202,11 @@ spec:
             configMapKeyRef:
               name: oauth-client-map
               key: MASTER_IP
+        - name: ICP_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: common-config
+              key: ICP_PORT
         - name: ICP_DEFAULT_ADMIN_USER
           valueFrom:
             secretKeyRef:
@@ -169,7 +221,7 @@ spec:
               {{- else }}
               name: cam-secure-values-secret
               {{- end }}
-              key: httpsProxy          
+              key: httpsProxy
         - name: https_proxy
           valueFrom:
             secretKeyRef:
@@ -178,7 +230,7 @@ spec:
               {{- else }}
               name: cam-secure-values-secret
               {{- end }}
-              key: httpsProxy  
+              key: httpsProxy
         - name: HTTP_PROXY
           valueFrom:
             secretKeyRef:
@@ -187,7 +239,7 @@ spec:
               {{- else }}
               name: cam-secure-values-secret
               {{- end }}
-              key: httpProxy  
+              key: httpProxy
         - name: http_proxy
           valueFrom:
             secretKeyRef:
@@ -196,7 +248,7 @@ spec:
               {{- else }}
               name: cam-secure-values-secret
               {{- end }}
-              key: httpProxy  
+              key: httpProxy
         - name: NO_PROXY
           valueFrom:
             secretKeyRef:
@@ -205,7 +257,7 @@ spec:
               {{- else }}
               name: cam-secure-values-secret
               {{- end }}
-              key: noProxy  
+              key: noProxy
         - name: no_proxy
           valueFrom:
             secretKeyRef:
@@ -214,36 +266,73 @@ spec:
               {{- else }}
               name: cam-secure-values-secret
               {{- end }}
-              key: noProxy  
+              key: noProxy
 {{- end }}
         - name: ICP_ENDPOINT
-          value: https://$(ICP_MASTER_IP):8443
-        - name: ORPHEUS_IDENTITY_API_URL
-          value: $(ICP_ENDPOINT)/idprovider
+          value: https://$(ICP_MASTER_IP):$(ICP_PORT)
+        - name: ORPHEUS_IDENTITY_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              name: common-config
+              key: ORPHEUS_TENANT_URL
         - name: ORPHEUS_IDENTITY_URL
+          {{- if ne .Values.platform "icp"}}
+          value: $(ORPHEUS_IDENTITY_ENDPOINT)/api
+          {{- else }}
           value: $(ICP_ENDPOINT)/idprovider
+          {{- end }}
+        - name: ORPHEUS_IDENTITY_API_URL
+          value: $(ORPHEUS_IDENTITY_URL)
         - name: FILE_LIMIT
           value: 3mb
+        - name: CAM_PROVIDER_BROKER
+          value: https://cam-provider-broker:7050/api/
         - name: POD_NAME
           valueFrom:
             fieldRef:
               fieldPath: metadata.name
-        - name: SCL_MIGRATION_REQUIRED 
+        - name: SCL_MIGRATION_REQUIRED
           value: "true"
+        - name: SI_MIGRATION_REQUIRED
+          value: "true"
+        - name: SCL_Service_MIGRATION_REQUIRED
+          value: "true"
+        - name: COMPATIBILITY_MODE
+          value: "false"
+        - name: FEATURE_APPROVAL_FOR_EDIT
+          value: "false"
+        - name: FEATURE_APPROVAL_FOR_UPGRADE_DOWNGRADE
+          value: "false"
         - name: POD_NAMESPACE
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
+        - name: LOG_LEVEL
+          value: {{ .Values.camLoggingPolicies.logLevel }}
         - name: SERVICE_NAME
           value: cam-service-composer-api
         - name: AUDIT_ENABLED
           value: "{{ .Values.global.audit }}"
         - name: AUDIT_LOG_PATH
           value: /var/audit/cam-service-composer-api-audit.log
+        - name: AUDIT_INITIATOR_HOST_ADDRESS_HEADER
+          value: X-Forwarded-For
 {{- if .Values.global.audit }}
       - name: cam-service-composer-api-audit
+{{- if .Values.global.ICP32}}
+        image: "{{ .Values.auditService.image.repository }}icp-audit-service-nr:{{ .Values.auditService.image.tag }}"
+{{- else }}
         image: "{{ .Values.auditService.image.repository }}icp-audit-service:{{ .Values.auditService.image.tag }}"
+{{- end }}
         imagePullPolicy: {{ .Values.auditService.image.pullPolicy }}
+        securityContext:
+{{- if .Values.global.legacyAudit }}
+          runAsNonRoot: false
+          runAsUser: 0
+{{- else }}
+          fsGroup: 1000
+          runAsUser: 1000
+{{- end }}
         resources:
 {{ toYaml .Values.auditService.resources | indent 10 }}
         env:
@@ -251,10 +340,11 @@ spec:
             valueFrom:
               fieldRef:
                 fieldPath: metadata.name
+          - name: LOG_LEVEL
+            value: {{ .Values.camLoggingPolicies.logLevel }}
         volumeMounts:
           - name:  {{ .Values.camLogsPV.name }}
             mountPath: /var/camlog
-            subPath: cam-iaas
           - name: shared
             mountPath: "/var/log/audit"
           - name: journal
@@ -263,14 +353,18 @@ spec:
             mountPath: "/etc/logrotate.d/audit"
             subPath: audit
           - name: logrotate-conf
-            mountPath: "/etc/logrotate.conf"            
+            mountPath: "/etc/logrotate.conf"
             subPath: logrotate.conf
         livenessProbe:
           exec:
             command:
             - sh
             - -c
+{{- if .Values.global.legacyAudit }}
             - "service cron status"
+{{- else }}
+            - "ps -ef | grep python"
+{{- end }}
           initialDelaySeconds: 30
           timeoutSeconds: 5
         readinessProbe:
@@ -278,20 +372,12 @@ spec:
             command:
             - sh
             - -c
+{{- if .Values.global.legacyAudit }}
             - "service cron status"
+{{- else }}
+            - "ps -ef | grep python"
+{{- end }}
           initialDelaySeconds: 5
-          timeoutSeconds: 1 
+          timeoutSeconds: 1
           value: "true"
-{{- end }}   
-      initContainers:
-      - name: cam-service-composer-api-init
-        image: "{{ .Values.image.repository }}icam-busybox:{{ .Values.image.tag }}{{ template "platform" . }}"
-        imagePullPolicy:  {{ .Values.image.pullPolicy }}
-        securityContext:
-          runAsUser: 0
-        command: ["/bin/sh", "-c"]
-        args:
-          - mkdir -p /var/camlog/cam-service-composer-api && chown -R 1000:1000 /var/camlog/cam-service-composer-api;
-        volumeMounts:
-        - name: {{ .Values.camLogsPV.name }}
-          mountPath: /var/camlog
+{{- end }}

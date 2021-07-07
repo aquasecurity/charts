@@ -1,0 +1,57 @@
+{{- if eq .Values.global.deploymentTarget "icp4data" }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app: wkc-lite
+    chart: wkc-lite
+    heritage: Tiller
+    icpdata_addon: "true"
+    icpdata_addon_version: "3.5.3"
+    release: wkc-lite
+    app.kubernetes.io/name: wkc-lite
+    helm.sh/chart: wkc-lite
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/instance: wkc-lite
+    wkc_glossary_service_v: "{{ index .Values "wkc-glossary-service-chart" "image" "tag" }}"
+    wdp_search_v: "{{ index .Values "wdp-search-chart" "image" "tag" }}"
+    wdp_profiling_v: "{{ index .Values "wdp-profiling-chart" "image" "tag" }}"
+    wdp_profiling_messaging_v: "{{ index .Values "wdp-profiling-messaging-chart" "image" "tag" }}"
+    wdp_profiling_ui_v: "{{ index .Values "wdp-profiling-ui-chart" "image" "tag" }}"
+    wkc_gov_ui_v: "{{ index .Values "wkc-gov-ui-chart" "image" "tag" }}"
+    dataconn_engine_opdiscovery_v: "{{ index .Values "dataconn-engine-opdiscovery-chart" "image" "tag" }}"
+    dataconn_engine_service_v: "{{ index .Values "dataconn-engine-service-chart" "image" "tag" }}"
+    dataconn_engine_spark_cluster_v: "{{ index .Values "dataconn-engine-spark-cluster-chart" "image" "tag" }}"
+    wdp_activities_v: "{{ index .Values "wdp-activities-chart" "image" "tag" }}"
+    wdp_policy_service_v: "{{ index .Values "wdp-policy-service-chart" "image" "tag" }}"
+    wdp_lineage_chart_v: "{{ index .Values "wdp-lineage-chart" "image" "tag" }}"
+  name: wkc-lite-config-map
+data:
+  add-ons.json: |
+      {
+         "wkc":{
+            "details":{
+               "openURL": "/data/catalogs",
+               "plan_name": "icp4d-professional",
+               "wkc_type": "wkc_core",
+               "priority": -1
+            },
+            "versions":{
+               "3.5.3":{
+                  "state":"enabled"
+               }
+            }
+         },
+         "wkc-full":{
+            "add_on_type": "component",
+            "details":{
+               "internal": true
+            },
+            "versions":{
+               "3.5.3":{
+                  "state":"enabled"
+               }
+            }
+         }
+      }
+{{- end }}

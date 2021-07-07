@@ -1,0 +1,110 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: {{ .Values.common.appName }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    name: atlas{{ .Values.instanceIdWithinNamespace }}
+    release: {{ .Release.Name }}
+    paw_instance_name: {{ .Values.paw_instance_name }}
+  name: atlas{{ .Values.instanceIdWithinNamespace }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.atlas.replicas }}
+  selector:
+    matchLabels:
+      name: atlas{{ .Values.instanceIdWithinNamespace }}
+  template:
+    metadata:
+      annotations:
+        hook.activate.cpd.ibm.com/command: '[]'
+        hook.deactivate.cpd.ibm.com/command: '[]'  
+        cloudpakName: {{ .Values.cloudpakAnnotations.cloudpakName }}
+        cloudpakId: {{ .Values.cloudpakAnnotations.cloudpakId }}
+        productCloudpakRatio: {{ .Values.cloudpakAnnotations.productCloudpakRatio }}
+        productName: {{ .Values.productName.PAWorkSpace }}
+        productID:  {{ .Values.cloudpakAnnotations.productID }}      
+        productVersion: 3.5.2
+        productMetric: "VIRTUAL_PROCESSOR_CORE"
+        productChargedContainers: "All"
+      labels:
+        app.kubernetes.io/name: {{ .Values.common.appName }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/managed-by: {{ .Release.Service }}
+        icpdsupport/addOnId: pa
+        icpdsupport/app: "pa-workspace" 
+        cloudpakInstanceId: "{{ .Values.zenCloudPakInstanceId }}"
+        {{- include "planning-analytics.serviceid" . | indent 8 }}
+        {{- if ( .Values.createdBy )  }}
+        icpdsupport/createdBy: {{ .Values.createdBy | quote }}
+        {{- end }} 
+        helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+        name: atlas{{ .Values.instanceIdWithinNamespace }}
+        release: {{ .Release.Name }}
+        version: "15-ubi7"
+        paw_instance_name: {{ .Values.paw_instance_name }}
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: beta.kubernetes.io/arch
+                operator: In
+                values:
+                - {{ .Values.arch }}
+      containers:
+        - name: atlas
+          image: {{ .Values.docker_registry_prefix }}/pa-atlas-service:15-ubi7
+          ports:
+            - containerPort: 9076
+              protocol: TCP
+          env:
+          resources:
+            limits:
+              cpu: "{{ .Values.atlas.cpuLimit }}"
+              memory: "{{ .Values.atlas.memoryLimit }}"
+            requests:
+              cpu: "{{ .Values.atlas.cpuRequestLimit }}"
+              memory: "{{ .Values.atlas.memoryRequestLimit }}"
+          securityContext:
+            runAsNonRoot: true
+{{- if not (.Capabilities.APIVersions.Has "security.openshift.io/v1") }} 
+            runAsUser: 2000
+{{- end }} 
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            readOnlyRootFilesystem: false
+            allowPrivilegeEscalation: false
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            initialDelaySeconds: 300
+            failureThreshold: 1
+            tcpSocket:
+              port: 9076
+            periodSeconds: 2
+          readinessProbe:
+            failureThreshold: 1
+            periodSeconds: 2
+            tcpSocket:
+              port: 9076
+      hostNetwork: false
+      hostIPC: false
+      hostPID: false
+      restartPolicy: Always
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+

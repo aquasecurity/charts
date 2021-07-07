@@ -1,0 +1,922 @@
+## Metadata for <PRODUCTNAME> configuration
+## This metadata is used to drive IBM Cloud Private UI for configuration of the Helm chart installation
+
+global:
+  __metadata:
+    hidden: true
+  deployOnCP4D:
+    __metadata:
+      hidden: true  
+  externalSecretName:
+    __metadata:
+      hidden: true  
+  runAsUser:
+    __metadata:
+      hidden: true
+      
+  #Set the Additional Group ID settings that the containers should run as
+  #This depends on the GID of the shared storage like NFS
+  fsGroupConfig:
+    supplementalGroups:
+      __metadata:
+        hidden: true
+  managerFQDN:
+    __metadata:
+      label: manager FQDN
+      description: kube manager FQDN.
+  coreReleaseName:
+    __metadata:
+      label: core Release Name
+      description: fci core Release Name.
+  dockerRegistryPrefix:
+    __metadata:
+      label: docker Repository
+      description: docker Repository URL.
+  createPv:
+    __metadata:
+      label: create Pv
+      description: create Pv.
+  nfsServer:
+    __metadata:
+      label: nfs Server
+      description: nfs Server hostname.
+  persistence:
+    storageClassName:
+      __metadata:
+        label: Storage class name
+        description: Storage class Name.
+    useDynamicProvisioning:
+      __metadata:
+        label: Dynamic provisioning
+        description: Dynamic provisioning.
+  commonScripts:
+    resources:
+      requests:
+        memory:
+          __metadata:
+            hidden: true
+        cpu:
+          __metadata:
+            hidden: true
+      limits:
+        memory:
+          __metadata:
+            hidden: true
+        cpu:
+          __metadata:
+            hidden: true
+    image:
+      repository:
+        __metadata:
+          label: image name of common scripts image
+          description: common scripts container image name.
+      tag:
+        __metadata:
+          label: common scripts image tag
+          description: common scripts image tag.
+      pullPolicy:
+        __metadata:
+          label: common scripts image pull policy
+          description: common scripts image pull policy.
+          hidden: true
+  config:
+    esUsername:
+      __metadata:
+        label: es Username
+        description: SIFS Elastic search Username.
+    HDP_MASTER_HOST:
+      __metadata:
+        label: HDP master hostname
+        description: HDP Master hostname.
+    export_all_url:
+      __metadata:
+        label: voice export all url
+        description: voice export all url.
+    export_metadata_url:
+      __metadata:
+        label: voice export metadata url
+        description: voice export metadata url.
+    export_transcript_url:
+      __metadata:
+        label: voice export transcript url
+        description: voice export transcript url.
+    export_audio_url:
+      __metadata:
+        label: voice export audio url
+        description: voice export audio url.
+    stt_endpoint:
+      __metadata:
+        label: stt end point
+        description: stt end point.
+    stt_user:
+      __metadata:
+        label: stt user name
+        description: stt user name.
+    callback_url_prefix:
+      __metadata:
+        label: callback url prefix
+        description: callback url prefix.
+    language_customization_id:
+      __metadata:
+        label: language customization id
+        description: language customization id.
+        
+  rmsConfig:
+    HDFS_URL:
+      __metadata:
+        label: HDFS URL
+        description: HDFS URL.
+
+rmsdbConfig:
+  __metadata:
+    hidden: true
+  FLYWAY_BASELINE_VERSION:
+    __metadata:
+      label: FLYWAY BASELINE VERSION
+      description: FLYWAY BASELINE VERSION.
+  db2_service:
+    __metadata:
+      label: DB2 SERVICE
+      description: DB2 SERVICE Name.
+
+dbConfig:
+  __metadata:
+    hidden: true
+  FLYWAY_BASELINE_VERSION:
+    __metadata:
+      label: FLYWAY BASELINE VERSION
+      description: FLYWAY BASELINE VERSION.
+  DB_SERVICE:
+    __metadata:
+      label: DB SERVICE
+      description: DB SERVICE Name.
+
+arch:
+  __metadata:
+    hidden: true
+    label: Arch value
+    description: Arch value.
+
+rmsDesignStudio:
+  __metadata:
+    hidden: true
+  image:
+    repository:
+      __metadata:
+        label: image name of rms designstudio
+        description: rms designstudio container image name.
+    tag:
+      __metadata:
+        label: rms designstudio image tag
+        description: rms designstudio image tag.
+    pullPolicy:
+      __metadata:
+        label: rms designstudio image pull policy
+        description: rms designstudio image pull policy.
+  resources:
+    requests:
+      cpu:
+        __metadata:
+          label: rms designstudio cpu request
+          description: rms designstudio cpu request.
+      memory:
+        __metadata:
+          label: rms designstudio memory request
+          description: rms designstudio memory request.
+    limits:
+      cpu:
+        __metadata:
+          label: rms designstudio cpu limit
+          description: rms designstudio cpu limit.
+      memory:
+        __metadata:
+          label: rms designstudio memory limit
+          description: rms designstudio memory limit.
+
+surveillanceLiberty:
+  __metadata:
+    hidden: true
+  image:
+    repository:
+      __metadata:
+        label: image name of liberty
+        description: liberty container image name.
+    tag:
+      __metadata:
+        label: liberty image tag
+        description: liberty image tag.
+    pullPolicy:
+      __metadata:
+        label: liberty image pull policy
+        description: liberty image pull policy.
+  resources:
+    requests:
+      cpu:
+        __metadata:
+          label: liberty cpu request
+          description: liberty cpu request.
+      memory:
+        __metadata:
+          label: liberty memory request
+          description: liberty memory request.
+    limits:
+      cpu:
+        __metadata:
+          label: liberty cpu limit
+          description: liberty cpu limit.
+      memory:
+        __metadata:
+          label: liberty memory limit
+          description: liberrty memory limit.
+
+surveillance_ecomm:
+  __metadata:
+    hidden: true
+  enabled:
+    __metadata:
+      hidden: true
+  swidtag:
+    file:
+      __metadata:
+        hidden: true
+  ecomm:
+    image:
+      repository:
+        __metadata:
+          label: image name of ecomm liberty
+          description: ecomm liberty container image name.
+      tag:
+        __metadata:
+          label: ecomm liberty image tag
+          description: ecomm liberty image tag.
+      pullPolicy:
+        __metadata:
+          label: ecomm liberty image pull policy
+          description: ecomm liberty image pull policy.
+    resources:
+      requests:
+        cpu:
+          __metadata:
+            label: ecomm liberty cpu request
+            description: ecomm liberty cpu request.
+        memory:
+          __metadata:
+            label: ecomm liberty memory request
+            description: ecomm liberty memory request.
+      limits:
+        cpu:
+          __metadata:
+            label: ecomm liberty cpu limit
+            description: ecomm liberty cpu limit.
+        memory:
+          __metadata:
+            label: ecomm liberty memory limit
+            description: ecomm liberrty memory limit.
+
+
+surveillance_voice:
+  __metadata:
+    hidden: true
+  enabled:
+    __metadata:
+      hidden: true
+  voice:
+    image:
+      repository:
+        __metadata:
+          label: image name of voice liberty
+          description: voice liberty container image name.
+      tag:
+        __metadata:
+          label: voice liberty image tag
+          description: voice liberty image tag.
+      pullPolicy:
+        __metadata:
+          label: voice liberty image pull policy
+          description: voice liberty image pull policy.
+    resources:
+      requests:
+        cpu:
+          __metadata:
+            label: voice liberty cpu request
+            description: voice liberty cpu request.
+        memory:
+          __metadata:
+            label: voice liberty memory request
+            description: voice liberty memory request.
+      limits:
+        cpu:
+          __metadata:
+            label: voice liberty cpu limit
+            description: voice liberty cpu limit.
+        memory:
+          __metadata:
+            label: voice liberty memory limit
+            description: voice liberrty memory limit.
+
+surveillance_complaints:
+  __metadata:
+    hidden: true
+  enabled:
+    __metadata:
+      hidden: true
+  swidtag:
+    file:
+      __metadata:
+        hidden: true
+  complaints:
+    image:
+      repository:
+        __metadata:
+          label: image name of complaints liberty
+          description: complaints liberty container image name.
+      tag:
+        __metadata:
+          label: complaints liberty image tag
+          description: complaints liberty image tag.
+      pullPolicy:
+        __metadata:
+          label: complaints liberty image pull policy
+          description: complaints liberty image pull policy.
+    resources:
+      requests:
+        cpu:
+          __metadata:
+            label: complaints liberty cpu request
+            description: complaints liberty cpu request.
+        memory:
+          __metadata:
+            label: complaints liberty memory request
+            description: complaints liberty memory request.
+      limits:
+        cpu:
+          __metadata:
+            label: complaints liberty cpu limit
+            description: complaints liberty cpu limit.
+        memory:
+          __metadata:
+            label: complaints liberty memory limit
+            description: complaints liberrty memory limit.
+
+initContainerResource:
+  __metadata:
+    hidden: true
+  resources:
+    requests:
+      cpu:
+        __metadata:
+          label: init container cpu request
+          description: init container cpu request.
+      memory:
+        __metadata:
+          label: init container memory request
+          description: init container memory request.
+    limits:
+      cpu:
+        __metadata:
+          label: init container cpu limit
+          description: init container cpu limit.
+      memory:
+        __metadata:
+          label: init container memory limit
+          description: init container memory limit.
+
+sideCarContainers:
+  __metadata:
+    hidden: true
+  resources:
+    requests:
+      cpu:
+        __metadata:
+          label: side car container cpu request
+          description: side car container cpu request.
+      memory:
+        __metadata:
+          label: side car container memory request
+          description: side car container memory request.
+    limits:
+      cpu:
+        __metadata:
+          label: side car container cpu limit
+          description: side car container cpu limit.
+      memory:
+        __metadata:
+          label: side car container memory limit
+          description: side car container memory limit.
+
+db2Container:
+  __metadata:
+    hidden: true
+  image:
+    repository:
+      __metadata:
+        label: image name of db2
+        description: db2 container image name.
+    tag:
+      __metadata:
+        label: db2 image tag
+        description: db2 image tag.
+    pullPolicy:
+      __metadata:
+        label: db2 image pull policy
+        description: db2 image pull policy.
+  resources:
+    requests:
+      cpu:
+        __metadata:
+          label: db2 container cpu request
+          description: db2 container cpu request.
+      memory:
+        __metadata:
+          label: db2 container memory request
+          description: db2 container memory request.
+    limits:
+      cpu:
+        __metadata:
+          label: db2 container cpu limit
+          description: db2 container cpu limit.
+      memory:
+        __metadata:
+          label: db2 container memory limit
+          description: db2 container memory limit.
+          
+rmsdb2Client:
+  __metadata:
+    hidden: true
+  image:
+    repository:
+      __metadata:
+        label: image name of rms db2
+        description: rms db2 container image name.
+    tag:
+      __metadata:
+        label: rms db2 image tag
+        description: rms db2 image tag.
+    pullPolicy:
+      __metadata:
+        label: rms db2 image pull policy
+        description: rms db2 image pull policy.
+  resources:
+    requests:
+      cpu:
+        __metadata:
+          label: rms db2 container cpu request
+          description: rms db2 container cpu request.
+      memory:
+        __metadata:
+          label: rms db2 container memory request
+          description: rms db2 container memory request.
+    limits:
+      cpu:
+        __metadata:
+          label: rms db2 container cpu limit
+          description: rms db2 container cpu limit.
+      memory:
+        __metadata:
+          label: rms db2 container memory limit
+          description: rms db2 container memory limit.
+
+surveillanceLogstash:
+  __metadata:
+    hidden: true
+  image:
+    repository:
+      __metadata:
+        label: image name of logstash
+        description: logstash container image name.
+    tag:
+      __metadata:
+        label: logstash image tag
+        description: logstash image tag.
+    pullPolicy:
+      __metadata:
+        label: logstash image pull policy
+        description: logstash image pull policy.
+  resources:
+    requests:
+      cpu:
+        __metadata:
+          label: logstash cpu request
+          description: logstash cpu request.
+      memory:
+        __metadata:
+          label: logstash memory request
+          description: logstash memory request.
+    limits:
+      cpu:
+        __metadata:
+          label: logstash cpu limit
+          description: logstash cpu limit.
+      memory:
+        __metadata:
+          label: logstash memory limit
+          description: logstash memory limit.
+
+surveillanceLogstashproxy:
+  __metadata:
+    hidden: true
+  image:
+    repository:
+      __metadata:
+        label: image name of logstash proxy
+        description: logstash proxy container image name.
+    tag:
+      __metadata:
+        label: logstash proxy image tag
+        description: logstash proxy image tag.
+    pullPolicy:
+      __metadata:
+        label: logstash proxy image pull policy
+        description: logstash proxy image pull policy.
+  resources:
+    requests:
+      cpu:
+        __metadata:
+          label: logstash proxy cpu request
+          description: logstash proxy cpu request.
+      memory:
+        __metadata:
+          label: logstash proxy memory request
+          description: logstash proxy memory request.
+    limits:
+      cpu:
+        __metadata:
+          label: logstash proxy cpu limit
+          description: logstash proxy cpu limit.
+      memory:
+        __metadata:
+          label: logstash proxy memory limit
+          description: logstash proxy memory limit.
+
+surveillanceFilebeat:
+  __metadata:
+    hidden: true
+  image:
+    repository:
+      __metadata:
+        label: image name of filebeat
+        description: filebeat container image name.
+    tag:
+      __metadata:
+        label: filebeat image tag
+        description: filebeat image tag.
+    pullPolicy:
+      __metadata:
+        label: filebeat image pull policy
+        description: filebeat image pull policy.
+  resources:
+    requests:
+      cpu:
+        __metadata:
+          label: filebeat cpu request
+          description: filebeat cpu request.
+      memory:
+        __metadata:
+          label: filebeat memory request
+          description: filebeat memory request.
+    limits:
+      cpu:
+        __metadata:
+          label: filebeat cpu limit
+          description: filebeat cpu limit.
+      memory:
+        __metadata:
+          label: filebeat memory limit
+          description: filebeat memory limit.
+
+kerberosClient:
+  __metadata:
+    hidden: true
+  image:
+    repository:
+      __metadata:
+        label: image name of hdp kerberos client
+        description: hdp kerberos client container image name.
+    tag:
+      __metadata:
+        label: hdp kerberos client image tag
+        description: hdp kerberos client image tag.
+    pullPolicy:
+      __metadata:
+        label: hdp kerberos client image pull policy
+        description: hdp kerberos client image pull policy.
+  livenessProbe:
+    exec:
+      command:
+        __metadata: 
+          label: Commnand for performing livness probe
+          description: Commnand for performing livness probe.
+    initialDelaySeconds:
+      __metadata:
+        label: Initial Delay Seconds
+        description: Initial Delay Seconds for probe.
+    periodSeconds:
+      __metadata:
+        label: Period Seconds
+        description: Period Seconds for each probe.
+    timeoutSeconds:
+      __metadata:
+        label: Timeout Seconds
+        description: Timeout Seconds for each probe.
+    successThreshold:
+      __metadata:
+        label: Success Threshold
+        description: Success Threshold.
+    failureThreshold:
+      __metadata:
+        label: Failure Threshold
+        description: Failure Threshold.
+  readinessProbe:
+    exec:
+      command:
+        __metadata: 
+          label: Commnand for performing livness probe
+          description: Commnand for performing livness probe.
+    initialDelaySeconds:
+      __metadata:
+        label: Initial Delay Seconds
+        description: Initial Delay Seconds for probe.
+    periodSeconds:
+      __metadata:
+        label: Period Seconds
+        description: Period Seconds for each probe.
+    timeoutSeconds:
+      __metadata:
+        label: Timeout Seconds
+        description: Timeout Seconds for each probe.
+    successThreshold:
+      __metadata:
+        label: Success Threshold
+        description: Success Threshold.
+    failureThreshold:
+      __metadata:
+        label: Failure Threshold
+        description: Failure Threshold.
+
+
+rmslibertyhdfsPvNfsPath:
+  __metadata:
+    hidden: true
+    label: rms liberty hdfs Pv Nfs Path
+    description: RMS Liberty hdfs pv NFS path.
+rmslibertyhdfsPvcSpec:
+  __metadata:
+    hidden: true
+  accessModes:
+    __metadata:
+      label: Access modes
+      description: Access modes.
+  storageClassName:
+    __metadata:
+      hidden: true
+      label: Storage class name
+      description: Storage class name.
+  size:
+    __metadata:
+      hidden: true
+      label: Size of persistent volume
+      description: Size of persistent volume.
+
+rmslibertyPvNfsPath:
+  __metadata:
+    hidden: true
+    label: rms liberty Pv Nfs Path
+    description: RMS Liberty pv NFS path.
+rmslibertyPvcSpec:
+  __metadata:
+    hidden: true
+  accessModes:
+    __metadata:
+      label: Access modes
+      description: Access modes.
+  storageClassName:
+    __metadata:
+      hidden: true
+      label: Storage class name
+      description: Storage class name.
+  size:
+    __metadata:
+      hidden: true
+      label: Size of persistent volume
+      description: Size of persistent volume.
+
+libertyPvNfsPath:
+  __metadata:
+    hidden: true
+    label: liberty Pv Nfs Path
+    description: Liberty pv NFS path.
+libertyPvcSpec:
+  __metadata:
+    hidden: true
+  accessModes:
+    __metadata:
+      label: Access modes
+      description: Access modes.
+  storageClassName:
+    __metadata:
+      hidden: true
+      label: Storage class name
+      description: Storage class name.
+  size:
+    __metadata:
+      hidden: true
+      label: Size of persistent volume
+      description: Size of persistent volume.
+
+logstashPvNfsPath:
+  __metadata:
+    hidden: true
+    label: logstash Pv Nfs Path
+    description: Logstash pv NFS path.
+logstashPvcSpec:
+  __metadata:
+    hidden: true
+  accessModes:
+    __metadata:
+      label: Access modes
+      description: Access modes.
+  storageClassName:
+    __metadata:
+      hidden: true
+      label: Storage class name
+      description: Storage class name.
+  size:
+    __metadata:
+      hidden: true
+      label: Size of persistent volume
+      description: Size of persistent volume.
+
+filebeatPvNfsPath:
+  __metadata:
+    hidden: true
+    label: Filebeat pv NFS path
+    description: filebeat pv NFS path.
+filebeatPvcSpec:
+  __metadata:
+    hidden: true
+  accessModes:
+    __metadata:
+      label: Access modes
+      description: Access modes.
+  storageClassName:
+    __metadata:
+      hidden: true
+      label: Storage class name
+      description: Storage class name.
+  size:
+    __metadata:
+      hidden: true
+      label: Size of persistent volume
+      description: Size of persistent volume.
+
+ecommPvNfsPath:
+  __metadata:
+    hidden: true
+    label: EComm Liberty pv NFS path
+    description: EComm Liberty pv NFS path.
+ecommPvcSpec:
+  __metadata:
+    hidden: true
+  accessModes:
+    __metadata:
+      label: Access modes
+      description: Access modes.
+  storageClassName:
+    __metadata:
+      hidden: true
+      label: Storage class name
+      description: Storage class name.
+  size:
+    __metadata:
+      hidden: true
+      label: Size of persistent volume
+      description: Size of persistent volume.
+
+voicePvNfsPath:
+  __metadata:
+    hidden: true
+    label: Voice Liberty pv NFS path
+    description: Voice Liberty pv NFS path.
+voicePvcSpec:
+  __metadata:
+    hidden: true
+  accessModes:
+    __metadata:
+      label: Access modes
+      description: Access modes.
+  storageClassName:
+    __metadata:
+      hidden: true
+      label: Storage class name
+      description: Storage class name.
+  size:
+    __metadata:
+      hidden: true
+      label: Size of persistent volume
+      description: Size of persistent volume.
+
+complaintsPvNfsPath:
+  __metadata:
+    hidden: true
+    label: Complaints Liberty pv NFS path
+    description: Complaints Liberty pv NFS path.
+complaintsPvcSpec:
+  __metadata:
+    hidden: true
+  accessModes:
+    __metadata:
+      label: Access modes
+      description: Access modes.
+  storageClassName:
+    __metadata:
+      hidden: true
+      label: Storage class name
+      description: Storage class name.
+  size:
+    __metadata:
+      hidden: true
+      label: Size of persistent volume
+      description: Size of persistent volume.
+      
+sharedPvNfsPath:
+  __metadata:
+    hidden: true
+    label: Shared pv NFS path
+    description: Shared pv NFS path.
+sharedPvcSpec:
+  __metadata:
+    hidden: true
+  accessModes:
+    __metadata:
+      label: Access modes
+      description: Access modes.
+  storageClassName:
+    __metadata:
+      hidden: true
+      label: Storage class name
+      description: Storage class name.
+  size:
+    __metadata:
+      hidden: true
+      label: Size of persistent volume
+      description: Size of persistent volume.
+
+livenessProbe:
+  __metadata:
+    hidden: true
+  initialDelaySeconds:
+    __metadata:
+      label: Initial Delay Seconds
+      description: Initial Delay Seconds for probe.
+  periodSeconds:
+    __metadata:
+      label: Period Seconds
+      description: Period Seconds for each probe.
+  timeoutSeconds:
+    __metadata:
+      label: Timeout Seconds
+      description: Timeout Seconds for each probe.
+  successThreshold:
+    __metadata:
+      label: Success Threshold
+      description: Success Threshold.
+  failureThreshold:
+    __metadata:
+      label: Failure Threshold
+      description: Failure Threshold.
+
+readinessProbe:
+  __metadata:
+    hidden: true
+  initialDelaySeconds:
+    __metadata:
+      label: Initial Delay Seconds
+      description: Initial Delay Seconds for probe.
+  periodSeconds:
+    __metadata:
+      label: Period Seconds
+      description: Period Seconds for each probe.
+  timeoutSeconds:
+    __metadata:
+      label: Timeout Seconds
+      description: Timeout Seconds for each probe.
+  successThreshold:
+    __metadata:
+      label: Success Threshold
+      description: Success Threshold.
+  failureThreshold:
+    __metadata:
+      label: Failure Threshold
+      description: Failure Threshold.
+
+affinity:
+  __metadata:
+    hidden: true
+
+nodeSelector:
+  __metadata:
+    hidden: true
+
+tolerations:
+  __metadata:
+    hidden: true

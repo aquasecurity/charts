@@ -14,12 +14,14 @@ metadata:
   name: cam-ui-basic
   labels:
     name: cam-ui-basic
-    app: {{ template "fullname" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    "app.kubernetes.io/name": {{ template "fullname" . }}
+    "helm.sh/chart": "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
-  namespace: {{ .Values.service.namespace }}
+    "app.kubernetes.io/instance": "{{ .Release.Name }}"
+    "app.kubernetes.io/managed-by": "{{ .Release.Service }}"
+  namespace: {{ .Release.Namespace }}
 spec:
+  progressDeadlineSeconds: 1800
   replicas: {{ .Values.camUI.replicaCount }}
   selector:
     matchLabels:
@@ -34,15 +36,29 @@ spec:
     metadata:
       labels:
         name: cam-ui-basic
-        app: {{ template "fullname" . }}
-        chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+        "app.kubernetes.io/name": {{ template "fullname" . }}
+        "helm.sh/chart": "{{ .Chart.Name }}-{{ .Chart.Version }}"
         release: "{{ .Release.Name }}"
-        heritage: "{{ .Release.Service }}"
+        "app.kubernetes.io/instance": "{{ .Release.Name }}"
+        "app.kubernetes.io/managed-by": "{{ .Release.Service }}"
       annotations:
         productName: "Cloud Automation Manager"
         productID: "{{ .Values.global.id.productID }}"
         productVersion: "{{ .Chart.AppVersion }}"
     spec:
+      hostNetwork: false
+      hostPID: false
+      hostIPC: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+        supplementalGroups:
+          - 1000
+{{- if .Values.global.audit }}
+        seLinuxOptions:
+            type: spc_t
+{{- end }}
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -54,6 +70,11 @@ spec:
                 - {{ .Values.arch }}
       hostname: cam-ui-basic
       volumes:
+      - name: tmp-empty
+        emptyDir: {}
+      - name: cam-cert
+        secret:
+          secretName: {{ .Values.camAPI.certificate.certName }}
 {{- if .Values.global.audit }}
       - name: shared
         emptyDir: {}
@@ -86,14 +107,36 @@ spec:
       {{- else }}
         emptyDir: {}
       {{- end }}
-      {{- if .Values.global.image.secretName }}
-      {{- if ne .Values.global.image.secretName "default"}}
+      {{- if ne .Values.global.image.secretName "default" }}
       imagePullSecrets:
-      - name: {{ .Values.global.image.secretName }}
+      {{- else }}
+        {{- if ne .Values.auditService.image.pullSecret "" }}
+          {{- if .Values.global.audit }}
+      imagePullSecrets:
+          {{- end }}
+        {{- end }}
       {{- end }}
+      {{- if .Values.global.image.secretName }}
+        {{- if ne .Values.global.image.secretName "default" }}
+      - name: {{ .Values.global.image.secretName }}
+        {{- end }}
+      {{- end }}
+      {{- if .Values.auditService.image.pullSecret }}
+        {{- if ne .Values.auditService.image.pullSecret "" }}
+          {{- if .Values.global.audit }}
+      - name: {{ .Values.auditService.image.pullSecret }}
+          {{- end }}
+        {{- end }}
       {{- end }}
       containers:
       - name: cam-ui-basic
+        securityContext:
+          privileged: false
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - MKNOD
         image: "{{ .Values.image.repository }}icam-ui-basic:{{ .Values.image.tag }}{{ template "platform" . }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
@@ -103,20 +146,26 @@ spec:
           httpGet:
             path: /ui/health
             port: liveness-port
+            scheme: HTTPS
           initialDelaySeconds: 300
           periodSeconds: 20
         readinessProbe:
           httpGet:
             path: /ui/health
             port: liveness-port
+            scheme: HTTPS
           initialDelaySeconds: 5
           periodSeconds: 20
         resources:
 {{ toYaml .Values.resources | indent 10 }}
         volumeMounts:
+          - name: tmp-empty
+            mountPath: /tmp
+          - name: cam-cert
+            mountPath: /usr/src/app/certs
+            readOnly: true
           - name:  {{ .Values.camLogsPV.name }}
             mountPath: /var/camlog
-            subPath: cam-ui-basic
 {{- if .Values.global.audit }}
           - name: shared
             mountPath: /var/audit
@@ -124,8 +173,6 @@ spec:
         envFrom:
         - configMapRef:
             name: common-config
-        - configMapRef:
-            name: redis-config
         env:
         - name: MONGODB_PASSWORD
           valueFrom:
@@ -157,17 +204,48 @@ spec:
             secretKeyRef:
               name: {{ .Values.camUI.camUISecret.secretName }}
               key: sessionSecret
+        - name: sessionTTL
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.camUI.camUISecret.secretName }}
+              key: sessionTTL
         - name: ICP_MASTER_IP
           valueFrom:
             configMapKeyRef:
               name: oauth-client-map
               key: MASTER_IP
+        - name: ICP_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: common-config
+              key: ICP_PORT
         - name: ICP_ENDPOINT
-          value: https://$(ICP_MASTER_IP):8443
-        - name: ORPHEUS_IDENTITY_API_URL
-          value: $(ICP_ENDPOINT)/idprovider
+          value: https://$(ICP_MASTER_IP):$(ICP_PORT)
+        - name: ORPHEUS_IDENTITY_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              name: common-config
+              key: ORPHEUS_TENANT_URL
         - name: ORPHEUS_IDENTITY_URL
+          {{- if ne .Values.platform "icp"}}
+          value: $(ORPHEUS_IDENTITY_ENDPOINT)/api
+          {{- else }}
           value: $(ICP_ENDPOINT)/idprovider
+          {{- end }}
+        - name: ORPHEUS_IDENTITY_API_URL
+          value: $(ORPHEUS_IDENTITY_URL)
+        {{- if eq .Values.platform "mcmp" }}
+        - name: MCMP_AUTHENTICATION_URL
+          value: {{ .Values.mcmp.gatewayUrl }}
+        - name: MCMP_STORE_CATALOG_URL
+          value: {{ .Values.mcmp.storeCatalogUrl }}
+        - name: MULTI_TENANT_MODE
+          {{- if .Values.mcmp.multiTenantMode }}
+          value: "true"
+          {{- else }}
+          value: "false"
+          {{- end }}
+        {{- end }}
         - name: wlpClientId
           valueFrom:
             secretKeyRef:
@@ -189,6 +267,8 @@ spec:
           value: /cam/auth/liberty/callback
         - name: disableSectionIds
           value: '["monitor","servicecomposer"]'
+        - name: NODE_TLS_REJECT_UNAUTHORIZED
+          value: "0"
         - name: POD_NAME
           valueFrom:
             fieldRef:
@@ -197,16 +277,40 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
+        - name: LOG_LEVEL
+          value: {{ .Values.camLoggingPolicies.logLevel }}
         - name: SERVICE_NAME
           value: cam-ui-basic
         - name: AUDIT_ENABLED
           value: "{{ .Values.global.audit }}"
         - name: AUDIT_LOG_PATH
           value: /var/audit/cam-ui-basic-audit.log
+        - name: AUDIT_INITIATOR_HOST_ADDRESS_HEADER
+          value: X-Forwarded-For
+        - name: APP_CONTEXT_BASIC
+          value: /ui
+        - name: APP_CONTEXT_CONNECTIONS
+          value: /connections
+        - name: APP_CONTEXT_INSTANCES
+          value: /instances
+        - name: APP_CONTEXT_TEMPLATES
+          value: /templates
 {{- if .Values.global.audit }}
       - name: cam-ui-basic-audit
+{{- if .Values.global.ICP32}}
+        image: "{{ .Values.auditService.image.repository }}icp-audit-service-nr:{{ .Values.auditService.image.tag }}"
+{{- else }}
         image: "{{ .Values.auditService.image.repository }}icp-audit-service:{{ .Values.auditService.image.tag }}"
+{{- end }}
         imagePullPolicy: {{ .Values.auditService.image.pullPolicy }}
+        securityContext:
+{{- if .Values.global.legacyAudit }}
+          runAsNonRoot: false
+          runAsUser: 0
+{{- else }}
+          fsGroup: 1000
+          runAsUser: 1000
+{{- end }}
         resources:
 {{ toYaml .Values.auditService.resources | indent 10 }}
         env:
@@ -214,10 +318,11 @@ spec:
             valueFrom:
               fieldRef:
                 fieldPath: metadata.name
+          - name: LOG_LEVEL
+            value: {{ .Values.camLoggingPolicies.logLevel }}
         volumeMounts:
           - name:  {{ .Values.camLogsPV.name }}
             mountPath: /var/camlog
-            subPath: cam-iaas
           - name: shared
             mountPath: "/var/log/audit"
           - name: journal
@@ -226,14 +331,18 @@ spec:
             mountPath: "/etc/logrotate.d/audit"
             subPath: audit
           - name: logrotate-conf
-            mountPath: "/etc/logrotate.conf"            
+            mountPath: "/etc/logrotate.conf"
             subPath: logrotate.conf
         livenessProbe:
           exec:
             command:
             - sh
             - -c
+{{- if .Values.global.legacyAudit }}
             - "service cron status"
+{{- else }}
+            - "ps -ef | grep python"
+{{- end }}
           initialDelaySeconds: 30
           timeoutSeconds: 5
         readinessProbe:
@@ -241,19 +350,11 @@ spec:
             command:
             - sh
             - -c
+{{- if .Values.global.legacyAudit }}
             - "service cron status"
+{{- else }}
+            - "ps -ef | grep python"
+{{- end }}
           initialDelaySeconds: 5
           timeoutSeconds: 1
 {{- end }}
-      initContainers:
-      - name: cam-ui-basic-init
-        image: "{{ .Values.image.repository }}icam-busybox:{{ .Values.image.tag }}{{ template "platform" . }}"
-        imagePullPolicy:  {{ .Values.image.pullPolicy }}
-        securityContext:
-          runAsUser: 0
-        command: ["/bin/sh", "-c"]
-        args:
-          - mkdir -p /var/camlog/cam-ui-basic && chown -R 1000:1000 /var/camlog/cam-ui-basic;
-        volumeMounts:
-        - name: {{ .Values.camLogsPV.name }}
-          mountPath: /var/camlog

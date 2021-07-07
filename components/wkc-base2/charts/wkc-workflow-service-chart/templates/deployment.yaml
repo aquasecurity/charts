@@ -1,0 +1,317 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: {{ .Values.appName }}
+  labels:
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/name: {{ .Values.appName }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.minReplicas }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Values.appName }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/name: {{ .Values.appName }}
+        app.kubernetes.io/managed-by: {{ .Release.Service }}
+        helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+        release: {{ .Release.Name }}
+        date: "date"
+        {{- if .Values.global.podLabels }}
+{{ tpl (toYaml .Values.global.podLabels) . | trim | indent 8 }}
+        {{- end }}
+      annotations:
+        {{- if .Values.global.podAnnotations }}
+{{ tpl (toYaml .Values.global.podAnnotations) . | trim | indent 8 }}
+        {{- end }}
+    spec:
+      hostNetwork: false
+      hostPID: false
+      hostIPC: false
+      securityContext:
+        runAsNonRoot: true
+        {{- if .Values.securityContext.runAsUser }}
+        runAsUser: {{ .Values.securityContext.runAsUser }}
+        {{- end}}
+      containers:
+      - name: {{ .Values.appName }}
+        image: {{ if .Values.global.dockerRegistryPrefix }}{{ trimSuffix "/" .Values.global.dockerRegistryPrefix }}/{{ end }}{{ .Values.image.repository }}:{{ .Values.image.tag }}
+        {{- if .Values.global.installCerts }}
+        volumeMounts:
+        - name: wdp-certs
+          mountPath: "/etc/wdp_certs"
+          readOnly: true
+        {{- end }}
+        ports:
+        - containerPort: {{ .Values.ports.targetPort }}
+          protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.environment.appVersionEndpoint }}
+            port: {{ .Values.ports.targetPort }}
+            scheme: HTTPS
+          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+          periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+          successThreshold: {{ .Values.livenessProbe.successThreshold }}
+          failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.environment.appVersionEndpoint }}
+            port: {{ .Values.ports.targetPort }}
+            scheme: HTTPS
+          initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+          periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+          successThreshold: {{ .Values.readinessProbe.successThreshold }}
+          failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+        env:
+
+        {{- /* Boilerplate env vars, some cloud only (may not all be required) */}}
+
+        - name: "COMPONENT_ID"
+          value: {{ quote .Values.environment.COMPONENT_ID }}
+
+        {{- if .Values.environment.appVersionEndpoint }}
+        - name: "BM_APP_VERSION_ENDPOINT"
+          value: "{{ .Values.environment.appVersionEndpoint }}"
+        {{- end }}
+
+        {{- if .Values.environment.appVersion }}
+        - name: "BM_APP_VERSION"
+          value: "{{ .Values.environment.appVersion }}"
+        {{- end }}
+
+        {{- if .Values.environment.swaggerHost }}
+        - name: {{ .Values.environment.swaggerHost.name }}
+          value: {{ .Values.environment.swaggerHost.value }}
+        {{- end }}
+
+        - name: "ENVIRONMENT_NAME"
+          value: {{ quote .Values.environment.ENVIRONMENT_NAME }}
+        - name: "ENVIRONMENT_TYPE"
+          value: {{ quote .Values.environment.ENVIRONMENT_TYPE }}
+        - name: "DEPLOY_TARGET"
+          value: {{ quote .Values.environment.DEPLOY_TARGET }}
+        - name: "DEPLOYMENT_TARGET"
+          value: {{ quote .Values.environment.DEPLOYMENT_TARGET }}
+        - name: "BLUEMIX_REGION"
+          value: {{ quote .Values.environment.BLUEMIX_REGION }}
+        - name: "REGION"
+          value: {{ quote .Values.environment.REGION }}
+        - name: "DATA_CENTER"
+          value: {{ quote .Values.environment.DATA_CENTER }}
+        - name: "PRODUCT_NAME"
+          value: {{ quote .Values.environment.PRODUCT_NAME }}
+
+        {{- if .Values.environment.CONTAINER_MEMORY }}  
+        - name: "CONTAINER_MEMORY"
+          value: {{ quote .Values.environment.CONTAINER_MEMORY }}
+        {{- end }}
+
+        {{- /* URLs */}}
+
+        {{- if .Values.environment.gatewayUrl }}
+        - name: "GATEWAY_URL"
+          value: "{{ .Values.environment.gatewayUrl }}"
+        {{- end }}
+        - name: {{ .Values.environment.baseUrl.name }}
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Values.environment.baseUrl.config }}
+              key: {{ .Values.environment.baseUrl.key }}
+        - name: "ces_base_url"
+          value: "$({{ .Values.environment.baseUrl.name }})/v3"
+        - name: "notification_base_url"
+          value: "$({{ .Values.environment.baseUrl.name }})"
+        - name: "WF_USER_PROFILE_SERVICE_URL"
+          value: "$({{ .Values.environment.baseUrl.name }})"
+        - name: "WF_PUBLIC_KEYS_URL"
+          value: "$({{ .Values.environment.baseUrl.name }})/auth/jwtpublic"
+        - name: "IAM_TOKEN_URL"
+          value: {{ quote .Values.environment.IAM_TOKEN_URL }}
+
+        {{- /* Service IDs */}}
+
+        {{- if (.Values.environment.workflowServiceIdApiKey) }}
+        - name: {{ .Values.environment.workflowServiceIdApiKey.name }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.environment.workflowServiceIdApiKey.secret }}
+              key: {{ .Values.environment.workflowServiceIdApiKey.key }}
+        - name: "WORKFLOW_EXTERNAL_SERVICE_ID_ALLOW_LIST"
+          value: {{ quote .Values.environment.WORKFLOW_EXTERNAL_SERVICE_ID_ALLOW_LIST }}
+        {{- end }}
+
+        {{- if (.Values.environment.serviceIdCredential) }}
+        - name: {{ .Values.environment.serviceIdCredential.name }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.environment.serviceIdCredential.secret }}
+              key: {{ .Values.environment.serviceIdCredential.key }}
+        {{- end }}
+
+        {{- if (.Values.environment.serviceId) }}
+        - name: {{ .Values.environment.serviceId.name }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.environment.serviceId.secret }}
+              key: {{ .Values.environment.serviceId.key }}
+        {{- end }}
+
+        {{- /* CP4D root URLs + credentials */}} 
+
+        {{- if (.Values.environment.icp4dUrl) }}
+        - name: {{ .Values.environment.icp4dUrl.name }}
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Values.environment.icp4dUrl.config }}
+              key: {{ .Values.environment.icp4dUrl.key }}
+        {{- end }}
+
+        {{- if (.Values.environment.icp4dInternalUrl) }}
+        - name: {{ .Values.environment.icp4dInternalUrl.name }}
+          value: {{ .Values.environment.icp4dInternalUrl.value }}
+        {{- end }}
+
+        {{- if (.Values.environment.icp4dSysCallUsername) }}
+        - name: {{ .Values.environment.icp4dSysCallUsername.name }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.environment.icp4dSysCallUsername.secret }}
+              key: {{ .Values.environment.icp4dSysCallUsername.key }}
+              optional: true
+        {{- end }}
+
+        {{- if (.Values.environment.icp4dSysCallPassword) }}
+        - name: {{ .Values.environment.icp4dSysCallPassword.name }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.environment.icp4dSysCallPassword.secret }}
+              key: {{ .Values.environment.icp4dSysCallPassword.key }}
+              optional: true
+        {{- end }}
+
+        {{- /* SSL trust all: is this used anywhere? */}} 
+
+        {{- if (.Values.environment.sslTrustAll) }}
+        - name: {{ .Values.environment.sslTrustAll.name }}
+          value: {{ .Values.environment.sslTrustAll.value }}
+        {{- end }}
+
+        {{- /* LogDNA */}} 
+
+        {{- if eq .Values.global.deploymentTarget "cloud" }}
+        - name: {{ .Values.environment.logDNASource.name }}
+          valueFrom:
+             secretKeyRef:
+               name: {{ .Values.environment.logDNASource.secret }}
+               key: {{ .Values.environment.logDNASource.key }}
+        - name: "LOGDNA_SAVE_SERVICE_COPY"
+          value: {{ quote .Values.environment.LOGDNA_SAVE_SERVICE_COPY }}
+        {{- end }}
+
+        {{- /* DB2 */}}
+
+        {{- if (.Values.environment.dbName) }}
+        - name: {{ .Values.environment.dbName.name }}
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Values.environment.dbName.config }}
+              key: {{ .Values.environment.dbName.key }}
+              optional: true
+        {{- end }}
+
+        - name: {{ .Values.environment.dbUsername.name }}
+          value: {{ .Values.environment.dbUsername.value }}
+
+        {{- if .Values.global.useDB2u }}
+        - name: {{ .Values.environment.dbUrl.name }}
+          value: jdbc:db2://c-db2oltp-wfdb-db2u:50001/$(WF_DB2_DATABASE_NAME):sslConnection=true;clientProgramName=workflow;
+        - name: {{ .Values.environment.dbPassword.name }}
+          valueFrom:
+            secretKeyRef:
+              name: c-db2oltp-lineage-instancepassword
+              key: password
+        {{- else }}
+        - name: {{ .Values.environment.dbUrl.name }}
+          value: jdbc:db2://wdp-db2:50001/$(WF_DB2_DATABASE_NAME):sslConnection=true;clientProgramName=workflow;
+        - name: {{ .Values.environment.dbPassword.name }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.environment.dbPassword.secret }}
+              key: {{ .Values.environment.dbPassword.key }}
+        {{- end }}
+
+        {{- if (.Values.environment.dbDriver) }}
+        - name: {{ .Values.environment.dbDriver.name }}
+          value: {{ .Values.environment.dbDriver.value }}
+        {{- end }}
+
+        resources:
+          limits:
+            cpu: {{ .Values.resources.limits.cpu }}
+            memory: {{ .Values.resources.limits.memory }}
+          requests:
+            cpu: {{ .Values.resources.requests.cpu }}
+            memory: {{ .Values.resources.requests.memory }}
+
+        securityContext:
+          privileged: false
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+          runAsNonRoot: true
+          capabilities:
+            drop:
+            - ALL
+      {{- if .Values.global.installCerts }}
+      volumes:
+      - name: wdp-certs
+        projected:
+          sources:
+          - secret:
+              name: internal-nginx-svc-tls
+              items:
+              - key: certificate.pem
+                path: internal-nginx.cert.pem
+              optional: true
+          - secret:
+              name: rabbitmq-ha-cert
+              items:
+              - key: cert.pem
+                path: rabbitmq.cert.pem
+              optional: true
+          {{- if .Values.global.useDB2u }}
+          - secret:
+              name: internal-tls
+              items:
+              - key: tls.crt
+                path: tls.crt.pem
+              optional: true
+          {{- else }}
+          - secret:
+              name: wdp-db2-cert
+              items:
+              - key: wdp-db2-ca.crt
+                path: wdp-db2-ca.pem
+              optional: true
+          {{- end }}
+      {{- end }}
+      {{- if .Values.repository.secret.name }}
+      imagePullSecrets:
+      - name: {{ .Values.repository.secret.name }}
+      {{- end }}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: beta.kubernetes.io/arch
+                operator: In
+                values:
+                - amd64

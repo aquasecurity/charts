@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "svc-api.fullname" . }}
+  labels:
+    app: {{ template "svc-api.name" . }}
+    chart: {{ template "svc-api.chart" . }}
+    release: 3.5.2
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "svc-api.name" . }}
+      release: 3.5.2
+  template:
+    metadata:
+      annotations:
+        cloudpakName: "IBM Planning Analytics Extension for IBM Cloud Pak for Data"
+        cloudpakId: "27646a3a52bb43408a3156180def3775"
+        productCloudpakRatio: "1:1"
+        productID: "27646a3a52bb43408a3156180def3775"
+        productName: "IBM Planning Analytics Local TM1 Server"
+        productMetric: "VIRTUAL_PROCESSOR_CORE"
+        productVersion: 3.5.1
+        productChargedContainers: "All"
+      labels:
+        app: {{ template "svc-api.name" . }}
+        icpdsupport/addOnId: pa
+        icpdsupport/app: "pa-addon"
+        release: 3.5.2
+    spec:
+      serviceAccountName: ibm-planning-analytics-sa
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.global.dockerRegistryPrefix }}/pa-cp4d-service-provider:2.0.55-172-3"
+          imagePullPolicy: Always
+          livenessProbe:
+            httpGet:
+              path: /api/v1/Status
+              port: http
+              scheme: HTTP
+          readinessProbe:
+            httpGet:
+              path: /api/v1/Status
+              port: http
+              scheme: HTTP
+          ports:
+            - name: http
+              containerPort: {{ .Values.svcApi.service.port }}
+              protocol: TCP
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

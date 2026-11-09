@@ -1,4 +1,4 @@
-# © Copyright IBM Corporation 2017, 2018
+# © Copyright IBM Corporation 2017, 2020
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,9 +13,9 @@
 # limitations under the License.
 {{- /*
 Chart specific config file for SCH (Shared Configurable Helpers)
-_sch-chart-config.tpl is a config file for the chart to specify additional 
+_sch-chart-config.tpl is a config file for the chart to specify additional
 values and/or override values defined in the sch/_config.tpl file.
- 
+
 */ -}}
 
 {{- /*
@@ -27,7 +27,21 @@ sch:
   chart:
     appName: "ibm-mq"
     metering:
-      productName: IBM MQ Advanced for Developers
-      productID: 98102d16795c4263ad9ca075190a2d4d
-      productVersion: "9.1.1.0"
+      productName: "IBM MQ Advanced for Developers"
+      productID: "2f886a3eefbe4ccb89b2adb97c78b9cb"
+      productVersion: "9.1.5.0"
+      productMetric: "FREE_USAGE"
+      productChargedContainers: ""
+{{- end -}}
+
+{{- define "ibm-mq.sch.chart.config.metadata.labels" }}
+{{- range $key, $value := .Values.metadata.labels }}
+{{ $key }}: {{ $value | quote }}
+{{- end }}
+{{- end }}
+
+{{- define "ibm-mq.chart.config.validate-multi-instance-persistence" -}}
+{{- if or (eq .Values.queueManager.multiInstance false) (and .Values.queueManager.multiInstance .Values.persistence.enabled) -}}
+ok
+{{- end -}}
 {{- end -}}

@@ -1,0 +1,53 @@
+{{- $compName := "zen-homepage-resource-extensions" -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: zen-homepage-resource-extensions
+  labels:
+    {{- include "zenhelper.labels" (list . $compName) | indent 4 }}
+    icpdata_addon: "true"
+    icpdata_addon_version: "3.5.2"
+data:
+  extensions: |
+    [
+      {
+        "extension_point_id": "homepage_resource",
+        "extension_name": "zen_homepage_resource_document",
+        "order_hint": 100,
+        "details": {
+          "label": "{{`{{.global_zen_homepage_resource_document_label}}`}}",
+          "nav_link": "https://www.ibm.com/support/knowledgecenter/SSQNUZ_3.5.0/cpd/overview/welcome.html",
+          "carbon_icon": "Document16"
+        }
+      },
+      {
+        "extension_point_id": "homepage_resource",
+        "extension_name": "zen_homepage_resource_community",
+        "order_hint": 200,
+        "details": {
+          "label": "{{`{{.global_zen_homepage_resource_community_label}}`}}",
+          "nav_link": "https://community.ibm.com/icpfordata",
+          "carbon_icon": "Collaborate16"
+        }
+      },
+      {
+        "extension_point_id": "homepage_resource",
+        "extension_name": "zen_homepage_resource_ibm_support",
+        "order_hint": 300,
+        "details": {
+          "label": "{{`{{.global_zen_homepage_resource_ibm_support_label}}`}}",
+          "nav_link": "https://www.ibm.com/mysupport/s/topic/0TO50000000IYkUGAW/cloud-private-for-data",
+          "carbon_icon": "UserIdentification16"
+        }
+      },
+      {
+        "extension_point_id": "homepage_resource",
+        "extension_name": "zen_homepage_resource_share_an_idea",
+        "order_hint": 400,
+        "details": {
+          "label": "{{`{{.global_zen_homepage_resource_share_an_idea_label}}`}}",
+          "nav_link": "https://ibm-data-and-ai.ideas.aha.io/",
+          "carbon_icon": "Idea16"
+        }
+      }
+    ]

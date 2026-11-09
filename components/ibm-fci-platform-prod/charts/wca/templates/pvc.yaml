@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ template "wca.fullname" . }}
+  labels:
+{{- include "common.label.metadata" (list . (include "wca.name" .) (include "wca.chart" .) .Release.Name .Release.Service ) | indent 4 }}
+spec:
+{{- if .Values.pvcSpec.accessModes }}
+{{-   with .Values.pvcSpec.accessModes }}
+  accessModes:
+{{      toYaml . | indent 4 -}}
+{{-   end -}}
+{{- end }}
+{{- if .Values.global.persistence.useDynamicProvisioning }}
+{{-   if not .Values.pvcSpec.storageClassName }}
+  storageClassName: {{ default nil .Values.global.persistence.storageClassName | quote }}
+{{-   else }}
+  storageClassName: {{ .Values.pvcSpec.storageClassName | quote }}
+{{-   end }}
+{{- else }}
+  storageClassName: {{ default "" .Values.pvcSpec.storageClassName | quote }}
+{{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.pvcSpec.size }}
+{{- if not .Values.global.persistence.useDynamicProvisioning }}
+  selector:
+    matchLabels:
+{{- include "common.selector.labels" (list . (include "wca.name" .) .Release.Name ) | indent 6 }}
+{{- end -}}

@@ -39,7 +39,7 @@ spec:
       {{- include "podAntiAffinity" . | indent 6 }}
       initContainers:
         - name: init
-          image: busybox
+          image: "{{ .Values.devops.image.repository }}:{{ .Values.devops.image.tag }}"
           command: ['sh', '/config-map/init.sh', '/config-map', '/config-storage']
           env:
             - name: CAM_USERNAME
@@ -52,7 +52,7 @@ spec:
                 secretKeyRef:
                   name: {{ required ".Values.cam.secret" .Values.cam.secret | quote }}
                   key: password
-          {{- include "wasaas.security.container.init" . | indent 10 }}
+          {{- include "wasaas.security.container.nonroot" . | indent 10 }}
           volumeMounts:
           - name: {{ include "sch.names.fullCompName" (list . $cloudsmCommon) | quote }}
             mountPath: /config-map
@@ -67,10 +67,10 @@ spec:
               path: "/cloudsm/style.css"
               port: 9445
               scheme: HTTPS
-            initialDelaySeconds: 90
-            periodSeconds: 30
-            failureThreshold: 6
-            timeoutSeconds: 30
+            initialDelaySeconds: 60
+            periodSeconds: 20
+            failureThreshold: 4
+            timeoutSeconds: 20
           env:
             - name: WLP_LOGGING_CONSOLE_FORMAT
               value: "json"
@@ -105,6 +105,8 @@ spec:
                   key: keystorePassword
           {{- include "wasaas.security.container.nonroot" . | indent 10 }}
           volumeMounts:
+            - name: logs
+              mountPath: /logs
             - name: config-storage
               mountPath: /opt/ibm/wlp/usr/servers/defaultServer/wasaas-network.properties
               subPath: wasaas-network.properties
@@ -123,17 +125,27 @@ spec:
             - name: {{ include "sch.names.fullCompName" (list . $commonName) | quote }}
               mountPath: /opt/ibm/wlp/usr/servers/defaultServer/region.properties
               subPath: region.properties
+            - name: {{ include "sch.names.fullCompName" (list . $commonName) | quote }}
+              mountPath: /opt/ibm/wlp/usr/servers/defaultServer/killjava.sh
+              subPath: killjava.sh
+            - name: {{ include "sch.names.fullCompName" (list . $commonName) | quote }}
+              mountPath: /opt/ibm/wlp/usr/servers/defaultServer/catalog.properties
+              subPath: catalog.properties
             - name: credentials-secret
               mountPath: /opt/ibm/wlp/usr/servers/defaultServer/shared.key
               subPath: shared.key
             - name: certificates-secret
               mountPath: /etc/wlp/config
       volumes:
+        - name: logs
+          emptyDir: {}
         - name: config-storage
           emptyDir: {}
         - name: {{ include "sch.names.fullCompName" (list . $commonName) | quote }}
           configMap:
             name: {{ include "sch.names.fullCompName" (list . $commonName) | quote }}
+             # must be group executable
+            defaultMode: 0750
         - name: {{ include "sch.names.fullCompName" (list . $cloudsmCommon) | quote }}
           configMap:
             name: {{ include "sch.names.fullCompName" (list . $cloudsmCommon) | quote }}

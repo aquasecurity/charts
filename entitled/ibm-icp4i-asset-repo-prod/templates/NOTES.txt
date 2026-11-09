@@ -1,0 +1,2 @@
+{{- include "sch.config.init" (list . ) }}
+This instance of the ICP4I Asset Repository should be accessed through the ICP4I Platform Navigator.

@@ -1,0 +1,16 @@
+apiVersion: v1
+name: ibm-wsl-runtime-addon-r36-prod
+description: R 3.6 runtime module
+icon: https://datascience.ibm.com/graphics/landing/logo.svg
+version: "3.5.3014+2039"
+appVersion: "3.5.3014"
+tillerVersion: ">=2.9"
+kubeVersion: ">=1.11.0"
+keywords:
+- amd64
+- ppc64le
+- Commercial
+- "Analytics"
+- "Data Science"
+- RHOCP
+- ROKS

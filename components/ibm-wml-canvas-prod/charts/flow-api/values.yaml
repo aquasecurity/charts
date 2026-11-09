@@ -1,0 +1,55 @@
+# Default values for flow-api.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# These values will mostly be over-ridden from above.
+image:
+  repository: flow-api
+  namespace: canvas
+  name: flow-api
+  tag: "1618"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 3300
+
+container:
+  port: 3300
+
+resources:
+  # The number of pods this canvas api is loaded onto.
+  replicaCount: 3
+  memLimits: 1Gi
+  memRequests: 1Gi
+  cpuLimits: 1500m
+  cpuRequests: 100m
+
+# Control of the node runtime.
+node:
+  env: production
+  modules:
+    cache: false
+
+# Make helm lint happy: See https://github.com/helm/helm/issues/3822
+nameOverride: ""
+fullnameOverride: ""
+
+# This needs to be over-ridden from above, because the database suffix is different for each environment.
+cloudant:
+  database:
+    nameSuffix: ""
+    host: ""
+
+# This needs to be over-ridden from above, because the new relic application name is different for each environment.
+newRelic:
+  applicationName: ""
+
+ingress:
+  enabled: true
+
+watsonStudio:
+  useSharedServiceId: true
+
+
+

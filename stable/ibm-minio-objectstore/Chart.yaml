@@ -1,19 +1,22 @@
 apiVersion: v1
-description: Minio is a high performance distributed object storage server, designed for large-scale private cloud infrastructure.
+description: Minio is a high performance distributed object storage server
 name: ibm-minio-objectstore
-version: 1.6.0
-appVersion: RELEASE.2018-08-21T00-37-20Z
+version: 2.4.7
+appVersion: RELEASE.2019-04-09T01-22-30Z.1
 keywords:
 - storage
 - object-storage
 - S3
-- Tech
 - amd64
 - ppc64le
+- s390x
 - OpenSource
 - ICP
 - Storage
+- Commercial
+- Limited
 tillerVersion: '>=2.7.2'
+kubeVersion: '>=1.9.0'
 home: https://minio.io
 icon: https://www.minio.io/img/logo_160x160.png
 sources:

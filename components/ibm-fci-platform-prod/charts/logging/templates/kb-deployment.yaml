@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "logging.fullname" . }}-kb
+  labels:
+{{- include "common.label.metadata" (list . (printf "%s-%s" (include "logging.name" .) "kb") (include "logging.chart" .) .Release.Name .Release.Service ) | indent 4 }}
+spec:
+{{ include "common.scaleDownIfDisabled" . | indent 2 }}
+  selector:
+    matchLabels:
+{{- include "common.selector.labels" (list . (printf "%s-%s" (include "logging.name" .) "kb") .Release.Name ) | indent 6 }}
+  template:
+    metadata:
+      annotations:
+{{ include "common.meteringAnnotations" . | indent 8 }}
+      labels:
+{{- include "common.label.metadata" (list . (printf "%s-%s" (include "logging.name" .) "kb") (include "logging.chart" .) .Release.Name .Release.Service ) | indent 8 }}
+{{- include "common.using-secrets" (list "elastic") | indent 8 }}
+    spec:
+      serviceAccountName: fci-common
+{{ include "common.configureHostAliases" . | indent 6 }}
+{{ include "common.PodHostConfig" . | indent 6 }}
+      securityContext:
+{{ include "common.PodSecurityContextConfig" . | indent 8 }}
+      volumes:
+        - name: file-secrets
+          secret:
+            secretName: {{ .Release.Name }}-platform-secret-files
+      containers:
+        - name: kibana
+          image: {{ required "global.dockerRegistryPrefix must specify from which repository the docker image should be fetched." .Values.global.dockerRegistryPrefix }}/{{ .Values.kibana.image.repository }}:{{ .Values.kibana.image.tag }}
+          imagePullPolicy: {{ .Values.kibana.image.pullPolicy }}
+          livenessProbe:
+{{ toYaml .Values.kibana.livenessProbe | indent 12 }}
+          readinessProbe:
+{{ toYaml .Values.kibana.readinessProbe | indent 12 }}
+          securityContext:
+{{ include "common.RestrictedContainerSecurityContext" . | indent 12 }}
+          env:
+{{- include "common.import-secret" (list . "ELASTICSEARCH_PASSWORD" "elastic" "ELASTIC_ADMIN_PASSWORD") | indent 10 }}
+          {{- range $key, $value := .Values.kbEnv }}
+          - name: "{{ $key }}"
+            value: "{{ $value }}"
+          {{- end }}
+          - name: ELASTICSEARCH_URL
+            value: https://{{ .Release.Name }}-elasticsearch-master:9200
+          - name: ELASTICSEARCH_USERNAME
+            value: {{ .Values.elasticsearchUsername }}
+          volumeMounts:
+          - name: file-secrets
+            mountPath: /usr/share/kibana/config/kibana.key
+            subPath: fci_universal_ks.pvtk.pem
+          - name: file-secrets
+            mountPath: /usr/share/kibana/config/kibana.crt
+            subPath: fci_universal_ks.crt.pem
+          ports:
+            - containerPort: 5601
+          resources:
+{{ toYaml .Values.kibana.resources | indent 12 }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+      affinity:
+{{ include "common.ArchNodeAffinity" . | indent 8 }}
+    {{- with .Values.affinity }}
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

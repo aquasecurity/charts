@@ -1,0 +1,45 @@
+########################################################################
+#
+# Licensed Materials - Property of IBM
+#
+# 5725Q09
+#
+# (C) Copyright IBM Corp.
+#
+# 2020 All Rights Reserved
+#
+# US Government Users Restricted Rights - Use, duplication or disclosure
+# restricted by GSA ADP Schedule Contract with IBM Corp.
+#
+########################################################################
+
+arch:
+- amd64
+- ppc64le
+- s390x
+global:
+  logstash:
+    replicaCount: 1
+  environmentSize: size0
+  image:
+    repository:
+    useTag: true
+
+image:
+  name: logstash
+  pullPolicy: IfNotPresent
+  tag: !!python/unicode '7.6.2-ubi8-minimal-20201127T133103Z-amd64-L-TKAI-BTYDF9'
+  digest: sha256:0fc854b9118d5c3c48a9c13c3ca5682f865f9c45b25c1dbc80403bfa7a7f3714
+livenessProbe:
+  failureThreshold: 3
+  initialDelaySeconds: 300
+  periodSeconds: 10
+  timeoutSeconds: 5
+  successThreshold: 1
+readinessProbe:
+  failureThreshold: 3
+  initialDelaySeconds: 60
+  periodSeconds: 10
+  timeoutSeconds: 5
+  successThreshold: 3
+httpPort: 9600

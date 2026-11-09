@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "data-gate-catalog.fullname" . }}
+  labels:
+    component: "datagate-catalog-service"
+    icpdata_addon: "true"
+    icpdata_addon_version: {{.Chart.AppVersion | quote }}
+{{ include "data-gate-catalog.metadataLabels" . | indent 4 }}
+{{ include "data-gate-catalog.addOnLevelLabels" . | indent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+  - port: 8080
+    targetPort: http
+    protocol: TCP
+    name: http
+  - port: 8443
+    targetPort: https
+    protocol: TCP
+    name: https
+  selector:
+    app: {{ template "data-gate-catalog.name" . }}
+    release: {{ .Release.Name }}

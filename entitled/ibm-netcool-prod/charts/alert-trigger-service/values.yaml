@@ -1,0 +1,39 @@
+global:
+  license: not accepted
+  environmentSize: size0
+  rbac:
+    serviceAccountName: serviceAccount
+  image:
+    repository: artifactory_repo
+    secret: artifactory_secret
+    pullPolicy: Always
+    useTag: true
+  integrations:
+    policyRegistry:
+      releaseName: null
+      namespace: null
+    analyticsKafka:
+      releaseName: null
+      namespace: null
+image:
+  repository: 
+  name: noi-alert-trigger-service
+  tag: 5.0.77
+  digest: sha256:73d12f6a2c0d896d99f4221d0815eab993a5da10ff6db4ef81d512408d8cdba0
+topics:
+  events:
+    name: noi-events
+    enabled: false
+  actions:
+    name: noi-actions
+  eaevents:
+    name: ea-events
+  stats:
+    name: noi-policy-stats
+replicas: 3
+cneaChartName: ibm-hdm-analytics-dev
+alerttriggerservice:
+  enabled: true
+  serviceType: ClusterIP
+  pullPolicy: Always
+  port: 8080

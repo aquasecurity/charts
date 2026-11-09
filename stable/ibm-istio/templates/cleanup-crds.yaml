@@ -1,7 +1,8 @@
 apiVersion: v1
 kind: ServiceAccount
-{{- if .Values.global.imagePullSecrets }}
 imagePullSecrets:
+  - name: sa-{{ .Release.Namespace }}
+{{- if .Values.global.imagePullSecrets }}
 {{- range .Values.global.imagePullSecrets }}
   - name: {{ . }}
 {{- end }}
@@ -83,8 +84,8 @@ spec:
         heritage: {{ .Release.Service }}
         release: {{ .Release.Name }}
       annotations:
+        seccomp.security.alpha.kubernetes.io/pod: docker/default
         sidecar.istio.io/inject: "false"
-        scheduler.alpha.kubernetes.io/critical-pod: ""
     spec:
       serviceAccountName: istio-cleanup-crds-service-account
 {{- if .Values.global.priorityClassName }}
@@ -105,3 +106,10 @@ spec:
       restartPolicy: OnFailure
       affinity:
 {{- include "nodeaffinity" . | indent 6 }}
+      {{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 6 }}
+      {{- else if .Values.global.defaultTolerations }}
+      tolerations:
+{{ toYaml .Values.global.defaultTolerations | indent 6 }}
+      {{- end }}

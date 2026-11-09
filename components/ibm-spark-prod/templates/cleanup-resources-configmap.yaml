@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ .Values.environment.name }}-cleanup-resources-script"
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: "{{ .Values.environment.name }}-cleanup-resources-script"
+{{- include "helm.labels" . | indent 4 }}
+{{- include "cloudpak.labels" . | indent 4 }}
+  annotations:
+    "helm.sh/hook": "post-delete"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+    "helm.sh/hook-weight": "4"
+data:
+  cleanup-resources.sh: |-
+{{ .Files.Get "conf/cleanup-resources.sh" | indent 4 }}

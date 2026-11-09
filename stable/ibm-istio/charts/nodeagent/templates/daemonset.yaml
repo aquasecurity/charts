@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: istio-nodeagent
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ template "nodeagent.name" . }}
+    chart: {{ template "nodeagent.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    istio: nodeagent
+spec:
+  updateStrategy:
+    type: RollingUpdate 
+  selector:
+    matchLabels:
+      istio: nodeagent
+  template:
+    metadata:
+      labels:
+        app: {{ template "nodeagent.name" . }}
+        chart: {{ template "nodeagent.chart" . }}
+        release: {{ .Release.Name }}
+        heritage: {{ .Release.Service }}
+        istio: nodeagent
+      annotations:
+        seccomp.security.alpha.kubernetes.io/pod: docker/default
+        sidecar.istio.io/inject: "false"
+        productName: istio-nodeagent
+        productID: istio-nodeagent_{{ .Chart.Version }}_apachev2_00000
+        productVersion: {{ .Chart.Version }}
+    spec:
+      serviceAccountName: istio-nodeagent-service-account
+{{- if .Values.global.priorityClassName }}
+      priorityClassName: "{{ .Values.global.priorityClassName }}"
+{{- end }}
+      containers:
+      - name: nodeagent
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+        volumeMounts:
+        - mountPath: /var/run/sds
+          name: sdsudspath
+        env:
+        {{- if .Values.env }}
+        {{- range $key, $val := .Values.env }}
+        - name: {{ $key }}
+          value: "{{ $val }}"
+        {{- end }}
+        {{- end }}
+        - name: "Trust_Domain"
+          value: "{{ .Values.global.trustDomain }}"
+      volumes:
+      - name: sdsudspath
+        hostPath:
+          path: /var/run/sds
+      affinity:
+      {{- include "nodeagentNodeAffinity" . | indent 6 }}
+      {{- include "nodeagentPodAntiAffinity" . | indent 6 }}
+      {{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 6 }}
+      {{- else if .Values.global.defaultTolerations }}
+      tolerations:
+{{ toYaml .Values.global.defaultTolerations | indent 6 }}
+      {{- end }}

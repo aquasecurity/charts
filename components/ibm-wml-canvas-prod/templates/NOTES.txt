@@ -1,0 +1,3 @@
+The notes for ibm-wml-canvas-prod
+Chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+- See [Details](https://www.ibm.com/support/knowledgecenter/en/SSQNUZ_2.1.0/com.ibm.icpdata.doc/zen/overview/whats-new.html)

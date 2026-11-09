@@ -1,0 +1,28 @@
+{{- if empty .Values.serviceAccountName }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ template "fullname" . }}-role
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+{{ include "odm-additional-labels" (dict "componentName" "odm" "root" .) | indent 4 }}
+rules: {{- if not (eq .Values.customization.vault "initcontainer") }} []
+{{- else }}
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+  - list
+- apiGroups:
+  - base.automation.ibm.com
+  resources:
+  - cartridgerequirements
+  verbs:
+  - get
+{{- end }}
+{{- end }}

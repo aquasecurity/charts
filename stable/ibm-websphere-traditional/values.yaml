@@ -14,8 +14,87 @@
 ###############################################################################
 image:
   repository: ibmcom/websphere-traditional
-  tag: 9.0.0.9-profile
+  tag: 9.0.5.0-ubi
   pullPolicy: IfNotPresent
+  pullSecrets: []
+  extraEnvs: []
+  # Example:
+  # extraEnvs:
+  # - name: FOO
+  #   valueFrom:
+  #     secretKeyRef:
+  #       key: FOO
+  #       name: secret-resource
+  # - name: BAR
+  #   value: bar
+
+  extraVolumeMounts: []
+  # Example:
+  # extraVolumeMounts:
+  #   - name: podinfo
+  #     mountPath: /podinfo
+  #     readOnly: false
+
+  security: {}
+  # Example:
+  # security:
+  #   securityContext:
+  #     privileged: false
+  #     readOnlyRootFilesystem: false
+  #     allowPrivilegeEscalation: false
+  #     capabilities:
+  #       drop:
+  #       - ALL
+
+deployment:
+  annotations: {}
+  # Example:
+  # annotations:
+  #   prometheus.io/scheme: "http"
+  #   prometheus.io/scrape: "true"
+
+  labels: {}
+  # Example:
+  # labels:
+  #   environment: "dev"
+  #   tier: "backend"
+
+pod:
+  annotations: {}
+  # Example:
+  # annotations:
+  #   prometheus.io/scheme: "http"
+  #   prometheus.io/scrape: "true"
+
+  security: {}
+  # Example:
+  # security:
+  #   hostNetwork: false
+  #   hostPID: false
+  #   hostIPC: false
+  #   securityContext:
+  #     runAsNonRoot: true
+  #     runAsUser: 1001
+
+  labels: {}
+  # Example:
+  # labels:
+  #   environment: "dev"
+  #   tier: "backend"
+
+  extraVolumes: []
+  # Example:
+  # extraVolumes:
+  #   - name: podinfo
+  #     downwardAPI:
+  #       items:
+  #         - path: "labels"
+  #           fieldRef:
+  #             fieldPath: metadata.labels
+  #         - path: "annotations"
+  #           fieldRef:
+  #             fieldPath: metadata.annotations
+
 
 ###############################################################################
 ## Service
@@ -25,6 +104,8 @@ service:
   name: https-was
   port: 9443
   targetPort: 9443
+  labels: {}
+  annotations: {}
 
 ###############################################################################
 ## Ingress
@@ -33,7 +114,11 @@ ingress:
   enabled: false
   rewriteTarget: "/"
   path: "/"
-
+  labels: {}
+  annotations: {}
+  hosts: []
+  secretName: ""
+  
 ###############################################################################
 ## Configuration Properties
 ###############################################################################
@@ -81,7 +166,7 @@ resources:
     cpu: 500m
     memory: 2Gi
   limits:
-    cpu: 500m
+    cpu: 4000m
     memory: 10Gi
 
 ###############################################################################
@@ -95,8 +180,6 @@ resources:
 #   3 - Most preferred
 arch:
   amd64: "2 - No preference"
-  ppc64le: "0 - Do not use"
-  s390x: "0 - Do not use"
 
 ###############################################################################
 ## Persistence Storage
@@ -107,7 +190,7 @@ persistence:
   name: "pvc"
   size: "1Gi"
 
-  fsGroupGid: 1000
+  fsGroupGid: 
 
   useDynamicProvisioning: true
 
@@ -127,4 +210,3 @@ persistence:
 ###############################################################################
 logs:
   persistLogs: false
-

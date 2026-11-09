@@ -1,0 +1,39 @@
+{{- $compName := "zen-homepage-card-extensions" -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: zen-homepage-card-extensions
+  labels:
+    {{- include "zenhelper.labels" (list . $compName) | indent 4 }}
+    icpdata_addon: "true"
+    icpdata_addon_version: "3.5.2"
+data:
+  extensions: |
+    [
+      {
+        "extension_point_id": "homepage_card",
+        "extension_name": "zen_homepage_card_my_instances",
+        "order_hint": 600,
+        "details": {
+          "title": "{{`{{.global_zen_homepage_card_my_instances_title}}`}}",
+          "drilldown_url": "/zen/#/myInstances",
+          "template_type": "text_list",
+          "data_url": "/zen-data/v1/homepage/instances",
+          "empty_state": {
+            "main_text": "{{`{{.global_zen_homepage_card_my_instances_details_empty_state_main_text}}`}}",
+            "sub_text": "{{`{{.global_zen_homepage_card_my_instances_details_empty_state_sub_text}}`}}"
+          }
+        }
+      },
+      {
+        "extension_point_id": "homepage_card",
+        "extension_name": "homepage_card_requests",
+        "order_hint": 225,
+        "applies_to_addons": "wkc,ccs,osg",
+        "details": {
+          "title": "{{`{{.global_zen_homepage_card_requests_title}}`}}",
+          "template_type": "number_list",
+          "data_url": "/zen-data/v1/homepage/requests"
+        }
+      }
+    ]

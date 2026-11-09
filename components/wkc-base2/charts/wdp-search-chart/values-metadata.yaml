@@ -1,0 +1,441 @@
+global:
+  __metadata:
+    description: "Global variables"
+    label: "Global Variables"
+  installCerts:
+    description: "Install certificates"
+    label: "Install Certificates"
+    type: boolean
+  deploymentTarget:
+    __metadata:
+      description: "Deployment target"
+      label: "Deployment Target"
+      options:
+      - label: "None"
+        value: ""
+      - label: "ICP4Data"
+        value: "icp4data"
+  dockerRegistryPrefix:
+    __metadata:
+      description: "Image registry to pull images"
+      label: "Image Registry"
+  podLabels:
+    icpdsupport/app:
+      __metadata:
+        description: "icpd support app"
+        label: "app"
+  podAnnotations: 
+    __metadata:
+      label: "Pod Annotations"
+      description: "Pod annotations of wdp-search"
+    productName: 
+      __metadata:
+        label: "Product Name"
+        description: "Product Name of CP4D"
+        type: "string"
+    productID: 
+      __metadata:
+        label: "Product ID"
+        description: "Product ID of CP4D"
+        type: "string"
+    productVersion: 
+      __metadata:
+        label: "Product Version"
+        description: "Product Version of CP4D"
+        type: "string"
+    productMetric: 
+      __metadata:
+        label: "Product Metric"
+        description: "ProductMetric of CP4D"
+        type: "string"    
+fullnameOverride:
+  __metadata:
+    description: "fullnameOverride"
+    label: string
+maxReplicas:
+  __metadata:
+    description: "Maximum number of replicas"
+    label: "Maximum Replicas"
+    type: number
+minReplicas:
+  __metadata:
+    description: "Minimum number of replicas"
+    label: "Minimum Replicas"
+    type: number
+image:
+  __metadata:
+    description: "Image configuration"
+    label: "Image Configuration"
+  repository:
+    __metadata:
+      description: "Image repository"
+      label: "Image Repository"
+  tag:
+    __metadata:
+      description: "Image tag"
+      label: "Image Tag"
+  pullPolicy:
+    __metadata:
+      description: "Image pullPolicy"
+      label: IfNotPresent
+repository:
+  __metadata:
+    description: "Repository configuration"
+    label: "Repository Configuration"
+  secret:
+    name:
+      __metadata:
+        description: "Name of the secret from which to get the image pull secret"
+        label: "Image Pull Secret Name"
+resources:
+  __metadata:
+    description: "Resource configuration"
+    label: "Resource Configuration"
+  limits:
+    cpu:
+      __metadata:
+        description: "CPU usage limit beyond which the pod is killed"
+        label: "CPU Limit"
+    memory:
+      __metadata:
+        description: "Memory usage limit beyond which the pod is killed"
+        label: "Memory Limit"
+  requests:
+    cpu:
+      __metadata:
+        description: "Normal CPU usage"
+        label: "CPU Request"
+    memory:
+      __metadata:
+        description: "Normal memory usage"
+        label: "Memory Request"
+ports:
+  __metadata:
+    description: "Port configuration"
+    label: "Port Configuration"
+  targetPort:
+    __metadata:
+      description: "Container port at which the app is listening"
+      label: "Target Port"
+      type: number
+  externalPort:
+    __metadata:
+      description: "Service port at which the service is listening"
+      label: "External Port"
+      type: number
+livenessProbe:
+  __metadata:
+    description: "Liveness probe configuration"
+    label: "Liveness Probe Configuration"
+  initialDelaySeconds:
+    __metadata:
+      description: "Initial delay in seconds"
+      label: "Initial Delay"
+      type: number
+  timeoutSeconds:
+    __metadata:
+      description: "Timeout in seconds"
+      label: "Timeout"
+      type: number
+  periodSeconds:
+    __metadata:
+      description: "Check interval in seconds"
+      label: "Check Interval"
+      type: number
+  successThreshold:
+    __metadata:
+      description: "Number of successful checks until probe is considered successful"
+      label: "Success Threshold"
+      type: number
+  failureThreshold:
+    __metadata:
+      description: "Number of unsuccessful checks before pod is restarted"
+      label: "Failure Threshold"
+      type: number
+readinessProbe:
+  __metadata:
+    description: "Readiness probe configuration"
+    label: "Readiness Probe Configuration"
+  initialDelaySeconds:
+    __metadata:
+      description: "Initial delay in seconds"
+      label: "Initial Delay"
+      type: number
+  timeoutSeconds:
+    __metadata:
+      description: "Timeout in seconds"
+      label: "Timeout"
+      type: number
+  periodSeconds:
+    __metadata:
+      description: "Check interval in seconds"
+      label: "Check Interval"
+      type: number
+  successThreshold:
+    __metadata:
+      description: "Number of successful checks until probe is considered successful"
+      label: "Success Threshold"
+      type: number
+  failureThreshold:
+    __metadata:
+      description: "Number of unsuccessful checks before pod is restarted"
+      label: "Failure Threshold"
+      type: number
+environment:
+  __metadata:
+    description: "Environment variables"
+    label: "Environment Variables"
+  trustAllSslCert:
+    __metadata:
+      description: "trustAllSslCert"
+      label: boolean
+  wdpHostDomain:
+    configMapName:
+      __metadata:
+        description: "Name of the config map from which to get the ICP4D external URL"
+        label: string
+    hostKey:
+      __metadata:
+        description: "hostKey"
+        label: string
+    icp4dHostKey:
+      __metadata:
+        description: "icp4dHostKey"
+        label: string
+  gateWayHost:
+    __metadata:
+      description: "gateWayHost"
+      label: string
+  gateWayUrl:
+    __metadata:
+      description: "gateWayUrl"
+      label: string
+  iamUrl:
+    __metadata:
+      description: "iamUrl"
+      label: string
+  cloudantDb:
+    __metadata:
+      description: "cloudantDb"
+      label: string
+  componentId:
+    __metadata:
+      description: "componentId"
+      label: string
+  environmentName:
+    __metadata:
+      description: "environmentName"
+      label: string
+  environmentType:
+    __metadata:
+      description: "environmentType"
+      label: string
+  deployTarget:
+    __metadata:
+      description: "deployTarget"
+      label: sting
+  deploymentTarget:
+    __metadata:
+      description: "deploymentTarget"
+      label: sting
+  bmAppName:
+    __metadata:
+      description: "bmAppName"
+      label: string
+  bmAppVersionEndpoint:
+    __metadata:
+      description: "bmAppVersionEndpoint"
+      label: string
+  serviceId:
+    name:
+      __metadata:
+        hidden: true
+    secret:
+      __metadata:
+        description: "Name of the secret from which to get the service ID username"
+        label: "Service ID Username Secret Name"
+    key:
+      __metadata:
+        description: "Key within the secret from which to get the service ID username"
+        label: "Service ID Username Secret Key"
+  cloudantApiPassword:
+    name:
+      __metadata:
+        hidden: true
+    secret:
+      __metadata:
+        description: "Name of the secret from which to get the cloudant password"
+        label: "cloudant password Secret Name"
+    key:
+      __metadata:
+        description: "Key within the secret from which to get the cloudant password"
+        label: "cloudant password Secret Key"
+  cloudantApiUrl:
+    name:
+      __metadata:
+        hidden: true
+    secret:
+      __metadata:
+        description: "Name of the secret from which to get cloudant Api Url"
+        label: "cloudant Api Url Secret Name"
+    key:
+      __metadata:
+        description: "Key within the secret from which to get cloudant Api Url"
+        label: "cloudant Api Url Secret Key"
+  cloudantApiUser:
+    name:
+      __metadata:
+        hidden: true
+    secret:
+      __metadata:
+        description: "Name of the secret from which to get cloudant Api User"
+        label: "cloudant Api User Secret Name"
+    key:
+      __metadata:
+        description: "Key within the secret from which to get cloudant Api User"
+        label: "cloudant Api User Secret Key"
+  cloudantPassword:
+    name:
+      __metadata:
+        hidden: true
+    secret:
+      __metadata:
+        description: "Name of the secret from which to get the cloudant password"
+        label: "cloudant password Secret Name"
+    key:
+      __metadata:
+        description: "Key within the secret from which to get the cloudant password"
+        label: "cloudant password Secret Key"
+  cloudantLogDbPass:
+    name:
+      __metadata:
+        hidden: true
+    secret:
+      __metadata:
+        description: "Name of the secret from which to get the cloudant Log DB password"
+        label: "cloudant password Secret Name"
+    key:
+      __metadata:
+        description: "Key within the secret from which to get the cloudant Log DB password"
+        label: "cloudant password Secret Key"
+  cloudantUrl:
+    name:
+      __metadata:
+        hidden: true
+    secret:
+      __metadata:
+        description: "Name of the secret from which to get cloudant Url"
+        label: "cloudant Url Secret Name"
+    key:
+      __metadata:
+        description: "Key within the secret from which to get cloudant Url"
+        label: "cloudant Url Secret Key"
+  cloudantLogDbUrl:
+    name:
+      __metadata:
+        hidden: true
+    secret:
+      __metadata:
+        description: "Name of the secret from which to get cloudant Log DB Url"
+        label: "cloudant Url Secret Name"
+    key:
+      __metadata:
+        description: "Key within the secret from which to get cloudant Log DB Url"
+        label: "cloudant Url Secret Key"
+  cloudantUser:
+    name:
+      __metadata:
+        hidden: true
+    secret:
+      __metadata:
+        description: "Name of the secret from which to get cloudant User"
+        label: "cloudant User Secret Name"
+    key:
+      __metadata:
+        description: "Key within the secret from which to get cloudant User"
+        label: "cloudant User Secret Key"
+  cloudantLogDbUser:
+    name:
+      __metadata:
+        hidden: true
+    secret:
+      __metadata:
+        description: "Name of the secret from which to get cloudant Log DB User"
+        label: "cloudant User Secret Name"
+    key:
+      __metadata:
+        description: "Key within the secret from which to get cloudant Log DB User"
+        label: "cloudant User Secret Key"
+  cloudantRaDb:
+    __metadata:
+      description: "cloudantRaDb"
+      label: string
+  useDatabaseList:
+    __metadata:
+      description: "useDatabaseList"
+      label: boolean
+  updateDesignDocs:
+    __metadata:
+      description: "updateDesignDocs"
+      label: boolean
+  thresHoldTime:
+    __metadata:
+      description: "thresHoldTime"
+      label: number
+  staggerBuilderThreads:
+    __metadata:
+      description: "staggerBuilderThreads"
+      label: boolean
+  numberOfRetries:
+    __metadata:
+      description: "numberOfRetries"
+      label: number
+  maxRecommendedAssets:
+    __metadata:
+      description: "maxRecommendedAssets"
+      label: number
+  maxDigitalExhaustWorkers:
+    __metadata:
+      description: "maxDigitalExhaustWorkers"
+      label: number
+  logDbNamePrefix:
+    __metadata:
+      description: "logDbNamePrefix"
+      label: string
+  icp4dUrl:
+    __metadata:
+      description: "icp4dUrl"
+      label: string
+  ibmCosEndPoint:
+    __metadata:
+      description: "ibmCosEndPoint"
+      label: string
+  gatewayConfigured:
+    __metadata:
+      description: "gatewayConfigured"
+      label: boolean
+  disableEtcdLocking:
+    __metadata:
+      description: "disableEtcdLocking"
+      label: boolean
+  disableEtcdLocking:
+    __metadata:
+      description: "disableEtcdLocking"
+      label: boolean
+  enableETCDV3:
+    __metadata:
+      description: "Enable ETCD V3"
+      label: string
+  databaseListDb:
+    __metadata:
+      description: "databaseListDb"
+      label: string
+securityContext:
+  __metadata:
+    description: "security Context Configuration"
+    label: "security Context"
+  runAsUser:
+    __metadata:
+      description: "runAsUser"
+      label: number
+

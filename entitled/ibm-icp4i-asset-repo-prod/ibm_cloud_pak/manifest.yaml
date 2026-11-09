@@ -1,0 +1,55 @@
+charts:
+  - archive: file:ibm-icp4i-asset-repo-prod-4.0.1.tgz
+    registry-keys:
+      - global.images.registry
+
+images:
+- image: icip-configurator:3.1.0-2020-04-16-1324-73aeb994-service-v2020.1.1
+  references:
+  - repository: icip-configurator:3.1.0-2020-04-16-1324-73aeb994-service-v2020.1.1
+    pull-repository: cp.icr.io/cp/icp4i/icip-configurator:3.1.0-2020-04-16-1324-73aeb994-service-v2020.1.1
+    pull-authorization:
+      username:
+        env: USERNAME
+      password:
+        env: PASSWORD
+
+- image: icp4i-asset-repo-ui:3.1.0-2020-07-01-1241-65995753-service-v2020.1.1
+  references:
+  - repository: icp4i-asset-repo-ui:3.1.0-2020-07-01-1241-65995753-service-v2020.1.1
+    pull-repository: cp.icr.io/cp/icp4i/icp4i-asset-repo-ui:3.1.0-2020-07-01-1241-65995753-service-v2020.1.1
+    pull-authorization:
+      username:
+        env: USERNAME
+      password:
+        env: PASSWORD
+
+- image: wdp-redis:0.0.4-icp4i
+  references:
+  - repository: wdp-redis:0.0.4-icp4i
+    pull-repository: cp.icr.io/cp/icp4i/wdp-redis:0.0.4-icp4i
+    pull-authorization:
+      username:
+        env: USERNAME
+      password:
+        env: PASSWORD
+
+- image: cp4i-asset-repo-api:3.1.0-2020-07-01-1234-0bc45f8e-service-v2020.1.1
+  references:
+  - repository: cp4i-asset-repo-api:3.1.0-2020-07-01-1234-0bc45f8e-service-v2020.1.1
+    pull-repository: cp.icr.io/cp/icp4i/cp4i-asset-repo-api:3.1.0-2020-07-01-1234-0bc45f8e-service-v2020.1.1
+    pull-authorization:
+      username:
+        env: USERNAME
+      password:
+        env: PASSWORD
+
+- image: couchdb:3.0.0-864c4c6d8b62
+  references:
+  - repository: couchdb:3.0.0-864c4c6d8b62
+    pull-repository: cp.icr.io/cp/icp4i/couchdb:3.0.0-864c4c6d8b62
+    pull-authorization:
+      username:
+        env: USERNAME
+      password:
+        env: PASSWORD

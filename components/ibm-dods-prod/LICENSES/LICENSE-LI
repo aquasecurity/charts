@@ -1,0 +1,301 @@
+The translated license terms can be viewed here: http://www14.software.ibm.com/cgi-bin/weblap/lap.pl?la_formnum=&li_formnum=L-PGRU-BSDUS4&l=en
+
+IMPORTANT: READ CAREFULLY
+
+Two license agreements are presented below.
+
+1. IBM International License Agreement for Evaluation of Programs
+2. IBM International Program License Agreement
+
+If Licensee is obtaining the Program for purposes of productive use (other than evaluation, testing, trial "try or buy," or demonstration): By clicking on the "Accept" button below, Licensee accepts the IBM International Program License Agreement, without modification.
+
+If Licensee is obtaining the Program for the purpose of evaluation, testing, trial "try or buy," or demonstration (collectively, an "Evaluation"): By clicking on the "Accept" button below, Licensee accepts both (i) the IBM International License Agreement for Evaluation of Programs (the "Evaluation License"), without modification; and (ii) the IBM International Program License Agreement (the "IPLA"), without modification.
+
+The Evaluation License will apply during the term of Licensee's Evaluation.
+
+The IPLA will automatically apply if Licensee elects to retain the Program after the Evaluation (or obtain additional copies of the Program for use after the Evaluation) by entering into a procurement agreement (e.g., the IBM International Passport Advantage or the IBM Passport Advantage Express agreements).
+
+The Evaluation License and the IPLA are not in effect concurrently; neither modifies the other; and each is independent of the other.
+
+The complete text of each of these two license agreements follow.
+
+
+
+LICENSE INFORMATION
+
+The Programs listed below are licensed under the following License Information terms and conditions in addition to the Program license terms previously agreed to by Client and IBM. If Client does not have previously agreed to license terms in effect for the Program, the International License Agreement for Evaluation of Programs (Z125-5543-05) applies.
+
+Program Name (Program Number):
+IBM Watson Studio Premium Extension for IBM Cloud Pak for Data V3.5 (Evaluation)
+IBM Watson Studio Premium Extension for Non-Production for IBM Cloud Pak for Data V3.5 (Evaluation)
+
+The following standard terms apply to Licensee's use of the Program.
+
+Evaluation Period
+
+The evaluation period begins on the date that Licensee agrees to the terms of this Agreement and ends after 60 days.
+
+Prohibited Uses
+
+Licensee may not use or authorize others to use the Program if failure of the Program could lead to death, bodily injury, or property or environmental damage.
+
+Bundled Programs
+
+Licensee is authorized to install and use the Bundled Programs identified below. A Bundled Program may be accompanied by license terms, and those terms, if any, apply to Licensee's use of that Bundled Program. In the event of conflict, the terms in this License Information document supersede the Bundled Program's terms. The Principal Program and any Bundled Programs are all part of the Program, as a whole. Therefore, Licensee must obtain sufficient entitlements to the Program, as a whole, to cover Licensee's installation and use of all of the Bundled Programs, unless separate entitlements are provided within this License Information document. For example, if this Program were licensed on a VPC (Virtual Processor Core) basis and Licensee were to install the Principal Program or a Bundled Program on a 10 VPC machine and another Bundled Program on a second 10 VPC machine, Licensee would be required to obtain 20 VPC entitlements to the Program.
+
+Bundled Programs:
+IBM ILOG CPLEX Optimization Studio
+IBM SPSS Analytic Server
+IBM SPSS Collaboration and Deployment Services
+IBM SPSS Modeler Gold
+IBM SPSS Modeler Premium
+IBM SPSS Modeler Professional
+IBM SPSS Modeler Server Gold
+IBM SPSS Modeler Server Premium
+IBM SPSS Modeler Server Professional
+
+Supporting Programs
+
+Licensee is authorized to install and use the Supporting Programs identified below only to support Licensee's use of the Principal Program under this Agreement. The phrase "to support Licensee's use" would only include those uses that are necessary or otherwise directly related to a licensed use of the Principal Program or another Supporting Program. The Supporting Programs may not be used for any other purpose. A Supporting Program may be accompanied by license terms, and those terms, if any, apply to Licensee's use of that Supporting Program. In the event of conflict, the terms in this License Information document supersede the Supporting Program's terms. Licensee must obtain sufficient entitlements to the Program, as a whole, to cover Licensee's installation and use of all of the Supporting Programs, unless separate entitlements are provided within this License Information document. For example, if this Program were licensed on a VPC (Virtual Processor Core) basis and Licensee were to install the Principal Program or a Supporting Program on a 10 VPC machine and another Supporting Program on a second 10 VPC machine, Licensee would be required to obtain 20 VPC entitlements to the Program.
+
+Supporting Programs:
+IBM Cloud Pak for Data Enterprise Edition 3.5
+
+Permitted Components
+
+Licensee is permitted to use only the following components or functions of the identified Bundled or Supporting Program:
+Control Plane (of Cloud Pak for Data Enterprise Edition)
+Common Services (of Cloud Pak for Data Enterprise Edition)
+Portworx storage (of Cloud Pak for Data Enterprise Edition)
+
+Separately Licensed Code
+
+Each of the components listed in the NON_IBM_LICENSE file is considered "Separately Licensed Code" licensed to Licensee under the terms of the applicable third party license agreement(s) set forth in the NON_IBM_LICENSE file(s) that accompanies the Program, and not this Agreement. Future Program updates or fixes may contain additional Separately Licensed Code. Such additional Separately Licensed Code and related licenses are listed in the applicable NON_IBM_LICENSE file that accompanies the Program update or fix. 
+
+Note: Notwithstanding any of the terms in the third party license agreement, the Agreement, or any other agreement Licensee may have with IBM, with respect to the Separately Licensed Code: 
+(a) IBM provides it to Licensee WITHOUT WARRANTIES OF ANY KIND AND DISCLAIMS ANY AND ALL EXPRESS AND IMPLIED WARRANTIES AND CONDITIONS INCLUDING, BUT NOT LIMITED TO, THE WARRANTY OF TITLE, NON-INFRINGEMENT OR NON-INTERFERENCE, AND THE IMPLIED WARRANTIES AND CONDITIONS OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE;
+(b) IBM is not liable for any direct, indirect, incidental, special, exemplary, punitive or consequential damages including, but not limited to, lost data, lost savings, and lost profits.
+
+Source Components and Sample Materials
+
+The Program includes components in source code form ("Source Components"), or other materials identified as Sample Materials or both. Licensee may copy and modify Source Components and Sample Materials for internal use only within the limits of the license rights under this Agreement; provided, however, that Licensee may not alter or delete any copyright information or notices contained in the Source Components or Sample Materials. IBM provides the Source Components and Sample Materials without obligation of support and "AS IS", WITH NO WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING THE WARRANTY OF TITLE, NON-INFRINGEMENT OR NON-INTERFERENCE AND THE IMPLIED WARRANTIES AND CONDITIONS OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
+In addition to the above, the following terms apply to Licensee's use of the Program.
+
+1. Program Details:
+
+IBM Cloud Pak For Data Enterprise Edition
+- Additional Flat Entitlement: 38 VPC 
+- Usage Limitation: Licensee is only entitled to use the Watson Studio and Watson Machine Learning components of IBM Cloud Pak for Data Enterprise Edition with these additional entitlements. 
+
+IBM ILOG CPLEX OPTIMIZATION STUDIO DEVELOPER EDITION 
+- Conversion Entitlement Ratio: 3 Authorized User / 1 VPC 
+
+IBM ILOG CPLEX OPTIMIZER DEPLOYMENT EDITION 
+- Conversion Entitlement Ratio: 70 Processor Value Unit / 1 VPC
+
+IBM SPSS ANALYTIC SERVER 
+- Conversion Entitlement Ratio: 20 Resource Value Unit / 1 VPC
+- Conversion Entitlement Ratio: 3 Virtual Server / 1 VPC
+
+IBM SPSS COLLABORATION AND DEPLOYMENT SERVICES 
+- Conversion Entitlement Ratio: 1 Resource Value Unit / 1 VPC
+- Conversion Entitlement Ratio: 4 Authorized User / 1 VPC
+- Conversion Entitlement Ratio: 1 Concurrent User / 1 VPC 
+- Conversion Entitlement Ratio: 70 Processor Value Unit / 1 VPC
+
+IBM SPSS MODELER GOLD 
+- Conversion Entitlement Ratio: 1 Authorized User / 1 VPC
+- Conversion Entitlement Ratio: 0.5 Concurrent User / 1 VPC
+
+IBM SPSS MODELER PREMIUM 
+- Conversion Entitlement Ratio: 1 Authorized User / 1 VPC 
+- Conversion Entitlement Ratio: 0.5 Concurrent User/ 1 VPC 
+
+IBM SPSS MODELER PROFESSIONAL 
+- Conversion Entitlement Ratio: 2 Authorized User / 1 VPC
+- Conversion Entitlement Ratio: 1 Concurrent User / 1 VPC
+
+ IBM SPSS MODELER SERVER GOLD 
+- Conversion Entitlement Ratio: 70 Processor Value Unit/ 1 VPC
+
+IBM SPSS MODELER SERVER PREMIUM 
+- Conversion Entitlement Ratio: 70 Processor Value Unit / 1 VPC
+
+IBM SPSS MODELER SERVER PROFESSIONAL 
+- Conversion Entitlement Ratio: 70 Processor Value Unit / 1 VPC
+
+2. Red Hat Products
+
+Red Hat Products (as listed below) are licensed separately and are supported by IBM only when used in support of the Program and only while Licensee has Software Subscription and Support in effect for the Program. In addition, Licensee agrees that its use of and support for the Red Hat Products are subject to the following terms (https://www.redhat.com/en/about/agreements).
+
+Red Hat Product:
+
+Red Hat Enterprise Linux
+- Additional Entitlement Ratio: 1 VPC/ 1 VPC
+
+Red Hat OpenShift Container Platform
+- Additional Entitlement Ratio: 1 VPC/ 1 VPC
+
+3. This Program includes the following software which may not be used for Evil purposes.
+
+-  json.jar
+
+"Additional Flat Entitlement" means that regardless of the number of entitlements obtained to the Program, Licensee's use of the listed program is limited to the number of entitlement(s) listed.
+
+"Conversion Entitlement Ratio n/m" means that Licensee can convert some number ('n') entitlements of the indicated metric for the listed program for every specified number ('m') entitlements of the specified metric for the Program. Once converted, Licensee may only use such converted entitlements for the listed program. The specified conversion does not apply to any entitlements for the Program that are not of the required metric type. For example, if the conversion is 100 entitlements of a listed program for every 500 entitlements obtained of the Program and Licensee acquires 1,500 entitlements of the Program, Licensee may convert those 1,500 entitlements into 300 entitlements of the listed program, allowing the Licensee to use the listed program up to the 300 entitlements. 
+
+"Additional Entitlement Ratio n/m" means that Licensee receives some number ('n') entitlements of the indicated metric for the identified program for every specified number ('m') entitlements of the specified metric for the Program as a whole. The specified ratio does not apply to any entitlements for the Program that are not of the required metric type. The number of entitlements for the identified program is rounded up to a multiple of 'n'. For example, if a Program includes 100 PVUs for an identified program for every 500 PVUs obtained of the Principal Program and Licensee acquires 1,200 PVUs of the Program, Licensee may install the identified program and have processor cores available to or managed by it of up to 300 PVUs. Those PVUs would not need to be counted as part of the total PVU requirement for Licensee's installation of the Program on account of the installation of the identified program (although those PVUs might need to be counted for other reasons, such as the processor cores being made available to other components of the Program, as well).
+
+
+
+LICENSE INFORMATION
+
+The Programs listed below are licensed under the following License Information terms and conditions in addition to the Program license terms previously agreed to by Client and IBM. If Client does not have previously agreed to license terms in effect for the Program, the International Program License Agreement (Z125-3301-14) applies.
+
+Program Name (Program Number):
+IBM Watson Studio Premium Extension for IBM Cloud Pak for Data V3.5 (5900-ABU)
+IBM Watson Studio Premium Extension for Non-Production for IBM Cloud Pak for Data V3.5 (5900-ABU)
+
+The following standard terms apply to Licensee's use of the Program.
+
+Limited use right
+
+Licensee is not authorized to use the Program to provide commercial IT services to any third party, to provide commercial hosting or timesharing, or to sublicense, rent, or lease the Program unless expressly provided for in the applicable agreements under which Licensee obtains authorizations to use the Program.
+
+Prohibited Uses
+
+Licensee may not use or authorize others to use the Program if failure of the Program could lead to death, bodily injury, or property or environmental damage.
+
+Bundled Programs
+
+Licensee is authorized to install and use the Bundled Programs identified below. A Bundled Program may be accompanied by license terms, and those terms, if any, apply to Licensee's use of that Bundled Program. In the event of conflict, the terms in this License Information document supersede the Bundled Program's terms. The Principal Program and any Bundled Programs are all part of the Program, as a whole. Therefore, Licensee must obtain sufficient entitlements to the Program, as a whole, to cover Licensee's installation and use of all of the Bundled Programs, unless separate entitlements are provided within this License Information document. For example, if this Program were licensed on a VPC (Virtual Processor Core) basis and Licensee were to install the Principal Program or a Bundled Program on a 10 VPC machine and another Bundled Program on a second 10 VPC machine, Licensee would be required to obtain 20 VPC entitlements to the Program.
+
+Bundled Programs:
+IBM ILOG CPLEX Optimization Studio
+IBM SPSS Analytic Server
+IBM SPSS Collaboration and Deployment Services
+IBM SPSS Modeler Gold
+IBM SPSS Modeler Premium
+IBM SPSS Modeler Professional
+IBM SPSS Modeler Server Gold
+IBM SPSS Modeler Server Premium
+IBM SPSS Modeler Server Professional
+
+Supporting Programs
+
+Licensee is authorized to install and use the Supporting Programs identified below only to support Licensee's use of the Principal Program under this Agreement. The phrase "to support Licensee's use" would only include those uses that are necessary or otherwise directly related to a licensed use of the Principal Program or another Supporting Program. The Supporting Programs may not be used for any other purpose. A Supporting Program may be accompanied by license terms, and those terms, if any, apply to Licensee's use of that Supporting Program. In the event of conflict, the terms in this License Information document supersede the Supporting Program's terms. Licensee must obtain sufficient entitlements to the Program, as a whole, to cover Licensee's installation and use of all of the Supporting Programs, unless separate entitlements are provided within this License Information document. For example, if this Program were licensed on a VPC (Virtual Processor Core) basis and Licensee were to install the Principal Program or a Supporting Program on a 10 VPC machine and another Supporting Program on a second 10 VPC machine, Licensee would be required to obtain 20 VPC entitlements to the Program.
+
+Supporting Programs:
+IBM Cloud Pak for Data Enterprise Edition 3.5
+
+Permitted Components
+
+Licensee is permitted to use only the following components or functions of the identified Bundled or Supporting Program:
+Control Plane (of Cloud Pak for Data Enterprise Edition)
+Common Services (of Cloud Pak for Data Enterprise Edition)
+Portworx storage (of Cloud Pak for Data Enterprise Edition)
+
+Non-Production Limitation
+
+If the Program is designated as "Non-Production", Licensee can only use the Program as part of Licensee's internal development and test environment for internal non-production activities.
+
+Components Not Used for Establishing Required Entitlements
+
+Licensee may install and use the following Program components, under the license terms, but these components are not used to determine the number of entitlements required for the Program.
+Control Plane (of Cloud Pak for Data Enterprise Edition)
+Common Services (of Cloud Pak for Data Enterprise Edition)
+Portworx storage (of Cloud Pak for Data Enterprise Edition)
+
+Separately Licensed Code
+
+Each of the components listed in the NON_IBM_LICENSE file is considered "Separately Licensed Code" licensed to Licensee under the terms of the applicable third party license agreement(s) set forth in the NON_IBM_LICENSE file(s) that accompanies the Program, and not this Agreement. Future Program updates or fixes may contain additional Separately Licensed Code. Such additional Separately Licensed Code and related licenses are listed in the applicable NON_IBM_LICENSE file that accompanies the Program update or fix. 
+
+Note: Notwithstanding any of the terms in the third party license agreement, the Agreement, or any other agreement Licensee may have with IBM, with respect to the Separately Licensed Code: 
+(a) IBM provides it to Licensee WITHOUT WARRANTIES OF ANY KIND AND DISCLAIMS ANY AND ALL EXPRESS AND IMPLIED WARRANTIES AND CONDITIONS INCLUDING, BUT NOT LIMITED TO, THE WARRANTY OF TITLE, NON-INFRINGEMENT OR NON-INTERFERENCE, AND THE IMPLIED WARRANTIES AND CONDITIONS OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE;
+(b) IBM is not liable for any direct, indirect, incidental, special, exemplary, punitive or consequential damages including, but not limited to, lost data, lost savings, and lost profits.
+
+Source Components and Sample Materials
+
+The Program includes components in source code form ("Source Components"), or other materials identified as Sample Materials or both. Licensee may copy and modify Source Components and Sample Materials for internal use only within the limits of the license rights under this Agreement; provided, however, that Licensee may not alter or delete any copyright information or notices contained in the Source Components or Sample Materials. IBM provides the Source Components and Sample Materials without obligation of support and "AS IS", WITH NO WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING THE WARRANTY OF TITLE, NON-INFRINGEMENT OR NON-INTERFERENCE AND THE IMPLIED WARRANTIES AND CONDITIONS OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
+The following units of measure may apply to Licensee's use of the Program.
+
+Virtual Processor Core
+
+Virtual Processor Core is a unit of measure by which the Program can be licensed. A Physical Server is a physical computer that is comprised of processing units, memory, and input/output capabilities and that executes requested procedures, commands, or applications for one or more users or client devices. Where racks, blade enclosures, or other similar equipment is being employed, each separable physical device (for example, a blade or a rack-mounted device) that has the required components is considered itself a separate Physical Server. A Virtual Server is either a virtual computer created by partitioning the resources available to a Physical Server or an unpartitioned Physical Server. A Processor Core is a functional unit within a computing device that interprets and executes instructions. A Processor Core consists of at least one instruction control unit and one or more arithmetic or logic units. A Virtual Processor Core is a Processor Core in an unpartitioned Physical Server, or a virtual core assigned to a Virtual Server. Licensee must obtain entitlements for each Virtual Processor Core made available to the Program.
+
+Licensee can deploy the Program (if supported) using full capacity licensing, sub-capacity licensing (https://www.ibm.com/software/passportadvantage/subcaplicensing.html), or container licensing (https://www.ibm.com/software/passportadvantage/containerlicenses.html). See the linked websites for more information. 
+
+In addition to the above, the following terms apply to Licensee's use of the Program.
+
+1. Program Details:
+
+IBM Cloud Pak For Data Enterprise Edition
+- Additional Flat Entitlement: 38 VPC 
+- Usage Limitation: Licensee is only entitled to use the Watson Studio and Watson Machine Learning components of IBM Cloud Pak for Data Enterprise Edition with these additional entitlements. 
+
+IBM ILOG CPLEX OPTIMIZATION STUDIO DEVELOPER EDITION 
+- Conversion Entitlement Ratio: 3 Authorized User / 1 VPC 
+
+IBM ILOG CPLEX OPTIMIZER DEPLOYMENT EDITION 
+- Conversion Entitlement Ratio: 70 Processor Value Unit / 1 VPC
+
+IBM SPSS ANALYTIC SERVER 
+- Conversion Entitlement Ratio: 20 Resource Value Unit / 1 VPC
+- Conversion Entitlement Ratio: 3 Virtual Server / 1 VPC
+
+IBM SPSS COLLABORATION AND DEPLOYMENT SERVICES 
+- Conversion Entitlement Ratio: 1 Resource Value Unit / 1 VPC
+- Conversion Entitlement Ratio: 4 Authorized User / 1 VPC
+- Conversion Entitlement Ratio: 1 Concurrent User / 1 VPC 
+- Conversion Entitlement Ratio: 70 Processor Value Unit / 1 VPC
+
+IBM SPSS MODELER GOLD 
+- Conversion Entitlement Ratio: 1 Authorized User / 1 VPC
+- Conversion Entitlement Ratio: 0.5 Concurrent User / 1 VPC
+
+IBM SPSS MODELER PREMIUM 
+- Conversion Entitlement Ratio: 1 Authorized User / 1 VPC 
+- Conversion Entitlement Ratio: 0.5 Concurrent User/ 1 VPC 
+
+IBM SPSS MODELER PROFESSIONAL 
+- Conversion Entitlement Ratio: 2 Authorized User / 1 VPC
+- Conversion Entitlement Ratio: 1 Concurrent User / 1 VPC
+
+ IBM SPSS MODELER SERVER GOLD 
+- Conversion Entitlement Ratio: 70 Processor Value Unit/ 1 VPC
+
+IBM SPSS MODELER SERVER PREMIUM 
+- Conversion Entitlement Ratio: 70 Processor Value Unit / 1 VPC
+
+IBM SPSS MODELER SERVER PROFESSIONAL 
+- Conversion Entitlement Ratio: 70 Processor Value Unit / 1 VPC
+
+2. Red Hat Products
+
+Red Hat Products (as listed below) are licensed separately and are supported by IBM only when used in support of the Program and only while Licensee has Software Subscription and Support in effect for the Program. In addition, Licensee agrees that its use of and support for the Red Hat Products are subject to the following terms (https://www.redhat.com/en/about/agreements).
+
+Red Hat Product:
+
+Red Hat Enterprise Linux
+- Additional Entitlement Ratio: 1 VPC/ 1 VPC
+
+Red Hat OpenShift Container Platform
+- Additional Entitlement Ratio: 1 VPC/ 1 VPC
+
+3. This Program includes the following software which may not be used for Evil purposes.
+
+-  json.jar
+
+"Additional Flat Entitlement" means that regardless of the number of entitlements obtained to the Program, Licensee's use of the listed program is limited to the number of entitlement(s) listed.
+
+"Conversion Entitlement Ratio n/m" means that Licensee can convert some number ('n') entitlements of the indicated metric for the listed program for every specified number ('m') entitlements of the specified metric for the Program. Once converted, Licensee may only use such converted entitlements for the listed program. The specified conversion does not apply to any entitlements for the Program that are not of the required metric type. For example, if the conversion is 100 entitlements of a listed program for every 500 entitlements obtained of the Program and Licensee acquires 1,500 entitlements of the Program, Licensee may convert those 1,500 entitlements into 300 entitlements of the listed program, allowing the Licensee to use the listed program up to the 300 entitlements. 
+
+"Additional Entitlement Ratio n/m" means that Licensee receives some number ('n') entitlements of the indicated metric for the identified program for every specified number ('m') entitlements of the specified metric for the Program as a whole. The specified ratio does not apply to any entitlements for the Program that are not of the required metric type. The number of entitlements for the identified program is rounded up to a multiple of 'n'. For example, if a Program includes 100 PVUs for an identified program for every 500 PVUs obtained of the Principal Program and Licensee acquires 1,200 PVUs of the Program, Licensee may install the identified program and have processor cores available to or managed by it of up to 300 PVUs. Those PVUs would not need to be counted as part of the total PVU requirement for Licensee's installation of the Program on account of the installation of the identified program (although those PVUs might need to be counted for other reasons, such as the processor cores being made available to other components of the Program, as well).
+
+L/N:  L-PGRU-BSDUS4
+D/N:  L-PGRU-BSDUS4
+P/N:  L-PGRU-BSDUS4
+
+

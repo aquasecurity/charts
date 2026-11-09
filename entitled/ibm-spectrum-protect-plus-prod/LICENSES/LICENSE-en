@@ -1,0 +1,166 @@
+NOTICE
+
+This document includes License Information documents below for multiple Programs. Each License Information document identifies the Program(s) to which it applies. Only those License Information documents for the Program(s) for which Licensee has acquired entitlements apply.
+
+
+==============================================
+
+
+LICENSE INFORMATION
+
+The Programs listed below are licensed under the following License Information terms and conditions in addition to the Program license terms previously agreed to by Client and IBM. If Client does not have previously agreed to license terms in effect for the Program, the International Program License Agreement (Z125-3301-14) applies.
+
+Program Name (Program Number):
+IBM Spectrum Protect Plus Managed VM - Version 10.1.7 (5737-F11)
+
+The following standard terms apply to Licensee's use of the Program.
+
+Limited use right
+
+Licensee is not authorized to use the Program to provide commercial IT services to any third party, to provide commercial hosting or timesharing, or to sublicense, rent, or lease the Program unless expressly provided for in the applicable agreements under which Licensee obtains authorizations to use the Program.
+
+Prohibited Uses
+
+Licensee may not use or authorize others to use the Program if failure of the Program could lead to death, bodily injury, or property or environmental damage.
+
+Non-Production
+
+Licensee may only use the following components as part of Licensee's internal development and test environment for internal non-production activities ("Non-Production").
+
+Non-Production Components:
+RedHat Open Shift Capabilities
+IBM Block CSI Driver Capabilities
+
+Separately Licensed Code
+
+Each of the components listed in the NON_IBM_LICENSE file is considered "Separately Licensed Code" licensed to Licensee under the terms of the applicable third party license agreement(s) set forth in the NON_IBM_LICENSE file(s) that accompanies the Program, and not this Agreement. Future Program updates or fixes may contain additional Separately Licensed Code. Such additional Separately Licensed Code and related licenses are listed in the applicable NON_IBM_LICENSE file that accompanies the Program update or fix. 
+
+Note: Notwithstanding any of the terms in the third party license agreement, the Agreement, or any other agreement Licensee may have with IBM, with respect to the Separately Licensed Code: 
+(a) IBM provides it to Licensee WITHOUT WARRANTIES OF ANY KIND AND DISCLAIMS ANY AND ALL EXPRESS AND IMPLIED WARRANTIES AND CONDITIONS INCLUDING, BUT NOT LIMITED TO, THE WARRANTY OF TITLE, NON-INFRINGEMENT OR NON-INTERFERENCE, AND THE IMPLIED WARRANTIES AND CONDITIONS OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE;
+(b) IBM is not liable for any direct, indirect, incidental, special, exemplary, punitive or consequential damages including, but not limited to, lost data, lost savings, and lost profits.
+
+The following units of measure may apply to Licensee's use of the Program.
+
+Managed Virtual Server
+
+Managed Virtual Server is a unit of measure by which the Program can be licensed. A server is a physical computer that is comprised of processing units, memory, and input/output capabilities and that executes requested procedures, commands, or applications for one or more users or client devices. Where racks, blade enclosures, or other similar equipment is being employed, each separable physical device (for example, a blade or a rack-mounted device) that has the required components is considered itself a separate server. A virtual server is either a virtual computer created by partitioning the resources available to a physical server or an unpartitioned physical server. Licensee must obtain Managed Virtual Server entitlements for each virtual server managed by the Program.
+
+In addition to the above, the following terms apply to Licensee's use of the Program.
+
+Licensee is prohibited from using the Program for block level incremental backups for applications or file systems residing on physical servers.
+
+Licensee is prohibited from using the Program for containers or Office 365 user IDs. 
+
+L/N:  L-SVGY-BSEPD9
+D/N:  L-SVGY-BSEPD9
+P/N:  L-SVGY-BSEPD9
+
+
+
+==============================================
+
+
+LICENSE INFORMATION
+
+The Programs listed below are licensed under the following License Information terms and conditions in addition to the Program license terms previously agreed to by Client and IBM. If Client does not have previously agreed to license terms in effect for the Program, the International Program License Agreement (Z125-3301-14) applies.
+
+Program Name (Program Number):
+IBM Spectrum Protect Plus Capacity - Version 10.1.7 (5737-F11)
+
+The following standard terms apply to Licensee's use of the Program.
+
+Limited use right
+
+Licensee is not authorized to use the Program to provide commercial IT services to any third party, to provide commercial hosting or timesharing, or to sublicense, rent, or lease the Program unless expressly provided for in the applicable agreements under which Licensee obtains authorizations to use the Program.
+
+Prohibited Uses
+
+Licensee may not use or authorize others to use the Program if failure of the Program could lead to death, bodily injury, or property or environmental damage.
+
+Non-Production
+
+Licensee may only use the following components as part of Licensee's internal development and test environment for internal non-production activities ("Non-Production").
+
+Non-Production Components:
+RedHat Open Shift Capabilities
+IBM Block CSI Driver Capabilities
+
+Separately Licensed Code
+
+Each of the components listed in the NON_IBM_LICENSE file is considered "Separately Licensed Code" licensed to Licensee under the terms of the applicable third party license agreement(s) set forth in the NON_IBM_LICENSE file(s) that accompanies the Program, and not this Agreement. Future Program updates or fixes may contain additional Separately Licensed Code. Such additional Separately Licensed Code and related licenses are listed in the applicable NON_IBM_LICENSE file that accompanies the Program update or fix. 
+
+Note: Notwithstanding any of the terms in the third party license agreement, the Agreement, or any other agreement Licensee may have with IBM, with respect to the Separately Licensed Code: 
+(a) IBM provides it to Licensee WITHOUT WARRANTIES OF ANY KIND AND DISCLAIMS ANY AND ALL EXPRESS AND IMPLIED WARRANTIES AND CONDITIONS INCLUDING, BUT NOT LIMITED TO, THE WARRANTY OF TITLE, NON-INFRINGEMENT OR NON-INTERFERENCE, AND THE IMPLIED WARRANTIES AND CONDITIONS OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE;
+(b) IBM is not liable for any direct, indirect, incidental, special, exemplary, punitive or consequential damages including, but not limited to, lost data, lost savings, and lost profits.
+
+The following units of measure may apply to Licensee's use of the Program.
+
+Terabyte
+
+Terabyte is a unit of measure by which the Program can be licensed. A Terabyte is 2 to the 40th power bytes. Licensee must obtain an entitlement for each Terabyte available to the Program.
+
+Instead of the entitlements required for the Program directly, Licensee must obtain Terabyte entitlements for this Program sufficient to cover the Terabytes managed by the Program.
+
+In addition to the above, the following terms apply to Licensee's use of the Program.
+
+Licensee is prohibited from using the Program with partitioned physical servers or Office 365 user IDs, except containers.
+
+L/N:  L-SVGY-BSEPE4
+D/N:  L-SVGY-BSEPE4
+P/N:  L-SVGY-BSEPE4
+
+
+
+==============================================
+
+
+LICENSE INFORMATION
+
+The Programs listed below are licensed under the following License Information terms and conditions in addition to the Program license terms previously agreed to by Client and IBM. If Client does not have previously agreed to license terms in effect for the Program, the International Program License Agreement (Z125-3301-14) applies.
+
+Program Name (Program Number):
+IBM Spectrum Protect Plus for Microsoft Office 365 - Version 10.1.7 (5737-F11)
+
+The following standard terms apply to Licensee's use of the Program.
+
+Limited use right
+
+Licensee is not authorized to use the Program to provide commercial IT services to any third party, to provide commercial hosting or timesharing, or to sublicense, rent, or lease the Program unless expressly provided for in the applicable agreements under which Licensee obtains authorizations to use the Program.
+
+Prohibited Uses
+
+Licensee may not use or authorize others to use the Program if failure of the Program could lead to death, bodily injury, or property or environmental damage.
+
+Non-Production
+
+Licensee may only use the following components as part of Licensee's internal development and test environment for internal non-production activities ("Non-Production").
+
+Non-Production Components:
+RedHat Open Shift Capabilities
+IBM Block CSI Driver Capabilities
+
+Separately Licensed Code
+
+Each of the components listed in the NON_IBM_LICENSE file is considered "Separately Licensed Code" licensed to Licensee under the terms of the applicable third party license agreement(s) set forth in the NON_IBM_LICENSE file(s) that accompanies the Program, and not this Agreement. Future Program updates or fixes may contain additional Separately Licensed Code. Such additional Separately Licensed Code and related licenses are listed in the applicable NON_IBM_LICENSE file that accompanies the Program update or fix. 
+
+Note: Notwithstanding any of the terms in the third party license agreement, the Agreement, or any other agreement Licensee may have with IBM, with respect to the Separately Licensed Code: 
+(a) IBM provides it to Licensee WITHOUT WARRANTIES OF ANY KIND AND DISCLAIMS ANY AND ALL EXPRESS AND IMPLIED WARRANTIES AND CONDITIONS INCLUDING, BUT NOT LIMITED TO, THE WARRANTY OF TITLE, NON-INFRINGEMENT OR NON-INTERFERENCE, AND THE IMPLIED WARRANTIES AND CONDITIONS OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE;
+(b) IBM is not liable for any direct, indirect, incidental, special, exemplary, punitive or consequential damages including, but not limited to, lost data, lost savings, and lost profits.
+
+In addition to the above, the following terms apply to Licensee's use of the Program.
+
+ENTITY ID
+
+Entity ID is a unit of measure by which the Program can be licensed. An Entity ID is a unique identifier for any entity represented within the Program. Licensee must obtain sufficient entitlements to cover all Entity IDs identified in the Program. For purposes of this Program, an Entity ID is required for each Microsoft Office 365 user ID that utilizes this Program.
+
+
+Licensee is prohibited from using the Program with physical servers, partitioned physical servers, or containers.
+
+L/N:  L-SVGY-BSEPFL
+D/N:  L-SVGY-BSEPFL
+P/N:  L-SVGY-BSEPFL
+
+
+
+
+

@@ -1,0 +1,438 @@
+charts:
+- archive: file:ibm-guardium-insights-prod-2.5.2.tgz
+  global.repository:
+  - global.image.repository
+  - global.imageRegistry
+images:
+- image: insights-deploy-common-utils:release-v2.5.1-2021-02-16-11.46.28-294dcd4
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/insights-deploy-common-utils:release-v2.5.1-2021-02-16-11.46.28-294dcd4
+    repository: insights-deploy-common-utils:release-v2.5.1-2021-02-16-11.46.28-294dcd4
+- image: opencontent-common-utils:1.1.2
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/opencontent-common-utils:1.1.2
+    repository: opencontent-common-utils:1.1.2
+- image: opencontent-redis-3:1.1.5
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/opencontent-redis-3:1.1.5
+    repository: opencontent-redis-3:1.1.5
+- image: mongodb:4.2.11-debian-10-r58
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/mongodb:4.2.11-debian-10-r58
+    repository: mongodb:4.2.11-debian-10-r58
+- image: mongodb-exporter:0.11.2-debian-10-r63
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/mongodb-exporter:0.11.2-debian-10-r63
+    repository: mongodb-exporter:0.11.2-debian-10-r63
+- image: db2u:11.5.4.0-56-x86_64
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/db2u:11.5.4.0-56-x86_64
+    repository: db2u:11.5.4.0-56-x86_64
+- image: etcd:3.3.10-56-x86_64
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/etcd:3.3.10-56-x86_64
+    repository: etcd:3.3.10-56-x86_64
+- image: db2u.instdb:11.5.4.0-56-x86_64
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/db2u.instdb:11.5.4.0-56-x86_64
+    repository: db2u.instdb:11.5.4.0-56-x86_64
+- image: db2u.tools:11.5.4.0-56-x86_64
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/db2u.tools:11.5.4.0-56-x86_64
+    repository: db2u.tools:11.5.4.0-56-x86_64
+- image: db2u.auxiliary.auth:11.5.4.0-56-x86_64
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/db2u.auxiliary.auth:11.5.4.0-56-x86_64
+    repository: db2u.auxiliary.auth:11.5.4.0-56-x86_64
+- image: kafka:2.7.0-debian-10-r39
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/kafka:2.7.0-debian-10-r39
+    repository: kafka:2.7.0-debian-10-r39
+- image: zookeeper:3.6.2-debian-10-r131
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/zookeeper:3.6.2-debian-10-r131
+    repository: zookeeper:3.6.2-debian-10-r131
+- image: analytics-events:release-v2.5.1-2021-02-17-09.25.11-7468339
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/analytics-events:release-v2.5.1-2021-02-17-09.25.11-7468339
+    repository: analytics-events:release-v2.5.1-2021-02-17-09.25.11-7468339
+- image: analytics-extract:release-v2.5.1-2021-02-17-09.24.01-0c1e1c7
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/analytics-extract:release-v2.5.1-2021-02-17-09.24.01-0c1e1c7
+    repository: analytics-extract:release-v2.5.1-2021-02-17-09.24.01-0c1e1c7
+- image: apigateway:release-v2.5.1-2021-02-17-09.34.51-5c791d5
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/apigateway:release-v2.5.1-2021-02-17-09.34.51-5c791d5
+    repository: apigateway:release-v2.5.1-2021-02-17-09.34.51-5c791d5
+- image: assets:release-v2.5.1-2021-02-17-09.41.23-7cc73e7
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/assets:release-v2.5.1-2021-02-17-09.41.23-7cc73e7
+    repository: assets:release-v2.5.1-2021-02-17-09.41.23-7cc73e7
+- image: audit:release-v2.5.1-2021-02-17-09.22.13-1d5892d
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/audit:release-v2.5.1-2021-02-17-09.22.13-1d5892d
+    repository: audit:release-v2.5.1-2021-02-17-09.22.13-1d5892d
+- image: configuration:release-v2.5.1-2021-02-17-09.42.22-de794aa
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/configuration:release-v2.5.1-2021-02-17-09.42.22-de794aa
+    repository: configuration:release-v2.5.1-2021-02-17-09.42.22-de794aa
+- image: datamart-processor:release-v2.5.1-2021-02-17-09.23.11-97304a9
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/datamart-processor:release-v2.5.1-2021-02-17-09.23.11-97304a9
+    repository: datamart-processor:release-v2.5.1-2021-02-17-09.23.11-97304a9
+- image: db2-store:release-v2.5.1-2021-02-17-09.22.49-21842bc
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/db2-store:release-v2.5.1-2021-02-17-09.22.49-21842bc
+    repository: db2-store:release-v2.5.1-2021-02-17-09.22.49-21842bc
+- image: guardium-agent-cert-generator:release-v2.5.1-2021-02-17-10.34.32-9fe85ad
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/guardium-agent-cert-generator:release-v2.5.1-2021-02-17-10.34.32-9fe85ad
+    repository: guardium-agent-cert-generator:release-v2.5.1-2021-02-17-10.34.32-9fe85ad
+- image: guardium-connector:release-v2.5.1-2021-02-17-09.20.42-58ce71a
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/guardium-connector:release-v2.5.1-2021-02-17-09.20.42-58ce71a
+    repository: guardium-connector:release-v2.5.1-2021-02-17-09.20.42-58ce71a
+- image: insights:release-v2.5.1-2021-02-17-10.26.14-6d9ce6c
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/insights:release-v2.5.1-2021-02-17-10.26.14-6d9ce6c
+    repository: insights:release-v2.5.1-2021-02-17-10.26.14-6d9ce6c
+- image: jumpbox:release-v2.5.1-2021-02-17-10.14.55-1dc38f8
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/jumpbox:release-v2.5.1-2021-02-17-10.14.55-1dc38f8
+    repository: jumpbox:release-v2.5.1-2021-02-17-10.14.55-1dc38f8
+- image: notifications:release-v2.5.1-2021-02-17-09.20.06-9d47816
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/notifications:release-v2.5.1-2021-02-17-09.20.06-9d47816
+    repository: notifications:release-v2.5.1-2021-02-17-09.20.06-9d47816
+- image: outlier2:release-v2.5.1-2021-02-18-13.52.18-4154ff0
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/outlier2:release-v2.5.1-2021-02-18-13.52.18-4154ff0
+    repository: outlier2:release-v2.5.1-2021-02-18-13.52.18-4154ff0
+- image: outlier2-aggregation:release-v2.5.1-2021-02-18-12.16.17-971bcbb
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/outlier2-aggregation:release-v2.5.1-2021-02-18-12.16.17-971bcbb
+    repository: outlier2-aggregation:release-v2.5.1-2021-02-18-12.16.17-971bcbb
+- image: pa-alert:release-v2.5.1-2021-02-17-19.01.34-93f0403
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/pa-alert:release-v2.5.1-2021-02-17-19.01.34-93f0403
+    repository: pa-alert:release-v2.5.1-2021-02-17-19.01.34-93f0403
+- image: pa-core:release-v2.5.1-2021-02-17-19.01.34-93f0403
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/pa-core:release-v2.5.1-2021-02-17-19.01.34-93f0403
+    repository: pa-core:release-v2.5.1-2021-02-17-19.01.34-93f0403
+- image: pipeline-config:release-v2.5.1-2021-02-17-09.23.17-f41989c
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/pipeline-config:release-v2.5.1-2021-02-17-09.23.17-f41989c
+    repository: pipeline-config:release-v2.5.1-2021-02-17-09.23.17-f41989c
+- image: recommendation:release-v2.5.1-2021-02-17-09.19.06-0afa915
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/recommendation:release-v2.5.1-2021-02-17-09.19.06-0afa915
+    repository: recommendation:release-v2.5.1-2021-02-17-09.19.06-0afa915
+- image: reports:release-v2.5.1-2021-02-17-10.26.13-7914229
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/reports:release-v2.5.1-2021-02-17-10.26.13-7914229
+    repository: reports:release-v2.5.1-2021-02-17-10.26.13-7914229
+- image: reports-runner:release-v2.5.1-2021-02-17-09.18.40-e59adad
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/reports-runner:release-v2.5.1-2021-02-17-09.18.40-e59adad
+    repository: reports-runner:release-v2.5.1-2021-02-17-09.18.40-e59adad
+- image: scheduler:release-v2.5.1-2021-02-17-09.17.58-c24c46a
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/scheduler:release-v2.5.1-2021-02-17-09.17.58-c24c46a
+    repository: scheduler:release-v2.5.1-2021-02-17-09.17.58-c24c46a
+- image: risk-engine:release-v2.5.1-2021-02-17-17.28.24-b88de88
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/risk-engine:release-v2.5.1-2021-02-17-17.28.24-b88de88
+    repository: risk-engine:release-v2.5.1-2021-02-17-17.28.24-b88de88
+- image: risk-register:release-v2.5.1-2021-02-17-17.23.59-8bc8531
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/risk-register:release-v2.5.1-2021-02-17-17.23.59-8bc8531
+    repository: risk-register:release-v2.5.1-2021-02-17-17.23.59-8bc8531
+- image: risk-threats:release-v2.5.1-2021-02-17-17.22.48-b886577
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/risk-threats:release-v2.5.1-2021-02-17-17.22.48-b886577
+    repository: risk-threats:release-v2.5.1-2021-02-17-17.22.48-b886577
+- image: streams:release-v2.5.1-2021-02-17-09.18.07-2a3a560
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/streams:release-v2.5.1-2021-02-17-09.18.07-2a3a560
+    repository: streams:release-v2.5.1-2021-02-17-09.18.07-2a3a560
+- image: tenant-user:release-v2.5.1-2021-02-17-09.18.03-0c7701f
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/tenant-user:release-v2.5.1-2021-02-17-09.18.03-0c7701f
+    repository: tenant-user:release-v2.5.1-2021-02-17-09.18.03-0c7701f
+- image: ticketing:release-v2.5.1-2021-02-17-09.15.51-c111405
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/ticketing:release-v2.5.1-2021-02-17-09.15.51-c111405
+    repository: ticketing:release-v2.5.1-2021-02-17-09.15.51-c111405
+- image: tenant-fetcher:release-v2.5.1-2021-02-17-11.16.58-de09a37
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/tenant-fetcher:release-v2.5.1-2021-02-17-11.16.58-de09a37
+    repository: tenant-fetcher:release-v2.5.1-2021-02-17-11.16.58-de09a37
+- image: parquet-store:release-v2.5.1-2021-02-17-09.21.33-45cafa4
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/parquet-store:release-v2.5.1-2021-02-17-09.21.33-45cafa4
+    repository: parquet-store:release-v2.5.1-2021-02-17-09.21.33-45cafa4
+- image: mini-snif:release-v2.5.1-2020-11-18-19.37.00-8ef1fc0
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/mini-snif:release-v2.5.1-2020-11-18-19.37.00-8ef1fc0
+    repository: mini-snif:release-v2.5.1-2020-11-18-19.37.00-8ef1fc0
+- image: fetch:release-v2.5.1-2021-02-17-09.15.44-7cf5b10
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/fetch:release-v2.5.1-2021-02-17-09.15.44-7cf5b10
+    repository: fetch:release-v2.5.1-2021-02-17-09.15.44-7cf5b10
+- image: ssh-service:release-v2.5.1-2021-02-17-09.17.01-1ecd868
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/ssh-service:release-v2.5.1-2021-02-17-09.17.01-1ecd868
+    repository: ssh-service:release-v2.5.1-2021-02-17-09.17.01-1ecd868
+- image: data-retention:release-v2.5.1-2021-02-17-09.23.18-84bd7fe
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/data-retention:release-v2.5.1-2021-02-17-09.23.18-84bd7fe
+    repository: data-retention:release-v2.5.1-2021-02-17-09.23.18-84bd7fe
+- image: group-builder:release-v2.5.1-2021-02-17-09.23.02-9c5906d
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/group-builder:release-v2.5.1-2021-02-17-09.23.02-9c5906d
+    repository: group-builder:release-v2.5.1-2021-02-17-09.23.02-9c5906d
+- image: health-collector:release-v2.5.1-2021-02-17-09.21.09-c451182
+  references:
+  - pull-authorization:
+      password:
+        env: IAM_REGISTRY_PASSWORD
+      username:
+        env: iamapikey
+    pull-repository: cp.icr.io/cp/ibm-guardium-insights/health-collector:release-v2.5.1-2021-02-17-09.21.09-c451182
+    repository: health-collector:release-v2.5.1-2021-02-17-09.21.09-c451182

@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "graph-writer.fullname" . }}-gremlin-krb
+  labels:
+{{- include "common.label.metadata" (list . (printf "%s-%s" (include "graph-writer.name" .) "gremlin") (include "graph-writer.chart" .) .Release.Name .Release.Service ) | indent 4 }}
+data:
+  KERBEROS_CLIENT_PRINCIPAL: 'fcigraph-fcicluster@FCI.IBM'
+  KEYTAB_FILE: '/etc/security/keytabs/fcigraph.headless.keytab'
+  KERBEROS_ENABLED: 'true'
+  APP_USER: 'fcigraph'

@@ -1,0 +1,216 @@
+# Create a vault config
+#
+# kubectl create configmap vault-config --validate --from-file=./vault.conf
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: instascan-vault
+  annotations:
+    prod.name: {{ .Values.prod.name | quote }}
+    prod.version: {{ .Values.prod.version | quote }}
+  creationTimestamp: null
+  labels:
+    io.kompose.service: instascan-vault
+{{include "instascan.labels" . | indent 4 }}
+    release: "{{ .Release.Name }}"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.global.appname }}
+      release: {{ .Release.Name | quote }}
+      component: instascan-vault
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: {{ .Values.global.appname }}
+        release: {{ .Release.Name | quote }}
+        component: instascan-vault
+{{include "instascan.labels" . | indent 8 }}
+      annotations:
+        {{- if .Values.global.podAnnotations }}
+{{ toYaml .Values.global.podAnnotations | trim | indent 8 }}
+        {{- end }} 
+    spec:
+      hostNetwork: false
+      hostPID: false
+      hostIPC: false
+      serviceAccountName: {{ .Values.global.serviceAccountName }}
+      affinity:
+{{include "instascan.nodeAffinity" . | indent 8 }}
+      {{- if eq .Values.vault.securityContext.enabled true }}
+      securityContext:
+        fsGroup: {{ .Values.vault.securityContext.fsGroup }}
+      {{- end }}
+      volumes:
+      - name: internal-tls
+        secret:
+          defaultMode: 420
+          items:
+          - key: tls.crt
+            path: tls.crt
+          - key: tls.key
+            path: tls.key
+          - key: certificate.pem
+            path: certificate.pem
+          secretName: {{ .Values.vault.secret }}
+      {{- if not .Values.ibmPostgres.enabled }}
+      - name: pgsql
+        secret:
+          secretName: {{ .Values.postgres.secret }}
+          defaultMode: 420
+          items:
+          - key: pgpass
+            path: .pgpass
+      {{- end }}
+      - name: vault-config
+        configMap:
+          name: instascan-vault-configmap
+      {{- if .Values.ibmPostgres.enabled }}
+      - name: initdb-sql
+        configMap:
+          name: instascan-vault-initdb-sql
+      - name: postgres-tls
+        secret:
+          secretName: {{ .Values.ibmPostgres.tlsSecret }}
+          items:
+          - key: "tls.crt"
+            path: "tls.crt"
+      {{- end }}
+      {{- if .Values.ibmPostgres.enabled }}
+      initContainers:
+      - name: instascan-vault-initdb
+        image: {{ if .Values.global.dockerRegistryPrefix }}{{ trimSuffix "/" .Values.global.dockerRegistryPrefix }}{{ end }}/{{ .Values.ibmPostgres.image.name }}:{{ .Values.ibmPostgres.image.tag }}
+        imagePullPolicy: IfNotPresent
+        securityContext:
+{{include "nonroot.containers.securityContext" . | indent 10 }}
+          runAsUser: {{ .Values.global.nonroot.uid }}
+        resources:
+          requests:
+            memory: 128Mi
+            cpu: 10m
+          limits:
+            memory: 128Mi
+            cpu: 50m
+        volumeMounts:
+        - mountPath: /opt/ibm/postgres
+          name: postgres-tls
+        - mountPath: /tmp/
+          name: initdb-sql
+        env:
+        - name: PGHOST
+          value: {{ .Values.ibmPostgres.host }}
+        - name: PGPORT
+          value: {{ .Values.ibmPostgres.port | quote }}
+        - name: PGDATABASE
+          value: "postgres"
+        - name: PGUSER
+          value: {{ .Values.ibmPostgres.user }}
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: pg_su_password
+              name: {{ .Values.ibmPostgres.authSecret }}
+        - name: PGSSLROOTCERT
+          value: "/opt/ibm/postgres/tls.crt"
+        command:
+        - "/bin/bash"
+        - -c
+        - |
+          for i in $(seq 12)
+          do
+            pg_isready && break
+            sleep 10
+          done
+          pg_isready || exit 1
+          if [ -z "$(psql -l | awk '$1 ~ /vault/')" ]
+          then
+            psql -a -c 'CREATE DATABASE vault' || exit 1;
+          fi
+          psql -f /tmp/init-vaultdb.sql;
+      {{- end }}
+      containers:
+      - name: instascan-vault
+        {{- if .Values.global.dockerRegistryPrefix }}
+        image: "{{ .Values.global.dockerRegistryPrefix }}/{{ .Values.vault.image.name }}:{{ .Values.instascan.image.tag }}"
+        {{- else if .Values.instascan.image.repository }}
+        image: "{{ .Values.instascan.image.repository }}/{{ .Values.vault.image.name }}:{{ .Values.instascan.image.tag }}"
+        {{- else }}
+        image: "{{ .Values.vault.image.name }}:{{ .Values.instascan.image.tag }}"
+        {{- end }}
+        imagePullPolicy: {{ .Values.imagePullPolicy }}
+        readinessProbe:
+          {{- if eq .Values.isProduction true }}
+          exec:
+            command: ["/bin/curl", "--key", "/etc/internal-tls/tls.key", "--cert", "/etc/internal-tls/tls.crt", "--cacert", "/etc/internal-tls/certificate.pem", "https://localhost:8200/v1/sys/health"]
+          {{- else }}
+          exec:
+            command: {{ .Values.testProbe.command }}
+          {{- end }}
+          initialDelaySeconds: 5
+          failureThreshold: 20
+          periodSeconds: 5
+          timeoutSeconds: 5
+        livenessProbe:
+          {{- if eq .Values.isProduction true }}
+          exec:
+            command: ["/bin/curl", "--key", "/etc/internal-tls/tls.key", "--cert", "/etc/internal-tls/tls.crt", "--cacert", "/etc/internal-tls/certificate.pem", "https://localhost:8200/v1/sys/health"]
+          {{- else }}
+          exec:
+            command: {{ .Values.testProbe.command }}
+          {{- end }}
+          initialDelaySeconds: 30
+          failureThreshold: 3
+          periodSeconds: 60
+          timeoutSeconds: 30
+        ports:
+        - containerPort: 8200
+        resources:
+          {{- if eq .Values.isSingleNode true }}
+{{ toYaml .Values.singleNode.resources | trim | indent 10 }}
+          {{- else }}
+{{ toYaml .Values.vault.resources | trim | indent 10 }}
+          {{- end }}
+        securityContext:
+{{include "nonroot.containers.securityContext" . | indent 10 }}
+          runAsUser: {{ .Values.global.nonroot.uid }}
+          runAsGroup: 1001      
+        env:
+          - name: VAULT_ADDR
+            value: "http://localhost:8201"
+          {{- if .Values.ibmPostgres.enabled }}
+          - name: IBM_POSTGRESQL_HOST
+            value: {{ .Values.ibmPostgres.host }}
+          - name: IBM_POSTGRESQL_PORT
+            value: {{ .Values.ibmPostgres.port | quote }}
+          - name: IBM_POSTGRESQL_USER
+            value: {{ .Values.ibmPostgres.user }}
+          - name: IBM_POSTGRESQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: pg_su_password
+                name: {{ .Values.ibmPostgres.authSecret }}
+          {{- end }}
+        volumeMounts:
+        - mountPath: /etc/internal-tls
+          name: internal-tls
+        - mountPath: /vault/config
+          name: vault-config
+        {{- if not .Values.ibmPostgres.enabled }}
+        - mountPath: /etc/pgsql
+          name: pgsql
+        {{- end }}
+        envFrom:
+        - configMapRef:
+            name: instascan-vault-configmap          
+      restartPolicy: Always
+      {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecrets }}
+      {{- end }}
+status: {}

@@ -1,0 +1,269 @@
+{{- if .Values.decisionCenter.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "odm.decisioncenter.fullname" . }}
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+    run: {{ template "odm.decisioncenter.fullname" . }}
+{{ include "odm-additional-labels" (dict "componentName" "decisionCenter" "root" .) | indent 4 }}
+spec:
+  selector:
+    matchLabels:
+      release: "{{ .Release.Name }}"
+      run: {{ template "odm.decisioncenter.fullname" . }}
+  replicas: {{ .Values.decisionCenter.replicaCount }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        run: {{ template "odm.decisioncenter.fullname" . }}
+        app: {{ template "name" . }}
+        chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+        release: {{ .Release.Name }}
+        heritage: "{{ .Release.Service }}"
+{{ include "odm-additional-labels" (dict "componentName" "decisionCenter" "root" .) | indent 8 }}
+{{ include "odm-annotations" . | indent 6 }}
+        productChargedContainers: {{ template "odm.decisioncenter.fullname" . }}
+    spec:
+{{ include "odm-serviceAccountName" . | indent 6 }}
+      {{- if not (empty (.Values.customization.dedicatedNodeLabel))  }}
+{{ include "odm-tolerations" . | indent 6 }}
+     {{- end }}
+{{ include "odm-spec-security-context" . | indent 6 }}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          #If you specify multiple nodeSelectorTerms associated with nodeAffinity types,
+          #then the pod can be scheduled onto a node if one of the nodeSelectorTerms is satisfied.
+          #
+          #If you specify multiple matchExpressions associated with nodeSelectorTerms,
+          #then the pod can be scheduled onto a node only if all matchExpressions can be satisfied.
+          #
+          #valid operators: In, NotIn, Exists, DoesNotExist, Gt, Lt
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/arch
+                operator: In
+                values:
+                {{- if .Values.image.arch }}
+                - {{ .Values.image.arch }}
+                {{- else }}
+                - {{ template "arch" . }}
+                {{- end }}
+              {{- if not (empty (.Values.customization.dedicatedNodeLabel))  }}
+              - key: {{ .Values.customization.dedicatedNodeLabel }}
+                operator: "Exists"
+              {{- end }}
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              topologyKey: "kubernetes.io/hostname"
+      volumes:
+{{- if eq .Values.customization.vault "initcontainer" }}
+{{ include "odm-init-container-volume" (dict "initcontext" .Values.decisionCenter.initContainer "root" . "containername" "odm.decisionCenter") | indent 6 }}
+{{- else }}
+
+{{ include "odm-metering-volumes-context" . | indent 6 }}
+      {{- if not (empty (.Values.customization.authSecretRef)) }}
+      - name: {{ template "odm-auth-secret-volume.fullname" . }}
+        secret:
+          secretName: {{ .Values.customization.authSecretRef }}
+      {{ else }}
+      {{- if .Values.oidc.enabled }}
+      - name: {{ template "odm-auth-secret-volume.fullname" . }}
+        secret:
+          secretName: {{ template "odm.oidc-auth-secret.fullname" . }}
+      {{- end}}
+      {{- end}}
+      {{- if not (empty (.Values.externalCustomDatabase.datasourceRef)) }}
+      - name: {{ template "odm-custom-secret-ds.fullname" . }}
+        secret:
+          secretName: {{ .Values.externalCustomDatabase.datasourceRef }}
+      {{- end}}
+      {{- if not (empty .Values.externalCustomDatabase.driverPvc) }}
+      - name: {{ template "odm-driver-volume.fullname" . }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.externalCustomDatabase.driverPvc }}
+      {{- end }}
+{{- end }}
+
+{{ include "odm-dba-volumes-context" . | indent 6 }}
+{{ include "odm-db-ssl-volumes-context" (dict "root" . "componentName" "decisionCenter") | indent 6 }}
+{{ include "odm-security-volume" . | indent 6 }}
+
+      - name: {{ template "odm-logging-volume.fullname" . }}
+        configMap:
+      {{- if not (empty .Values.decisionCenter.loggingRef) }}
+          name: {{ .Values.decisionCenter.loggingRef }}
+      {{ else }}
+          name: {{ template "odm.dc-logging-configmap.fullname" .}}
+      {{- end }}
+          items:
+           - key: dc-logging
+             path: logging.xml
+      - name: {{ template "odm-jvm-options-volume.fullname" . }}
+        configMap:
+      {{- if not (empty .Values.decisionCenter.jvmOptionsRef) }}
+          name: {{ .Values.decisionCenter.jvmOptionsRef }}
+      {{ else }}
+          name: {{ template "odm.dc-jvm-options-configmap.fullname" .}}
+      {{- end }}
+          items:
+           - key: dc-jvm-options
+             path: jvm.options
+      {{- if not (empty .Values.decisionCenter.customlibPvc) }}
+      - name: {{ template "odm-dc-customlib-volume.fullname" . }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.decisionCenter.customlibPvc }}
+      {{- end }}
+      - name: lib-workarea-volume
+        emptyDir: {}
+      - name: {{ template "odm-dc-webconfigref-volume.fullname" . }}
+        configMap:
+      {{- if not (empty (.Values.decisionCenter.webConfigRef)) }}
+          name: {{ .Values.decisionCenter.webConfigRef }}
+      {{ else }}
+          name: {{ template "odm.dc-web-configmap.fullname" . }}
+      {{- end}}
+{{ include "odm-trusted-cert-volume" . | indent 6 }}
+      initContainers:
+{{- if eq .Values.customization.vault "initcontainer" }}
+{{ include "odm-init-container-template-full" (dict "initcontext" .Values.decisionCenter.initContainer "root" . "containername" "odm.decisionCenter" )  | indent 6 }}
+{{- end -}}
+      {{- if eq (include "isInternalDatabase" .) "true" }}
+      - name: init-dc
+{{ include "image.tagOrDigest" (dict "containerName" "dbserver" "containerTag" .Values.internalDatabase.tagOrDigest "root" .) | indent 8  }}
+{{ include "odm-security-context" . | indent 8 }}
+        command: ['sh','-c', '{{ template "odm-sql-internal-db-check" . }}']
+        env:
+{{ include "odm-sql-internal-db-check-env" . | indent 8 }}
+        resources:
+{{ include "odm-sql-internal-db-check-resources" . | indent 10 }}
+      {{- end}}
+{{ include "odm-dba-context" . | indent 6 }}
+      containers:
+      - name: {{ template "odm.decisioncenter.fullname" . }}
+{{ include "image.tagOrDigest" (dict "containerName" "odm-decisioncenter" "containerTag" .Values.decisionCenter.tagOrDigest "root" .) | indent 8  }}
+{{ include "odm-security-context" . | indent 8 }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        volumeMounts:
+{{- if eq .Values.customization.vault "initcontainer" }}
+{{ include "odm-init-container-volume-mount" . | indent 8 }}
+{{- end}}
+{{ include "odm-dba-volumemounts-context" . | indent 8 }}
+{{ include "odm-db-ssl-volumemounts-context" (dict "root" . "componentName" "decisionCenter") | indent 8 }}
+{{ include "odm-trusted-cert-volume-mount" . | indent 8 }}
+{{ include "odm-metering-volumemounts-context" . | indent 8 }}
+{{ include "odm-security-volumemounts-context" . | indent 8 }}
+        {{- if or (not (empty (.Values.customization.authSecretRef))) (and (.Values.oidc.enabled) (empty (.Values.customization.authSecretRef))) }}
+        - name: {{ template "odm-auth-secret-volume.fullname" . }}
+          mountPath: {{ template "odm-auth-dir" . }}
+        {{- end}}
+        - name: {{ template "odm-logging-volume.fullname" . }}
+          mountPath: {{ template "odm-log-dir" . }}
+        - name: {{ template "odm-jvm-options-volume.fullname" . }}
+          mountPath: {{ template "odm-jvm-options-dir" . }}
+        {{- if not (empty (.Values.externalCustomDatabase.datasourceRef)) }}
+        - name: {{ template "odm-custom-secret-ds.fullname" . }}
+          mountPath: {{ template "odm-customdatasource-dir" . }}
+        {{- end}}
+        {{- if not (empty (.Values.externalCustomDatabase.driverPvc)) }}
+        - name: {{ template "odm-driver-volume.fullname" . }}
+          mountPath: {{ template "odm-driver-dir" . }}
+        {{- end}}
+        {{- if not (empty .Values.decisionCenter.customlibPvc) }}
+        - name: {{ template "odm-dc-customlib-volume.fullname" . }}
+          mountPath: {{ template "odm-dc-customlib-dir" . }}
+        {{- end }}
+        - name: lib-workarea-volume
+          mountPath: /opt/ibm/wlp/output/defaultServer/workarea
+        - name: {{ template "odm-dc-webconfigref-volume.fullname" . }}
+          readOnly: true
+          mountPath: /config/web-configuration.properties
+          subPath: web-configuration.properties
+        ports:
+        {{- if .Values.service.enableTLS }}
+        - name: dc-port
+          containerPort: 9453
+        {{- else }}
+        - name: dc-port
+          containerPort: 9060
+        {{- end }}
+{{ include "odm-probe-container-template" (dict "root" . "componentPath" "decisioncenter/healthCheck" "port" "dc-port" "containerParameters" .Values.decisionCenter )  | indent 8 }}
+        env:
+{{ include "odm-security-config" . | indent 10 }}
+{{ include "odm-db-config"  (dict "componentName" "decisionCenter" "root" .) | indent 10 }}
+{{ include "odm-metering-config" . | indent 10 }}
+          - name: "DECISIONSERVERCONSOLE_NAME"
+            value: {{ template "odm.decisionserverconsole.fullname" . }}
+          - name: "DECISIONSERVERCONSOLE_PORT"
+            value: "9443"
+          - name: "DECISIONRUNNER_NAME"
+            value: {{ template "odm.decisionrunner.fullname" . }}
+          - name: "DECISIONRUNNER_PORT"
+            value: "9443"
+          - name: "DC_PERSISTENCE_LOCALE"
+            value: "{{ .Values.decisionCenter.persistenceLocale}}"
+          {{- if .Values.service.enableTLS }}
+          - name: "ENABLE_TLS"
+            value: "true"
+          {{- end }}
+          {{- if .Values.customization.enableFips }}
+          - name: "ENABLE_FIPS"
+            value: "true"
+          {{- end }}
+          - name: "RELEASE_NAME"
+            value: {{ .Release.Name }}
+          {{- if and (not (empty .Values.decisionCenter.extendRoleMapping )) (.Values.decisionCenter.extendRoleMapping) }}
+          - name: "DC_ROLE_GROUP_MAPPING"
+            value: "true"
+          {{- end }}
+          {{- if and (not (empty .Values.decisionCenter.disableAllAuthenticatedUser )) (.Values.decisionCenter.disableAllAuthenticatedUser) }}
+          - name: "DISABLE_ALL_AUTHENTICATED_RTSUSER"
+            value: "true"
+          {{- end }}
+          {{- if (not (empty .Values.decisionCenter.contextRoot )) }}
+          - name: "ODM_CONTEXT_ROOT"
+            value: "{{ .Values.decisionCenter.contextRoot}}"
+          {{- end }}
+          {{- if (not (empty .Values.decisionCenter.refererList )) }}
+          - name: "DC_REFERER_LIST"
+            value: "{{ .Values.decisionCenter.refererList}}"
+          {{- end }}
+          {{- if (not (empty .Values.decisionServerConsole.contextRoot )) }}
+          - name: "DECISIONSERVERCONSOLE_CONTEXT_ROOT"
+            value: "{{ .Values.decisionServerConsole.contextRoot}}"
+          {{- end }}
+          {{- if (not (empty .Values.decisionRunner.contextRoot )) }}
+          - name: "DECISIONRUNNER_CONTEXT_ROOT"
+            value: "{{ .Values.decisionRunner.contextRoot}}"
+          {{- end }}
+          {{- if eq (include "isInternalDatabase" .) "true" }}
+          {{- if .Values.internalDatabase.populateSampleData }}
+          - name: "DEMO"
+            value: "true"
+          {{- end }}
+          {{- end }}
+          {{- if .Values.customization.disableWSJavaAgent }}
+          - name: "WLP_SKIP_BOOTSTRAP_AGENT"
+            value: "true"
+          {{- end }}
+{{ include "odm-db-ssl-env-context" (dict "root" . "componentName" "decisionCenter") | indent 10 }}
+{{ include "odm-kubeVersion" . | indent 10 }}
+{{ include "odm-oidc-context" . | indent 10 }}
+{{ include "odm-dba-env-context" . | indent 10 }}
+{{ include "odm-dba-production" . | indent 10 }}
+{{ include "odm-users-password-env" . | indent 10 }}
+        resources:
+{{ toYaml .Values.decisionCenter.resources | indent 10 }}
+{{ include "odm-pullsecret-spec" . | indent 6 }}
+{{- end }}

@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels: {{ include "labels" . | nindent 4 }} {{ "serving.knative.dev/release: \"devel\"" | nindent 4 }} {{ cat "app:" .Chart.Name | nindent 4 }}
+  name: zipkin
+  namespace: istio-system
+spec:
+  replicas: {{ .Values.zipkin.replicas }}
+  selector:
+    matchLabels:
+      app: zipkin
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: 'false'
+      labels: {{ include "noVersionlabels" . | nindent 8 }} {{ "app: \"zipkin\"" | nindent 8 }} {{ "serving.knative.dev/release: \"devel\"" | nindent 8 }}
+    spec:
+      containers:
+      - env:
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+        - name: STORAGE_TYPE
+          value: elasticsearch
+        - name: ES_HOSTS
+          value: elasticsearch-logging.knative-monitoring.svc.cluster.local:9200
+        - name: ES_INDEX
+          value: zipkin
+        - name: ZIPKIN_UI_LOGS_URL
+          value: http://localhost:8001/api/v1/namespaces/knative-monitoring/services/kibana-logging/proxy/app/kibana#/
+        image: {{ .Values.zipkin.image }}
+        imagePullPolicy: IfNotPresent
+        name: zipkin
+        ports:
+        - containerPort: 9411
+        resources:
+          limits:
+            memory: 1000Mi

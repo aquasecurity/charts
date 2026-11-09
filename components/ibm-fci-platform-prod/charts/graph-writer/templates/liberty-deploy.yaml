@@ -1,0 +1,170 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "graph-writer.fullname" . }}-liberty
+  labels:
+{{- include "common.label.metadata" (list . (printf "%s-%s" (include "graph-writer.name" .) "liberty") (include "graph-writer.chart" .) .Release.Name .Release.Service ) | indent 4 }}
+spec:
+{{ include "common.scaleDownIfDisabled" . | indent 2 }}
+  selector:
+    matchLabels:
+{{- include "common.selector.labels" (list . (printf "%s-%s" (include "graph-writer.name" .) "liberty") .Release.Name ) | indent 6 }}
+  revisionHistoryLimit: {{required "A valid .Values.revision_history_limit entry required!" .Values.revision_history_limit}}
+  template:
+    metadata:
+      labels:
+        name: {{ template "graph-writer.fullname" . }}-liberty
+{{- include "common.label.metadata" (list . (printf "%s-%s" (include "graph-writer.name" .) "liberty") (include "graph-writer.chart" .) .Release.Name .Release.Service ) | indent 8 }}
+{{- include "common.using-secrets" (list "platform") | indent 8 }}
+      annotations:
+{{ include "common.meteringAnnotations" . | indent 8 }}
+        fci/build: {{ .Values.image.timestamp | default .Release.Time}}
+    spec:
+{{ include "common.configureHostAliases" . | indent 6 }}
+{{ include "common.PodHostConfig" . | indent 6 }}
+      securityContext:
+{{ include "common.PodSecurityContextConfig" . | indent 8 }}
+      affinity:
+{{ include "common.ArchNodeAffinity" . | indent 8 }}
+      {{- if .Values.global.pvRequiresPermissionsFix }}
+      serviceAccountName: fci-kube-api-fowner
+      {{- else }}
+      serviceAccountName: fci-common-scripts
+      {{- end }}
+      volumes:
+        - name: file-secrets
+          secret:
+            secretName: {{ .Release.Name }}-platform-secret-files
+        - name: graph-writer-liberty-volume
+          persistentVolumeClaim:
+            claimName: {{ template "graph-writer.fullname" . }}-liberty
+        - name: shared-data
+          emptyDir: {}
+        - name: keytab-file
+          secret:
+            secretName: {{ .Release.Name }}-graph-keytab  
+        - name: logs
+          emptyDir: {}
+      initContainers:
+        - name: init-pv
+          image: "{{ required "global.dockerRegistryPrefix must specify from which repository the docker image should be fetched." .Values.global.dockerRegistryPrefix }}/{{ .Values.libertyInitPv.image.repository }}:{{ .Values.libertyInitPv.image.tag }}"
+          imagePullPolicy: {{ .Values.libertyInitPv.image.pullPolicy }}
+          resources:
+{{ toYaml .Values.libertyInitPv.resources | indent 12 }}
+          securityContext:
+          {{- if .Values.global.pvRequiresPermissionsFix }}
+{{ include "common.RootFownerContainerSecurityContext" . | indent 12 }}
+          {{- else }}
+{{ include "common.RestrictedContainerSecurityContext" . | indent 12 }}
+          {{- end }}
+          args:
+          - /init-pv.sh {{ .Values.libertyInitPv.image.tag }}
+          {{- if .Values.global.pvRequiresPermissionsFix }}
+          - chmod -R g+w /pv
+          {{- end }}
+          command:
+          - /bin/sh
+          - -c
+          volumeMounts:
+          - name: graph-writer-liberty-volume
+            mountPath: /pv
+      containers:
+        - name: liberty
+          resources:
+{{ toYaml .Values.liberty.resources | indent 12 }}
+          image: "{{ required "global.dockerRegistryPrefix must specify from which repository the docker image should be fetched." .Values.global.dockerRegistryPrefix }}/{{ .Values.liberty.image.repository }}:{{ .Values.liberty.image.tag }}"
+          imagePullPolicy: {{ .Values.liberty.image.pullPolicy }}
+          securityContext:
+{{ include "common.RestrictedContainerSecurityContext" . | indent 12 }}
+            {{- if .Values.global.pvRequiresPermissionsFix }}
+            runAsUser: {{ .Values.runAsUser }}
+            {{- end }}
+          readinessProbe:
+            exec:
+              command:
+              - sh
+              - -c
+              - "if [ -e /opt/ibm/fci/scripts/healthcheck.sh ]; then /opt/ibm/fci/scripts/healthcheck.sh; else exit {{ default 0 .Values.global.enforceHealthCheck }}; fi"
+            initialDelaySeconds: {{ default 30 .Values.graphWriterLiberty.readinessProbe.initialDelaySeconds }}
+            timeoutSeconds: 30
+          livenessProbe:
+            exec:
+              command:
+              - sh
+              - -c
+              - "if [ -e /opt/ibm/fci/scripts/healthcheck.sh ]; then /opt/ibm/fci/scripts/healthcheck.sh; else exit {{ default 0 .Values.global.enforceHealthCheck }}; fi"
+            initialDelaySeconds: {{ default 30 .Values.graphWriterLiberty.livenessProbe.initialDelaySeconds }}
+            failureThreshold: 3
+            periodSeconds: 60
+            timeoutSeconds: 30
+          envFrom:
+          - configMapRef:
+              name: {{ template "graph-writer.fullname" . }}-liberty
+          - configMapRef:
+              name: {{ template "graph-writer.fullname" . }}-gremlin-krb
+          env:
+{{- include "common.import-secret" (list . "FCI_JKS_PASSWORD" "platform" "FCI_JKS_PASSWORD") | indent 10 }}
+{{- include "common.import-secret" (list . "JWT_KEY" "platform" "JWT_KEY") | indent 10 }}
+{{- include "common.import-secret" (list . "ELASTICSEARCH_PASSWORD" "elastic" "ELASTIC_ADMIN_PASSWORD") | indent 10 }}
+          - name: HDP_SHARED_DIR
+            value: /home/fcigraph
+          - name: ELASTICSEARCH_USERNAME
+            value: fci_admin
+          - name: ELASTICSEARCH_SERVICE_NAME
+            value: "{{ .Release.Name }}-elasticsearch-master"
+          ports:
+          - containerPort: 9554
+          volumeMounts:
+          - name: file-secrets
+            mountPath: /fciexports/graph-writer/fci_universal_ks.jks
+            subPath: fci_universal_ks.jks
+          - name: graph-writer-liberty-volume
+            mountPath: /fciexports/graph-writer
+          - name: shared-data
+            mountPath: /home/fcigraph
+          - mountPath: /etc/security/keytabs
+            name: keytab-file
+          - name: logs
+            mountPath: /opt/ibm/wlp/usr/servers/graphapiservice/logs
+        - envFrom:
+          - configMapRef:
+              name: {{ .Release.Name }}-ibm-fci-platform-prod-krb
+          - configMapRef:
+              name: {{ template "graph-writer.fullname" . }}-gremlin-krb
+          image: "{{ required "global.dockerRegistryPrefix must specify from which repository the docker image should be fetched." .Values.global.dockerRegistryPrefix }}/{{ .Values.kerberosClient.image.repository }}:{{ .Values.kerberosClient.image.tag }}"
+          imagePullPolicy: {{ .Values.kerberosClient.image.pullPolicy }}
+          livenessProbe:
+{{ toYaml .Values.kerberosClient.livenessProbe | indent 12 }}
+          readinessProbe:
+{{ toYaml .Values.kerberosClient.readinessProbe | indent 12 }}
+          name: hdp-client
+          resources:
+{{ toYaml .Values.global.kerberos.resources | indent 12 }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            readOnlyRootFilesystem: false
+            runAsNonRoot: true
+            {{- if .Values.global.pvRequiresPermissionsFix }}
+            runAsUser: {{ .Values.global.kerberos.runAsUser }}
+            {{- end }}
+          volumeMounts:
+          - mountPath: /etc/security/keytabs
+            name: keytab-file
+          - name: shared-data
+            mountPath: /home/fcigraph
+        - name: graph-liberty-log
+          resources:
+{{ toYaml .Values.sideCarContainers.resources | indent 12 }}
+          image: "{{ required "global.dockerRegistryPrefix must specify from which repository the docker image should be fetched." .Values.global.dockerRegistryPrefix }}/{{ .Values.global.commonScripts.image.repository }}:{{ .Values.global.commonScripts.image.tag }}"
+{{ include "common.livenessProbe" . | indent 10 }}
+{{ include "common.readinessProbe" . | indent 10 }}
+          securityContext:
+{{ include "common.RestrictedContainerSecurityContext" . | indent 12 }}
+          args: [/bin/sh, -c, 'tail -n+1 -F /logs/messages.log']
+          volumeMounts:
+          - name: logs
+            mountPath: /logs

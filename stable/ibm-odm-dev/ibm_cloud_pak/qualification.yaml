@@ -1,0 +1,24 @@
+qualification:
+  levelName: ""
+  levelDescription: ""
+  issueDate: ""
+  duration: ""
+  terms: ""
+prereqs:
+  security:
+    kubernetes:
+      podSecurityPolicy:
+        name: "ibm-restricted-psp"
+    openshift:
+      securityContextConstraints:
+        name: "restricted"
+    ibmCloudPrivate:
+      installerRole:
+        name: "Operator"
+  k8sDistros:
+    kubernetes:
+      semver: ">=1.11.0"
+    openshift:
+      semver: ">=1.11.0"
+    ibmCloudPrivate:
+      semver: ">=1.12.4"

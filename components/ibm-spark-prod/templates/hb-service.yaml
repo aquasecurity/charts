@@ -1,0 +1,274 @@
+
+# This is a YAML-formatted file.
+
+apiVersion: apps/v1 # for versions before 1.8.0 use apps/v1beta1
+kind: Deployment
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: "{{ .Values.environment.name }}-control-plane"
+  labels:
+    app: "{{ .Values.environment.name }}-control-plane"
+{{- include "helm.labels" . | indent 4 }}
+{{- include "cloudpak.labels" . | indent 4 }}
+  annotations:
+{{- include "zenhelper.annotations" . | indent 4 }}
+spec:
+  selector:
+    matchLabels:
+      app: "{{ .Values.environment.name }}-control-plane"
+{{- include "helm.labels" . | indent 6 }}
+{{- include "cloudpak.labels" . | indent 6 }}
+  replicas: {{ default 1 .Values.global.replicaCount }} # tells deployment to run X pods matching the template
+  template: # create pods using pod definition in this template
+    metadata:
+      annotations:
+{{- include "zenhelper.annotations" . | indent 8 }}
+      # the name is not included in the meta data as a unique name is
+      # generated from the deployment name
+      labels:
+        app: "{{ .Values.environment.name }}-control-plane"
+{{- include "helm.labels" . | indent 8 }}
+{{- include "cloudpak.labels" . | indent 8 }}
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: beta.kubernetes.io/arch
+                operator: In
+                values:
+                - {{ .Values.global.architecture }}
+      hostNetwork: false
+      hostPID: false
+      hostIPC: false
+      containers:
+      - name: "{{ .Values.environment.name }}-control-plane"
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          runAsUser: {{ .Values.user.zensysId }}
+          runAsNonRoot: true
+          privileged: false
+          readOnlyRootFilesystem: false
+        image: "{{ .Values.global.dockerRegistryPrefix }}/{{ .Values.microService.image }}:{{ .Values.spark.image.tag }}"
+        imagePullPolicy: {{ .Values.microService.pullPolicy }}
+        resources:
+          requests:
+            cpu: {{ .Values.microService.requests.cpu }}
+            memory: {{ .Values.microService.requests.memory }}
+          limits:
+            cpu: {{ .Values.microService.limits.cpu }}
+            memory: {{ .Values.microService.limits.memory }}
+        ports:
+        - containerPort: {{ .Values.microService.targetPort }}
+          protocol: TCP
+        volumeMounts:
+        - name: "{{ .Values.environment.name }}-cp-confidential-properties"
+          mountPath: "{{ .Values.microService.confidentialProperties }}"
+          readOnly: true
+        - name: "{{ .Values.environment.name }}-cp-deployment-properties"
+          mountPath: "{{ .Values.microService.deploymentConfigPath }}"
+{{- if .Values.microService.isLocalMode }}
+        - name: "{{ .Values.environment.name }}-resource-limit-properties"
+          mountPath: "{{ .Values.microService.resourceLimitPath }}"
+        - name: "{{ .Values.environment.name }}-cp-wdp-secret"
+          mountPath: "{{ .Values.microService.wdpPropertiesPath }}"
+        - name: "{{ .Values.environment.name }}-zen-user-home-pvc"
+          mountPath: "{{ .Values.microService.jwtCerts }}"
+          subPath: "{{ .Values.zenUserHomeVol.jwtCertPath }}"
+          readOnly: true
+        - name: "{{ .Values.trustStore.icp4dTsSecretName }}"
+          mountPath: "{{ .Values.microService.trustStorePath }}/cacerts"
+          subPath: cacerts
+          readOnly: true
+#        - name: "{{ .Values.rabbitMQ.trustStoreSecretName }}"
+#          mountPath: "{{ .Values.microService.mqTrustStorePath }}/mqtruststore"
+#          subPath: mqtruststore
+#          readOnly: true
+        - name: "service-broker-token"
+          mountPath: "{{ .Values.microService.serviceBrokerTokenPath }}"
+          readOnly: true
+        - name: "{{ .Values.environment.name }}-audit-logs-vol"
+          mountPath: {{ .Values.microService.auditEventLogsPath }}
+        {{- if .Values.sparkMetastoredb.cockroachdb }}
+        - name: "{{ .Values.trustStore.zenMetastoreCertsSecretName }}"
+          mountPath: "{{ .Values.microService.zenMetastoreCerts }}"
+        {{- else }}
+        - name: {{ .Values.sparkMetastoredb.postgresSecretName }}
+          mountPath: "{{ .Values.microService.zenMetastoreCerts }}"
+        {{- end }}
+{{- end }}
+        readinessProbe:
+          httpGet:
+            path: "{{ .Values.kernelService.path }}/ping"
+            port: {{ .Values.microService.targetPort }}
+            scheme: {{ .Values.microService.readinessProbeScheme }}
+          initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+          failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+          timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+        livenessProbe:
+          exec:
+            command:
+            - ls
+            - /opt/hb/deployment_config/deployment.properties
+          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+          failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+          timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+      - name: "{{ .Values.environment.name }}-rsyslog-sidecar"
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          runAsUser: {{ .Values.user.uid }}
+          runAsNonRoot: true
+          privileged: false
+          readOnlyRootFilesystem: false
+        image: "{{ .Values.global.dockerRegistryPrefix  }}/{{ .Values.microService.imageSyslog }}:{{ .Values.spark.image.tag }}"
+        imagePullPolicy: {{ .Values.microService.pullPolicy }}
+        command: ["/bin/bash", "-c"]
+        args: ["/startup.sh {{ .Values.microService.rsyslogConfigPath }}"]
+        resources:
+          requests:
+            cpu: {{ .Values.rsyslog.requests.cpu }}
+            memory: {{ .Values.rsyslog.requests.memory }}
+          limits:
+            cpu: {{ .Values.rsyslog.limits.cpu }}
+            memory: {{ .Values.rsyslog.limits.memory }}
+        readinessProbe:
+          exec:
+            command:
+            - ls
+            - /var/log/audit
+          initialDelaySeconds: {{ .Values.rsyslog.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.rsyslog.readinessProbe.periodSeconds }}
+          failureThreshold: {{ .Values.rsyslog.readinessProbe.failureThreshold }}
+        livenessProbe:
+          exec:
+            command:
+            - ls
+            - /var/log/audit
+          initialDelaySeconds: {{ .Values.rsyslog.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.rsyslog.livenessProbe.periodSeconds }}
+          failureThreshold: {{ .Values.rsyslog.livenessProbe.failureThreshold }}
+        env:
+        - name: AUDIT_ENABLED
+          value: {{ .Values.microService.enableAudit | quote }}
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+        - name: NODENAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: spec.nodeName
+        - name: PODIPADDRESS
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: status.podIP
+        envFrom:
+        - configMapRef:
+            name: product-configmap
+        volumeMounts:
+        - name: "{{ .Values.environment.name }}-audit-logs-vol"
+          mountPath: {{ .Values.microService.auditEventLogsPath }}       
+        - name: "{{ .Values.environment.name }}-rsyslog-config-vol"
+          mountPath: {{ .Values.microService.rsyslogConfigPath }}
+        - name: internal-tls
+          mountPath: /etc/internal-tls
+      serviceAccount: {{ .Values.sa.editor }}
+      serviceAccountName: {{ .Values.sa.editor }}
+      volumes:
+        - name: "{{ .Values.environment.name }}-cp-confidential-properties"
+          secret:
+            secretName: "{{ .Values.environment.name }}-confidential-properties" 
+        - name: "{{ .Values.environment.name }}-cp-deployment-properties"
+          configMap:
+            name: "{{ .Values.environment.name }}-deployment-properties"
+            items:
+            - key: "deployment-properties"
+              path: "deployment.properties"
+{{ if .Values.microService.isLocalMode }}
+        - name: "{{ .Values.environment.name }}-resource-limit-properties"
+          configMap:
+            name: "{{ .Values.environment.name }}-resource-limit"
+            items:
+            - key: "resource-limit-properties"
+              path: "resource-limit.properties"
+        - name: "{{ .Values.environment.name }}-cp-wdp-secret"
+          secret:
+            secretName: "{{ .Values.microService.wdpSecretName }}"
+            items:
+            - key: service-id-credentials
+              path: wdp.properties
+        - name: "{{ .Values.environment.name }}-zen-user-home-pvc"
+          persistentVolumeClaim:
+            claimName: "{{ .Values.zenUserHomeVol.name }}"
+        - name: "{{ .Values.trustStore.icp4dTsSecretName }}"
+          secret:
+            secretName: "{{ .Values.trustStore.icp4dTsSecretName }}"
+#        - name: "{{ .Values.rabbitMQ.trustStoreSecretName }}"
+#          secret:
+#            secretName: "{{ .Values.rabbitMQ.trustStoreSecretName }}"
+        - name: "service-broker-token"
+          secret:
+            secretName: "{{ .Values.microService.serviceBrokerTokenSecret }}"
+            items:
+            - key: token
+              path: cpd_service_broker.properties
+        - name: "{{ .Values.environment.name }}-rsyslog-config-vol"
+          configMap:
+            name: "{{ .Values.environment.name }}-rsyslog-config"
+        - name: "{{ .Values.environment.name }}-audit-logs-vol"
+          emptyDir: {}
+        - name: internal-tls
+          secret:
+            secretName: internal-tls
+            defaultMode: 420
+        {{- if .Values.sparkMetastoredb.cockroachdb }}
+        - name: "{{ .Values.trustStore.zenMetastoreCertsSecretName }}"
+          secret:
+            secretName: "{{ .Values.trustStore.zenMetastoreCertsSecretName }}"
+        {{- else }}
+        - name: {{ .Values.sparkMetastoredb.postgresSecretName }}
+          secret:
+           secretName: {{ .Values.sparkMetastoredb.postgresSecretName }}
+           defaultMode: 420
+        {{- end }}
+{{ end }}
+---
+apiVersion: v1
+kind: Service
+metadata: 
+  labels:
+    app: "{{ .Values.environment.name }}-control-plane"
+    icpdsupport/addOnId: "{{ .Values.global.addOnId }}"
+    icpdsupport/app: "api"
+    chart: "{{ .Chart.Name }}"
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: helm
+    app.kubernetes.io/name: {{ .Release.Name }}
+    helm.sh/chart: "{{ .Chart.Name }}"
+  name: "{{ .Values.environment.name }}-control-plane"
+  namespace: {{ .Release.Namespace }}
+spec: 
+  selector:
+    app: "{{ .Values.environment.name }}-control-plane"
+    chart: "{{ .Chart.Name }}"
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+  type: {{ .Values.microService.svcType }}
+  ports: 
+  - port: {{ .Values.microService.port }}
+    protocol: TCP
+    targetPort: {{ .Values.microService.targetPort }}

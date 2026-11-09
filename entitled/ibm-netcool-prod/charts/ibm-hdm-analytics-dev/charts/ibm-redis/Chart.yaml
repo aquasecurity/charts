@@ -1,0 +1,27 @@
+apiVersion: v1
+appVersion: redis-5.0.9
+description: Highly available Kubernetes implementation of Redis
+icon: https://upload.wikimedia.org/wikipedia/en/thumb/6/6b/Redis_Logo.svg/1200px-Redis_Logo.svg.png
+keywords:
+- redis
+- keyvalue
+- database
+- amd64
+- ppc64le
+- s390x
+- ICP
+- ICPRHOCP
+- OpenSource
+- database
+- Commercial
+- Limited
+kubeVersion: '>=1.14'
+maintainers:
+- name: opencontent
+name: ibm-redis
+sources:
+- https://github.com/IBM/charts/tree/master/stable
+- https://redis.io/download
+- https://github.com/scality/Zenko/tree/development/1.0/kubernetes/zenko/charts/redis-ha
+- https://github.com/helm/charts/blob/master/stable/redis-ha
+version: 2.4.1

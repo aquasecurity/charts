@@ -1,9 +1,0 @@
-appVersion: v1.0.3
-description: Common Kafka and Kafkarest
-engine: gotpl
-keywords:
-- Kafka
-- Kafkarest
-name: kafka
-tillerVersion: '>=2.6.0'
-version: 0.2.0

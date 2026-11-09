@@ -1,0 +1,26 @@
+arch:
+  amd64: "3 - Most preferred"
+
+global:
+  image:
+    repository: ''
+    secret: ''
+    useTag: true
+  environmentSize: "size0"
+    
+master:
+    enabled: true
+    replicas: 1
+    pullPolicy: Always
+    serviceType: ClusterIP
+    image:
+        name: spark
+        tag: 3.0.216-20201125161330GMT
+        digest: sha256:294bb6a718b025eaae79c6a40286fab1899281da4a3ccc70677f8ba720126b8f
+slave:
+    enabled: true
+    pullPolicy: Always
+    image:
+       name: spark
+       tag: 3.0.216-20201125161330GMT
+       digest: sha256:294bb6a718b025eaae79c6a40286fab1899281da4a3ccc70677f8ba720126b8f

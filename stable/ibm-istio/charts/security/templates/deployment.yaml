@@ -1,5 +1,5 @@
 # istio CA watching all namespaces
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: istio-citadel
@@ -12,6 +12,13 @@ metadata:
     istio: citadel
 spec:
   replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      istio: citadel
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
   template:
     metadata:
       labels:
@@ -21,8 +28,8 @@ spec:
         release: {{ .Release.Name }}
         istio: citadel
       annotations:
+        seccomp.security.alpha.kubernetes.io/pod: docker/default
         sidecar.istio.io/inject: "false"
-        scheduler.alpha.kubernetes.io/critical-pod: ""
         productName: istio-citadel
         productID: istio-citadel_{{ .Chart.Version }}_apachev2_00000
         productVersion: {{ .Chart.Version }}
@@ -38,9 +45,9 @@ spec:
           args:
             - --append-dns-names=true
             - --grpc-port=8060
-            - --grpc-hostname=citadel
             - --citadel-storage-namespace={{ .Release.Namespace }}
-            - --custom-dns-names=istio-pilot-service-account.{{ .Release.Namespace }}:istio-pilot.{{ .Release.Namespace }},istio-ingressgateway-service-account.{{ .Release.Namespace }}:istio-ingressgateway.{{ .Release.Namespace }}
+            - --custom-dns-names=istio-pilot-service-account.{{ .Release.Namespace }}:istio-pilot.{{ .Release.Namespace }}
+            - --monitoring-port={{ .Values.global.monitoringPort }}
           {{- if .Values.selfSigned }}
             - --self-signed-ca=true
           {{- else }}
@@ -50,20 +57,41 @@ spec:
             - --root-cert=/etc/cacerts/root-cert.pem
             - --cert-chain=/etc/cacerts/cert-chain.pem
           {{- end }}
+          {{- if .Values.global.trustDomain }}
+            - --trust-domain={{ .Values.global.trustDomain }}
+          {{- end }}
+          {{- if .Values.workloadCertTtl }}
+            - --workload-cert-ttl={{ .Values.workloadCertTtl }}
+          {{- end }}
+          {{- if .Values.citadelHealthCheck }}
+            - --liveness-probe-path=/tmp/ca.liveness # path to the liveness health check status file
+            - --liveness-probe-interval=60s # interval for health check file update
+            - --probe-check-interval=15s    # interval for health status check
+          {{- end }}
+          {{- if .Values.citadelHealthCheck }}
           livenessProbe:
             exec:
               command:
-                - /usr/local/bin/istio_ca
-                - -h
-            initialDelaySeconds: 30
-            periodSeconds: 30
+              - /usr/local/bin/istio_ca
+              - probe
+              - --probe-path=/tmp/ca.liveness # path to the liveness health check status file
+              - --interval=125s # the maximum time gap allowed between the file mtime and the current sys clock
+            initialDelaySeconds: 60
+            periodSeconds: 60
+          {{- else}}
+          livenessProbe:
+            httpGet:
+              path: /version
+              port: {{ .Values.global.monitoringPort }}
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          {{- end }}
           readinessProbe:
-            exec:
-              command:
-                - /usr/local/bin/istio_ca
-                - -h
-            initialDelaySeconds: 30
-            periodSeconds: 30
+            httpGet:
+              path: /version
+              port: {{ .Values.global.monitoringPort }}
+            initialDelaySeconds: 5
+            periodSeconds: 5
           resources:
 {{- if .Values.resources }}
 {{ toYaml .Values.resources | indent 12 }}
@@ -81,9 +109,13 @@ spec:
          secretName: cacerts
          optional: true
 {{- end }}
-      nodeSelector:
-{{- include "security.nodeselector" . | indent 6 }}
-      tolerations:
-{{- include "security.tolerations" . | indent 6 }}
       affinity:
-{{- include "nodeaffinity" . | indent 6 }}
+      {{- include "nodeaffinity" . | indent 6 }}
+      {{- include "podAntiAffinity" . | indent 6 }}
+      {{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 6 }}
+      {{- else if .Values.global.defaultTolerations }}
+      tolerations:
+{{ toYaml .Values.global.defaultTolerations | indent 6 }}
+      {{- end }}

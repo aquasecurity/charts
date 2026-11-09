@@ -1,0 +1,156 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: {{ .Values.common.appName }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    name: couchdb-data2{{ .Values.instanceIdWithinNamespace }}
+    lb: couchdb{{ .Values.instanceIdWithinNamespace }}
+    release: {{ .Release.Name }}
+    paw_instance_name: {{ .Values.paw_instance_name }}
+  name: couchdb-data2{{ .Values.instanceIdWithinNamespace }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: couchdb-data2{{ .Values.instanceIdWithinNamespace }}
+      lb: couchdb{{ .Values.instanceIdWithinNamespace }}
+  template:
+    metadata:
+      annotations:
+        hook.activate.cpd.ibm.com/command: '[]'
+        hook.deactivate.cpd.ibm.com/command: '[]'      
+        cloudpakName: {{ .Values.cloudpakAnnotations.cloudpakName }}
+        cloudpakId: {{ .Values.cloudpakAnnotations.cloudpakId }}
+        productCloudpakRatio: {{ .Values.cloudpakAnnotations.productCloudpakRatio }}
+        productName: {{ .Values.productName.PAWorkSpace }}
+        productID:  {{ .Values.cloudpakAnnotations.productID }}
+        productMetric: "VIRTUAL_PROCESSOR_CORE"
+        productVersion: 3.5.2
+        productChargedContainers: "All"
+      labels:
+        app.kubernetes.io/name: {{ .Values.common.appName }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/managed-by: {{ .Release.Service }}
+        icpdsupport/addOnId: pa
+        icpdsupport/app: "pa-workspace" 
+        cloudpakInstanceId: "{{ .Values.zenCloudPakInstanceId }}"
+        {{- include "planning-analytics.serviceid" . | indent 8 }}
+        {{- if ( .Values.createdBy )  }}
+        icpdsupport/createdBy: {{ .Values.createdBy | quote }}
+        {{- end }} 
+        helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+        name: couchdb-data2{{ .Values.instanceIdWithinNamespace }}
+        release: {{ .Release.Name }}
+        version: "125-ubi7"
+        lb: couchdb{{ .Values.instanceIdWithinNamespace }}
+        pa-cacerts-secret: {{ .Values.secrets.cacertVersion }}
+        paw_instance_name: {{ .Values.paw_instance_name }}
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: beta.kubernetes.io/arch
+                operator: In
+                values:
+                - {{ .Values.arch }}
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: name
+                  operator: In
+                  values:
+                  - couchdb-data1{{ .Values.instanceIdWithinNamespace }}
+              topologyKey: kubernetes.io/hostname
+      volumes:
+        - name: pa-cacerts
+          secret:
+            secretName: pa-cacerts{{ .Values.instanceIdWithinNamespace }}     
+        - name: pa-internal-tls-cert
+          secret:
+            secretName: pa-internal-tls-cert{{ .Values.instanceIdWithinNamespace }}      
+        - name: couchdb-data2-storage
+          persistentVolumeClaim:
+            claimName: shared-storage{{ .Values.instanceIdWithinNamespace }}
+      containers:
+        - name: couchdb-data2
+          image: {{ .Values.docker_registry_prefix }}/pa-couchdb:125-ubi7
+          ports:
+            - containerPort: 6984
+              protocol: TCP
+          env:
+            - name: COUCHDB_LOCAL_SERVER
+              value: "couchdb2{{ .Values.instanceIdWithinNamespace }}.{{ .Release.Namespace }}.{{ .Values.common.internalDomainName }}"
+            - name: ENABLE_SSL
+              value: "true"
+            - name: SSL_CERTIFICATE_KEY_FILE
+              value: "/run/secrets/paw/internal-tls-cert/tls.key"
+            - name: SSL_CERTIFICATE_CHAIN_FILE
+              value: "/run/secrets/paw/internal-tls-cert/tls.crt"
+            - name: SSL_CA_BUNDLE_FILE
+              value: "/run/config/cacerts.pem"
+          resources:
+            limits:
+              cpu: "{{ .Values.couchdb.cpuLimit }}"
+              memory: "{{ .Values.couchdb.memoryLimit }}"
+            requests:
+              cpu: "{{ .Values.couchdb.cpuRequestLimit }}"
+              memory: "{{ .Values.couchdb.memoryRequestLimit }}"
+          securityContext:
+            runAsNonRoot: true
+{{- if not (.Capabilities.APIVersions.Has "security.openshift.io/v1") }} 
+            runAsUser: 2000
+{{- end }} 
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            readOnlyRootFilesystem: false
+            allowPrivilegeEscalation: false
+          volumeMounts:
+            - name: couchdb-data2-storage
+              mountPath: /opt/couchdb/data
+              subPath: couchdb-data2
+            - name: couchdb-data2-storage
+              mountPath: /opt/couchdb/etc/local.d
+              subPath: couchdb-ini2
+            - name: pa-cacerts
+              mountPath: /run/config
+            - name: pa-internal-tls-cert
+              mountPath: /run/secrets/paw/internal-tls-cert              
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 1
+            initialDelaySeconds: 300
+            tcpSocket:
+              port: 6984
+            periodSeconds: 2
+          readinessProbe:
+            failureThreshold: 1
+            periodSeconds: 2
+            tcpSocket:
+              port: 6984
+      hostNetwork: false
+      hostIPC: false
+      hostPID: false
+      restartPolicy: Always
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      schedulerName: {{ .Values.persistence.podScheduler }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+

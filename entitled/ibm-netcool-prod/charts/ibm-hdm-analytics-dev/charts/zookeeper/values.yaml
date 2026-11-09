@@ -1,0 +1,39 @@
+arch:
+- amd64
+- ppc64le
+- s390x
+serviceAccountName: ''
+global:
+  rbac:
+    create: true
+    serviceAccountName: ''
+  networkpolicies:
+    enabled: true
+  environmentSize: size0
+  privileged: false
+  arbitraryUids: true
+  persistence:
+    enabled: true
+    supplementalGroups: null
+    storageSize:
+      zookeeperdata: 512Mi
+    storageClassName: ''
+    storageClassOption:
+      zookeeperdata: default
+  image:
+    pullSecret: ''
+    repository: ''
+    useTag: true
+  zookeeper:
+    clusterSize: null
+    clientUserSecret: null
+    kafkaClientUserSecret: null
+image:
+  name: zookeeper
+  tag: 1.4.6-202011231214L-TKAI-BTYDF9
+  digest: sha256:4f4950f8a2a77283241779600b4a63d11f8ba5cf7c239d9b2012a052018b68cb
+  pullPolicy: IfNotPresent
+pdb:
+  enabled: true
+  minAvailable: 55%
+clusterSize: 1

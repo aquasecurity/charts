@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "fci-core-services.fullname" . }}-krb
+  labels:
+{{- include "common.label.metadata" (list . (include "fci-core-services.name" .)  (include "fci-core-services.chart" .) .Release.Name .Release.Service ) | indent 4 }}
+data:
+  KINIT_SECONDS: '{{ .Values.global.kerberos.KINIT_SECONDS }}'
+  HADOOP_VERSION: '3.x'

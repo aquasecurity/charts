@@ -1,0 +1,21 @@
+{{- include "sch.config.init" (list . "hsts.sch.chart.config.values") -}}
+kind: ConfigMap
+metadata:
+  name: {{ include "sch.names.fullCompName" (list . .sch.chart.components.aej.compName ) | quote }}
+  labels:
+{{  include "sch.metadata.labels.standard" (list . .sch.chart.components.aej.compName ) | indent 4 }}
+apiVersion: v1
+data:
+  aejd.json: |
+    {
+      "egress": [
+        {
+          "type": "redis",
+          "address": "{{ template "hsts.hosts.redis" . }}:{{ template "hsts.ports.redis" . }}"
+        }
+      ],
+      "persistence": {
+        "type": "inmemory",
+        "queue_capacity": {{ .Values.aej.config.queueCapacity }}
+      }
+    }

@@ -1,0 +1,85 @@
+########################################################################
+#
+# Licensed Materials - Property of IBM
+#
+# 5725Q09
+#
+# (C) Copyright IBM Corp.
+#
+# 2018-2019 All Rights Reserved
+#
+# US Government Users Restricted Rights - Use, duplication or disclosure 
+# restricted by GSA ADP Schedule Contract with IBM Corp.
+#
+########################################################################
+
+global:
+  # Review and accept the license terms? ['accept','not accepted']
+  license: "not accepted"
+
+  # Enable sub-chart resource requests
+  resource:
+    requests:
+      enable: true
+  # Define where/who the images will be pulled from
+  image:
+    # This is the artifactory server to pull the docker images from
+    repository: 
+    # Secret used to access the docker repository above
+    secret:
+    # pullPolicy: IfNotPresent change to Always to make the latest is always picked up
+    pullPolicy: Always
+    # Use image tags instead of digests
+    useTag: true
+    # Tag to use for configuration share utility image
+    sharedTag: 1.6.3-20201201000312
+    sharedDigest: sha256:d784b16f3f3c511884f21618581f449cefb35ba67b61c3750db994b2ffc33a94
+  rbac:
+    serviceAccountName: noi-service-account 
+replicaCount: 1
+image:
+  name: db2ese
+  tag: 1.6.3-20201201000307
+  digest: sha256:415fa61f344293d3937b21600269673b30dc7d9585de38fb8f89e844a601ccb0
+
+db2ese:
+  internal:
+    # This is the default port jdbc.
+    # It should not need to be exported outside
+    # as this is for internal services only.
+    port: 50000
+  liveness:
+    initialDelaySeconds: 300
+    periodSeconds: 5
+    timeoutSeconds: 1
+    failureThreshold: 3
+  readiness:
+    initialDelaySeconds: 30
+    periodSeconds: 5
+    timeoutSeconds: 1
+    failureThreshold: 1
+
+# Dedicated client image to test DB2. This is hidden in the UI
+db2rtcl:
+  image:
+    name: db2rtcl
+    tag: 1.6.3-20201201000310
+    digest: sha256:03e2855748b4d928c83e58d68ece3b98d983dd98ad1d4e215bc5e46b9205edcb
+
+pvc:
+  # specify the storageClassName you want to use
+  # if you don't specify a storageClassName it will use the default
+  storageClassName: ""
+
+  # Specify the name of the Existing Claim to be used by your application
+  # empty string means don't use an existClaim
+  existingClaimName: ""
+
+  # if your not using dynamic provisioning, you can use selectors to
+  # refine the binding process. You cannot specify a selector if your using dynamic provisioning!
+  selector:
+    label: ""
+    value: ""
+
+  size: 5Gi
+

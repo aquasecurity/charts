@@ -1,0 +1,135 @@
+# Default values for db2-data-gate.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+arch: 'amd64'
+
+baseNamespace: default
+
+dataGateInstanceName: ''
+
+data-gate-server:
+  service:
+    type: ClusterIP
+    port11400: 11400
+    port7091: 7091
+
+data-gate-api:
+  service:
+    type: ClusterIP
+    port: 8188
+
+data-gate-ui:
+  service:
+    type: ClusterIP
+    port: 8443
+
+db2u:
+  volumeType: ''
+  pvc:
+    name: ''
+  hostPath:
+    path: ''
+    type: Directory
+
+defaultRouteSubdomain: ''
+
+images:
+  replicas: 1
+  pullPolicy: IfNotPresent
+  initconfig:
+    image:
+      repository: datagate-init
+      tag: 1.1.1-55-x86_64
+    request:
+      cpu: 100m
+      memory: 64Mi
+    limit:
+      cpu: 200m
+      memory: 128Mi
+  stunnelinit:
+    image:
+      repository: container-stunnel-init
+      tag: 1.1.1-24-x86_64
+    request:
+      cpu: 100m
+      memory: 64Mi
+    limit:
+      cpu: 200m
+      memory: 128Mi
+  stunnel:
+    image:
+      repository: container-stunnel
+      tag: 1.1.1-29-x86_64
+    request:
+      cpu: 400m
+      memory: 1Gi
+    limit:
+      cpu: 1000m
+      memory: 1Gi
+  server:
+    image:
+      repository: datagate-server
+      tag: 1.1.1-102-x86_64
+    request:
+      cpu: 2000m
+      memory: 3.5Gi
+    limit:
+      cpu: 2000m
+      memory: 3.5Gi
+  apply:
+    image:
+      repository: datagate-apply
+      tag: 1.1.1-48-x86_64
+    request:
+      cpu: 2000m
+      memory: 7Gi
+    limit:
+      cpu: 2000m
+      memory: 7Gi
+  api:
+    image:
+      repository: datagate-api
+      tag: 1.1.1-121-x86_64
+    request:
+      cpu: 400m
+      memory: 1Gi
+    limit:
+      cpu: 1000m
+      memory: 1Gi
+  ui:
+    image:
+      repository: datagate-ui
+      tag: 1.1.1-193-x86_64
+    request:
+      cpu: 200m
+      memory: 512Mi
+    limit:
+      cpu: 500m
+      memory: 1Gi
+
+route:
+  dataGateRouteHostName: ''
+  dataGateRoutePort: 30446
+
+runtime: 'ICP4Data'
+
+serviceAccount: 'cpd-editor-sa'
+
+storage:
+  type: storageClass
+  storageClass:
+    name: ''
+    size: 5Gi
+  existingClaim:
+    name: ''
+  nfs:
+    name: ''
+  useDynamicProvisioning: true
+
+targetDbInstance: 'db2oltp-xxxxx'
+
+zenServiceInstanceId: ''
+zenServiceInstanceType: 'data-gate'
+zenCloudPakInstanceId: ''
+zenServiceInstanceUID: ''

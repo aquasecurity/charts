@@ -1,0 +1,147 @@
+charts:
+  - archive: file:ibm-aspera-hsts-icp4i-1.3.0.tgz
+    registry-keys:
+      - image.repository
+      - redis.image.repository
+      - sch.global.image.repository
+
+images:
+  - image: aspera-hsts-asperanode:3.9.6-rhel-amd64
+    references:
+    - repository: aspera-hsts-asperanode:3.9.6-rhel-amd64
+      pull-repository: cp.icr.io/cp/icp4i/aspera/aspera-hsts-asperanode:3.9.6-rhel-amd64
+      pull-authorization:
+        username:
+          env: USERNAME
+        password:
+          env: PASSWORD
+
+  - image: aspera-hsts-aej:3.9.6-rhel-amd64
+    references:
+    - repository: aspera-hsts-aej:3.9.6-rhel-amd64
+      pull-repository: cp.icr.io/cp/icp4i/aspera/aspera-hsts-aej:3.9.6-rhel-amd64
+      pull-authorization:
+        username:
+          env: USERNAME
+        password:
+          env: PASSWORD
+
+  - image: aspera-hsts-lifecycle:1.3.0-rhel-amd64
+    references:
+    - repository: aspera-hsts-lifecycle:1.3.0-rhel-amd64
+      pull-repository: cp.icr.io/cp/icp4i/aspera/aspera-hsts-lifecycle:1.3.0-rhel-amd64
+      pull-authorization:
+        username:
+          env: USERNAME
+        password:
+          env: PASSWORD
+
+  - image: aspera-hsts-stats:1.3.0-rhel-amd64
+    references:
+    - repository: aspera-hsts-stats:1.3.0-rhel-amd64
+      pull-repository: cp.icr.io/cp/icp4i/aspera/aspera-hsts-stats:1.3.0-rhel-amd64
+      pull-authorization:
+        username:
+          env: USERNAME
+        password:
+          env: PASSWORD
+
+  - image: aspera-hsts-swarm:1.3.0-rhel-amd64
+    references:
+    - repository: aspera-hsts-swarm:1.3.0-rhel-amd64
+      pull-repository: cp.icr.io/cp/icp4i/aspera/aspera-hsts-swarm:1.3.0-rhel-amd64
+      pull-authorization:
+        username:
+          env: USERNAME
+        password:
+          env: PASSWORD
+
+  - image: aspera-hsts-firstboot:3.9.6-rhel-amd64
+    references:
+    - repository: aspera-hsts-firstboot:3.9.6-rhel-amd64
+      pull-repository: cp.icr.io/cp/icp4i/aspera/aspera-hsts-firstboot:3.9.6-rhel-amd64
+      pull-authorization:
+        username:
+          env: USERNAME
+        password:
+          env: PASSWORD
+
+  - image: aspera-hsts-tcp-proxy:1.3.0-rhel-amd64
+    references:
+    - repository: aspera-hsts-tcp-proxy:1.3.0-rhel-amd64
+      pull-repository: cp.icr.io/cp/icp4i/aspera/aspera-hsts-tcp-proxy:1.3.0-rhel-amd64
+      pull-authorization:
+        username:
+          env: USERNAME
+        password:
+          env: PASSWORD
+
+  - image: aspera-hsts-http-proxy:1.3.0-rhel-amd64
+    references:
+    - repository: aspera-hsts-http-proxy:1.3.0-rhel-amd64
+      pull-repository: cp.icr.io/cp/icp4i/aspera/aspera-hsts-http-proxy:1.3.0-rhel-amd64
+      pull-authorization:
+        username:
+          env: USERNAME
+        password:
+          env: PASSWORD
+
+  - image: aspera-hsts-loadbalancer:1.3.0-rhel-amd64
+    references:
+    - repository: aspera-hsts-loadbalancer:1.3.0-rhel-amd64
+      pull-repository: cp.icr.io/cp/icp4i/aspera/aspera-hsts-loadbalancer:1.3.0-rhel-amd64
+      pull-authorization:
+        username:
+          env: USERNAME
+        password:
+          env: PASSWORD
+
+  - image: aspera-hsts-prometheus-endpoint:1.3.0-rhel-amd64
+    references:
+    - repository: aspera-hsts-prometheus-endpoint:1.3.0-rhel-amd64
+      pull-repository: cp.icr.io/cp/icp4i/aspera/aspera-hsts-prometheus-endpoint:1.3.0-rhel-amd64
+      pull-authorization:
+        username:
+          env: USERNAME
+        password:
+          env: PASSWORD
+
+  - image: aspera-hsts-probe:1.3.0-rhel-amd64
+    references:
+    - repository: aspera-hsts-probe:1.3.0-rhel-amd64
+      pull-repository: cp.icr.io/cp/icp4i/aspera/aspera-hsts-probe:1.3.0-rhel-amd64
+      pull-authorization:
+        username:
+          env: USERNAME
+        password:
+          env: PASSWORD
+
+  - image: aspera-hsts-utils:1.3.0-rhel-amd64
+    references:
+    - repository: aspera-hsts-utils:1.3.0-rhel-amd64
+      pull-repository: cp.icr.io/cp/icp4i/aspera/aspera-hsts-utils:1.3.0-rhel-amd64
+      pull-authorization:
+        username:
+          env: USERNAME
+        password:
+          env: PASSWORD
+
+  - image: aspera-hsts-election:1.3.0-rhel-amd64
+    references:
+    - repository: aspera-hsts-election:1.3.0-rhel-amd64
+      pull-repository: cp.icr.io/cp/icp4i/aspera/aspera-hsts-election:1.3.0-rhel-amd64
+      pull-authorization:
+        username:
+          env: USERNAME
+        password:
+          env: PASSWORD
+
+  - image: aspera-redis:4.0.12-rhel-amd64
+    references:
+    - repository: aspera-redis:4.0.12-rhel-amd64
+      pull-repository: cp.icr.io/cp/icp4i/aspera/aspera-hsts-redis:4.0.12-a53bee69
+      pull-authorization:
+        username:
+          env: USERNAME
+        password:
+          env: PASSWORD

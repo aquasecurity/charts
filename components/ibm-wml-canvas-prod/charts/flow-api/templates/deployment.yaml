@@ -1,0 +1,170 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "flow-api.fullname" . }}
+  annotations:
+    build: {{ .Values.global.buildVersion | quote }}
+    {{- include "spss-modeler.cloudpak_annotations" . | indent 4 }}
+  labels:
+    app.kubernetes.io/name: {{ template "flow-api.name" . }}
+    app.kubernetes.io/managed-by: {{.Release.Service | quote }}
+    helm.sh/chart: {{ template "flow-api.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    {{- include "spss-modeler.addOnPodLabels" . | indent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ template "flow-api.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      release: {{ .Release.Name }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        build: {{ .Values.global.buildVersion | quote }}
+        {{- include "spss-modeler.cloudpak_annotations" . | indent 8 }}
+      labels:
+        app.kubernetes.io/name: {{ template "flow-api.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/managed-by: {{.Release.Service | quote }}
+        helm.sh/chart: {{ template "flow-api.chart" . }}
+        release: {{ .Release.Name }}
+        {{- include "spss-modeler.addOnPodLabels" . | indent 8 }}
+    spec:
+      hostNetwork: false
+      hostPID: false
+      hostIPC: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: {{ .Values.global.runAsUser }}
+      serviceAccount: {{ .Values.global.viewer.sa }}
+      serviceAccountName: {{ .Values.global.viewer.sa }}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: beta.kubernetes.io/arch
+                    operator: In
+                    values:
+                      - "amd64"
+                      - "ppc64le"
+
+      {{- if .Values.global.nginx.importSSLCertificate.enabled }}
+      volumes:
+      - name: certificates
+        secret:
+          secretName: {{ .Values.global.nginx.importSSLCertificate.certificateSecret.name }}
+          items:
+          # The key name is dictated by the installer team - who created the secret.
+          - key: {{ .Values.global.nginx.importSSLCertificate.certificateSecret.key }}
+            # The path where we mount the secret is up to us.
+            path: {{ .Values.global.nginx.internalSSLCertificate.fileName }}
+      {{- end }}
+
+      containers:
+      - name: {{ .Chart.Name }}
+        image: {{ template "full-image-url" . }}
+        imagePullPolicy: {{ .Values.global.image.pullPolicy }}
+        securityContext:
+          readOnlyRootFilesystem: false
+          runAsUser: {{ .Values.global.runAsUser }}
+          capabilities:
+            drop:
+            - ALL
+          allowPrivilegeEscalation: false
+          privileged: false
+          runAsNonRoot: true
+        ports:
+          - name: https
+            containerPort: {{ .Values.container.port }}
+            protocol: TCP
+        resources:
+          limits:
+            cpu: {{ .Values.resources.cpuLimits }}
+            memory: {{ .Values.resources.memLimits }}
+          requests:
+            cpu: {{ .Values.resources.cpuRequests }}
+            memory: {{ .Values.resources.memRequests }}
+        livenessProbe:
+          httpGet:
+            path: /monitor
+            port: {{ .Values.container.port }}
+            scheme: HTTPS
+          initialDelaySeconds: 90
+          periodSeconds: 30
+          timeoutSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /monitor
+            port: {{ .Values.container.port }}
+            scheme: HTTPS
+          initialDelaySeconds: 30
+          periodSeconds: 30
+
+        {{ if .Values.global.nginx.importSSLCertificate.enabled }}
+        volumeMounts:
+        - name: certificates
+          mountPath: {{ .Values.global.nginx.internalSSLCertificate.mountFolder }}
+          readOnly: true
+        {{- end }}
+
+
+        env:
+        # Control the node runtime
+        - name: NODE_ENV
+          value: {{ .Values.node.env }}
+        - name: NODE_MODULES_CACHE
+          value: "{{ .Values.node.modules.cache }}"
+
+        # Which environment are we deploying into.
+        - name: DSX_OPERATING_ENVIRONMENT
+          value: {{ .Values.global.watsonStudio.operatingEnvironment }}
+
+        # The deployment target, could be icp, ip4d, cloud.
+        - name: DEPLOYMENT_TARGET
+          value: {{ .Values.global.watsonStudio.deploymentTarget}}
+
+        # Other watson studio components
+        - name: PROJECTS_API_URL
+          value: {{ .Values.global.watsonStudio.url }}
+
+        # Modeler Flow API url
+        - name: MODELER_FLOW_API_URL
+          value: {{ .Values.global.modelerFlowApi.url }}
+
+        # Authentication
+
+        {{- if .Values.global.auth.icp4d.enabled }}
+        # icp4d auth.
+        - name: auth__icp4d__publicKeyUrl
+          value: {{ .Values.global.auth.icp4d.publicKeyUrl }}
+        - name: auth__icp4d__serviceIdAuth
+          valueFrom:
+            secretKeyRef:
+                name: wdp-service-id
+                key: service-id-credentials
+        {{- end }}
+
+        {{- if .Values.global.watsonStudio.trustSelfSignedCertificates }}
+        # TLS - trust all self signed certs
+        - name: NODE_TLS_REJECT_UNAUTHORIZED
+          value: "0"
+        {{- end }}
+
+        {{ if .Values.global.nginx.importSSLCertificate.enabled }}
+        - name: NODE_EXTRA_CA_CERTS
+          value: {{ .Values.global.nginx.internalSSLCertificate.mountFolder }}/{{ .Values.global.nginx.internalSSLCertificate.fileName }}
+        {{- end }}
+
+      {{ if .Values.global.docker.useImagePullSecret }}
+      imagePullSecrets:
+      - name: {{ .Values.global.imagePullSecretName }}
+      {{ end }}

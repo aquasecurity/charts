@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: kiali
@@ -22,8 +22,10 @@ spec:
         heritage: {{ .Release.Service }}
         release: {{ .Release.Name }}
       annotations:
+        seccomp.security.alpha.kubernetes.io/pod: docker/default
         sidecar.istio.io/inject: "false"
-        scheduler.alpha.kubernetes.io/critical-pod: ""
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9090"
         productName: kiali
         productID: kiali_{{ .Chart.Version }}_apachev2_00000
         productVersion: {{ .Chart.Version }}
@@ -34,6 +36,7 @@ spec:
 {{- end }}
       containers:
       - image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: "{{ .Values.global.imagePullPolicy }}"
         name: kiali
         command:
         - "/opt/kiali/kiali"
@@ -46,36 +49,6 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-        - name: SERVER_CREDENTIALS_USERNAME
-          valueFrom:
-            secretKeyRef:
-              name: {{ .Values.dashboard.secretName }}
-              key: {{ .Values.dashboard.usernameKey }}
-        - name: SERVER_CREDENTIALS_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ .Values.dashboard.secretName }}
-              key: {{ .Values.dashboard.passphraseKey }}
-        - name: PROMETHEUS_SERVICE_URL
-          value: http://prometheus:9090
-{{- if .Values.dashboard.grafanaURL }}
-        - name: GRAFANA_URL
-          value: {{ .Values.dashboard.grafanaURL }}
-{{- end }}
-        - name: GRAFANA_DASHBOARD
-          value: istio-service-dashboard
-        - name: GRAFANA_VAR_SERVICE_SOURCE
-          value: var-service
-        - name: GRAFANA_VAR_SERVICE_DEST
-          value: var-service
-{{- if .Values.dashboard.jaegerURL }}
-        - name: JAEGER_URL
-          value: {{ .Values.dashboard.jaegerURL }}
-{{- end }}
-{{- if .Values.contextPath }}
-        - name: SERVER_WEB_ROOT
-          value: {{ .Values.contextPath }}
-{{- end }} 
         livenessProbe:
           exec:
             command:
@@ -89,6 +62,8 @@ spec:
         volumeMounts:
         - name: kiali-configuration
           mountPath: "/kiali-configuration"
+        - name: kiali-secret
+          mountPath: "/kiali-secret"
         resources:
 {{- if .Values.resources }}
 {{ toYaml .Values.resources | indent 10 }}
@@ -99,9 +74,17 @@ spec:
       - name: kiali-configuration
         configMap:
           name: kiali
-      nodeSelector:
-{{- include "kiali.nodeselector" . | indent 6 }}
-      tolerations:
-{{- include "kiali.tolerations" . | indent 6 }}
+      - name: kiali-secret
+        secret:
+          secretName: {{ .Values.dashboard.secretName }}
+          optional: true
       affinity:
-{{- include "nodeaffinity" . | indent 6 }}
+      {{- include "nodeaffinity" . | indent 6 }}
+      {{- include "podAntiAffinity" . | indent 6 }}
+      {{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 6 }}
+      {{- else if .Values.global.defaultTolerations }}
+      tolerations:
+{{ toYaml .Values.global.defaultTolerations | indent 6 }}
+      {{- end }}

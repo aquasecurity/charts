@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "security-auth.fullname" . }}
+  labels:
+{{- include "common.label.metadata" (list . (include "security-auth.name" .) (include "security-auth.chart" .) .Release.Name .Release.Service ) | indent 4 }}
+{{- with .Values.securityAuthConfig }}
+data:
+{{ toYaml . | indent 2 }}
+{{- end }}
+{{- with .Values.global.auth }}
+{{ toYaml . | indent 2 }}
+{{- end }}
+  REDIS_HOST: {{ template "security-auth.fullname" . }}-redis
+  AUDIT_API_HOST: {{ .Release.Name }}-security-audit-app
+  IDENTITY_SERVER_TYPE: {{ .Values.global.IDENTITY_SERVER_TYPE  }}
+  INTERNAL_REGISTRY: 'false'
+{{ if .Values.global.webProxyServer }}
+  SAML_CALLBACK_REDIRECT_URL: "https://{{ .Values.global.webProxyServer }}/common-ui/api/v1.0/login/saml"
+  SAML_CALLBACK_HOST: https://{{ .Values.global.webProxyServer }}:{{ .Values.global.commonUI.SSO_PORT }}
+  APPID_CALLBACK_HOST: https://{{ .Values.global.webProxyServer }}:{{ .Values.global.commonUI.SSO_PORT }}
+{{ else  }}
+  SAML_CALLBACK_REDIRECT_URL: "https://{{ .Values.global.commonUI.SSO_HOSTNAME }}:{{ .Values.global.commonUI.SSO_PORT }}/common-ui/api/v1.0/login/saml"
+  SAML_CALLBACK_HOST: https://{{ .Values.global.commonUI.SSO_HOSTNAME }}:{{ .Values.global.commonUI.SSO_PORT }}
+  APPID_CALLBACK_HOST: https://{{ .Values.global.commonUI.SSO_HOSTNAME }}:{{ .Values.global.commonUI.SSO_PORT }}
+{{ end }}

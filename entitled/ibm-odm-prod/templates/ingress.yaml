@@ -1,0 +1,75 @@
+{{- if .Values.service.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{  template "odm.ingress.fullname" . }}
+  labels:
+    app: {{ template "name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+{{ include "odm-additional-labels" (dict "componentName" "ingress" "root" .) | indent 4 }}
+    ingressroutes: {{ .Release.Name }}
+{{ include "odm-ingress-annotation-spec" . | indent 2 }}
+
+spec:
+  {{- if and (not (empty ( .Values.service.ingress.tlsHosts ))) (not (empty ( .Values.service.ingress.tlsSecretRef ))) }}
+  tls:
+  - hosts:
+    {{- range .Values.service.ingress.tlsHosts }}
+    - {{ . }}
+    {{- end }}
+    secretName: {{ .Values.service.ingress.tlsSecretRef }}
+  {{- end }}
+  rules:
+  {{- if (not (empty ( .Values.service.ingress.host )))}}
+  - host: {{ .Values.service.ingress.host }}
+    http:
+  {{- else }}
+  - http:
+  {{- end }}
+      paths:
+      {{- if or .Values.decisionServerRuntime.enabled .Values.decisionRunner.enabled }}
+      - path: {{ .Values.decisionServerConsole.contextRoot }}/res
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ template "odm.decisionserverconsole.fullname" . }}
+            port:
+              number: 9443
+      {{- end }}
+      {{- if .Values.decisionCenter.enabled }}
+      - path: {{ .Values.decisionCenter.contextRoot }}/decisioncenter
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ template "odm.decisioncenter.fullname" . }}
+            port:
+              number: 9453
+      - path: {{ .Values.decisionCenter.contextRoot }}/decisioncenter-api
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ template "odm.decisioncenter.fullname" . }}
+            port:
+              number: 9453
+      {{- end }}
+      {{- if .Values.decisionServerRuntime.enabled }}
+      - path: {{ .Values.decisionServerRuntime.contextRoot }}/DecisionService
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ template "odm.decisionserverruntime.fullname" . }}
+            port:
+              number: 9443
+      {{- end }}
+      {{- if .Values.decisionRunner.enabled }}
+      - path: {{ .Values.decisionRunner.contextRoot }}/DecisionRunner
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ template "odm.decisionrunner.fullname" . }}
+            port:
+              number: 9443
+      {{- end }}
+{{- end}}

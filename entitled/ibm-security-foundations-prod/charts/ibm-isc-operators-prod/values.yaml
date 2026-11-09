@@ -1,0 +1,75 @@
+# Declare variables to be passed into your templates.
+
+product:
+  id: a3af454f10374357a7c197b938365a9e
+  name: Foundations
+  version: 1.3.0
+  metric: MANAGED_VIRTUAL_SERVER
+
+cloudpak:
+  id: 929bd9017afc410da9dda2dc67c33b75
+  name: Cloud Pak for Security
+  version: 1.3.0
+
+
+operators:
+- name: sequences
+  debug: true
+  resources:
+    limits:
+      cpu: 200m
+      memory: 256Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+- name: middleware
+  debug: true
+  resources:
+    limits:
+      cpu: 200m
+      memory: 256Gi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+- name: entitlementsoperator
+  debug: true
+  resources:
+    requests:
+      cpu: 100m
+      memory: 100Mi
+    limits:
+      cpu: 500m
+      memory: 250Mi
+ansible:
+  resources:
+    limits:
+      cpu: 50m
+      memory: 64Mi
+    requests:
+      cpu: 10m
+      memory: 32Mi
+
+# value of net.core.somaxconn for network active pods to set
+somaxconn: 16384
+
+ambassador:
+  name: ambassador
+  replicaCount: 3
+  env: {}
+
+  podLabels: {}
+
+  podAnnotations: {}
+  # prometheus.io/scrape: "true"
+  # prometheus.io/port: "9102"
+
+  resources:
+    limits:
+     cpu: 1
+     memory: 512Mi
+    requests:
+     cpu: 100m
+     memory: 256Mi
+
+
+# Shared values

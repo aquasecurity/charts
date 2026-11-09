@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ .Values.environment.name }}-deployment-properties"
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: "{{ .Values.environment.name }}-deployment-properties"
+{{- include "helm.labels" . | indent 4 }}
+{{- include "cloudpak.labels" . | indent 4 }}
+  annotations:
+    "helm.sh/hook": "pre-install,pre-upgrade"
+    "helm.sh/hook-delete-policy": before-hook-creation
+data:
+  deployment-properties: |-
+{{ tpl (.Files.Get "conf/deployment.txt") . | indent 4}}

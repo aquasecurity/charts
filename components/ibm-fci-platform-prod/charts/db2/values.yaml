@@ -1,0 +1,39 @@
+global:
+  dockerRegistryPrefix: ""
+
+provisioner:
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "0.5"
+    limits:
+      memory: "1Gi"
+      cpu: "0.5"
+
+resources:
+  requests:
+    memory: "1Gi"
+    cpu: "0.5"
+  limits:
+    memory: "32Gi"
+    cpu: "8"
+
+tolerations: []
+
+affinity: {}
+
+arch: amd64
+
+readinessProbe:
+  initialDelaySeconds: 60
+  periodSeconds: 60
+  timeoutSeconds: 30
+  successThreshold: 1
+  failureThreshold: 1
+
+livenessProbe:
+  initialDelaySeconds: 600
+  periodSeconds: 60
+  timeoutSeconds: 30
+  successThreshold: 1
+  failureThreshold: 1

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ .Values.environment.name }}-{{ .Values.nginx.name }}-configmap"
+  namespace: {{ .Release.Namespace }}
+  labels:
+    icpdata_addon_version: {{ .Chart.AppVersion }}
+    name: "{{ .Values.environment.name }}-{{ .Values.nginx.name }}-configmap"
+    app: "{{ .Values.environment.name }}-{{ .Values.nginx.name }}-configmap"
+{{- include "helm.labels" . | indent 4 }}
+{{- include "cloudpak.labels" . | indent 4 }}
+data:
+  nginx.conf: |-
+{{ tpl (.Files.Get "conf/dataplane-nginx.conf") . | indent 4}}

@@ -1,0 +1,29 @@
+{{- if .Values.decisionCenter.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "odm.decisioncenter.fullname" . }}
+  labels:
+    app: {{ template "name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+{{ include "odm-additional-labels" (dict "componentName" "decisionCenter" "root" .) | indent 4 }}
+spec:
+  sessionAffinity : ClientIP
+  selector:
+    run: {{ template "odm.decisioncenter.fullname" . }}
+    app: {{ template "name" . }}
+    release: {{ .Release.Name }}
+{{ include "odm-service-type" . | indent 2 }}
+  ports:
+   - protocol: TCP
+     port: 9453
+     {{- if .Values.service.enableTLS }}
+     name: decisioncenter-https
+     targetPort: 9453
+     {{ else }}
+     name: decisioncenter
+     targetPort: 9060
+     {{- end }}
+{{- end }}

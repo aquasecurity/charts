@@ -38,64 +38,17 @@ image:
       type: "string"
       required: false
 
-## Arch metadata
-arch:
+## additional metadata
+metadata:
   __metadata:
-    label: "Architecture scheduling preferences"
-    description: "Configuration settings for specifying architecture preferences"
-  amd64:
+    label: "Metadata"
+    description: "Additional metadata to be added to resources"
+  labels:
     __metadata:
-      name: "amd64"
-      label: "amd64 scheduling preference"
-      description: "Architecture preference for target worker node"
+      label: "Additional labels"
+      description: "Additional labels to be added to resources"
       type: "string"
-      immutable: false
-      required: true
-      options:
-      - label: "0 - Do not use"
-        value: "0 - Do not use"
-      - label: "1 - Least preferred"
-        value: "1 - Least preferred"
-      - label: "2 - No preference"
-        value: "2 - No preference"
-      - label: "3 - Most preferred"
-        value: "3 - Most preferred"
-
-  ppc64le:
-    __metadata:
-      name: "ppc64le"
-      label: "ppc64le scheduling preference"
-      description: "Architecture preference for target worker node"
-      type: "string"
-      immutable: false
-      required: true
-      options:
-      - label: "0 - Do not use"
-        value: "0 - Do not use"
-      - label: "1 - Least preferred"
-        value: "1 - Least preferred"
-      - label: "2 - No preference"
-        value: "2 - No preference"
-      - label: "3 - Most preferred"
-        value: "3 - Most preferred"
-
-  s390x:
-    __metadata:
-      name: "s390x"
-      label: "s390x scheduling preference"
-      description: "Architecture preference for target worker node"
-      type: "string"
-      immutable: false
-      required: true
-      options:
-      - label: "0 - Do not use"
-        value: "0 - Do not use"
-      - label: "1 - Least preferred"
-        value: "1 - Least preferred"
-      - label: "2 - No preference"
-        value: "2 - No preference"
-      - label: "3 - Most preferred"
-        value: "3 - Most preferred"
+      multiline: true
 
 ## global persistence parameters
 persistence:
@@ -118,45 +71,83 @@ persistence:
 dataPVC:
   __metadata:
     label: "Data PVC"
-    description: "Configuration settings for Persistent Volume Claims"
+    description: "Configuration settings for the main Persistent Volume Claim"
   name:
     __metadata:
       label: "Name"
-      description: "Name of Persistent Volume Claim, used for MQ objects and messages"
+      description: "Name of Persistent Volume Claim"
       type: "string"
       required: true
   storageClassName:
     __metadata:
       label: "Storage Class name"
-      description: "Storage class of Persistent Volume Claim, used for MQ objects and messages"
+      description: "Storage class of Persistent Volume Claim"
       type: "string"
       required: false
   size:
     __metadata:
       label: "Size"
-      description: "Size of Persistent Volume Claim, used for MQ objects and messages"
+      description: "Size of Persistent Volume Claim"
       type: "string"
       required: true
 
-service:
+logPVC:
   __metadata:
-    label: "Service"
-    description: "Configuration settings for exposing ports through a service"
-  type:
+    label: "Log PVC"
+    description: "Configuration settings for the transaction logs Persistent Volume Claim"
+  enabled:
     __metadata:
-      label: "Service type"
-      description: "Type of service"
+      label: "Enable separate storage for transaction logs"
+      description: "Whether or not to use separate storage for transaction logs"
+      type: "boolean"
+      required: true
+  name:
+    __metadata:
+      label: "Name"
+      description: "Name of Persistent Volume Claim"
       type: "string"
       required: true
-      options:
-      - label: "ClusterIP"
-        value: "ClusterIP"
-      - label: "NodePort"
-        value: "NodePort"
-      - label: "LoadBalancer"
-        value: "LoadBalancer"
-      - label: "ExternalName"
-        value: "ExternalName"
+  storageClassName:
+    __metadata:
+      label: "Storage Class name"
+      description: "Storage class of Persistent Volume Claim"
+      type: "string"
+      required: false
+  size:
+    __metadata:
+      label: "Size"
+      description: "Size of Persistent Volume Claim"
+      type: "string"
+      required: true
+
+qmPVC:
+  __metadata:
+    label: "QM PVC"
+    description: "Configuration settings for the queue manager data Persistent Volume Claim"
+  enabled:
+    __metadata:
+      label: "Enable separate storage for queue manager data"
+      description: "Whether or not to use separate storage for queue manager data"
+      type: "boolean"
+      required: true
+  name:
+    __metadata:
+      label: "Name"
+      description: "Name of Persistent Volume Claim"
+      type: "string"
+      required: true
+  storageClassName:
+    __metadata:
+      label: "Storage Class name"
+      description: "Storage class of Persistent Volume Claim"
+      type: "string"
+      required: false
+  size:
+    __metadata:
+      label: "Size"
+      description: "Size of Persistent Volume Claim"
+      type: "string"
+      required: true
 
 resources:
   __metadata:
@@ -193,12 +184,26 @@ security:
   __metadata:
     label: "Security"
     description: "Configuration settings for security"
-  serviceAccountName:
-    __metadata:
-      label: "Service account name"
-      description: "Name of the service account to use"
-      type: "string"
-      required: true
+  context:
+      fsGroup:
+        __metadata:
+          label: "File system group"
+          description: "File system group ID (if required by storage provider)"
+          type: "string"
+          validation: "(^[0-9]+$)"
+          required: false
+      supplementalGroups:
+        __metadata:
+          label: "Supplemental groups"
+          description: "List of supplemental groups (if required by storage provider)"
+          type: "string" ### because of a backwards compatibility bug, the type *must* be string.
+          required: false
+  initVolumeAsRoot:
+      __metadata:
+        label: "Initialize volume as root"
+        description: "Whether or not storage provider requires root permissions to initialize"
+        type: "boolean"
+        required: true
 
 queueManager:
   __metadata:
@@ -210,19 +215,56 @@ queueManager:
       description: "MQ queue manager name, which defaults to the Helm release name"
       type: "string"
       required: false
+  multiInstance:
+    __metadata:
+      label: "Enable multi-instance queue manager"
+      description: "Whether to run in multi-instance mode with an active and standby queue manager"
+      type: "boolean"
+      required: true
+  terminationGracePeriodSeconds:
+    __metadata:
+      label: "Termination Grace Period (seconds)"
+      description: "The duration in seconds the Queue Manager needs to terminate gracefully"
+      type: "number"
+      required: false
   dev:
-    adminPassword:
-      __metadata:
-        label: "Admin password"
-        description: "Password for 'admin' user"
-        type: "password"
-        required: false
-    appPassword:
-      __metadata:
-        label: "App password"
-        description: "Password for 'app' user to use for messaging"
-        type: "password"
-        required: false
+    secret:
+      name:
+        __metadata:
+          label: "Password secret name"
+          description: "Secret that contains the 'admin' user password and optionally the 'app' user password to use for messaging"
+          type: "string"
+          required: true
+      adminPasswordKey:
+        __metadata:
+          label: "Admin password key"
+          description: "Secret key that contains the 'admin' user password"
+          type: "string"
+          required: true
+      appPasswordKey:
+        __metadata:
+          label: "App password key"
+          description: "Secret key that contains the 'app' user password"
+          type: "string"
+          required: false
+
+## pki certificates
+pki:
+  __metadata:
+    label: "PKI"
+    description: "Certificates to be added to the queue manager"
+  keys:
+    __metadata:
+      label: "Keys"
+      description: "Certificates containing private keys to add. See Readme/values.yaml for format."
+      type: "string"
+      multiline: true
+  trust:
+    __metadata:
+      label: "Certificates"
+      description: "Certificates to add. See Readme/values.yaml for format."
+      type: "string"
+      multiline: true
 
 # log section specifies settings for MQ error logs
 log:
@@ -240,6 +282,23 @@ log:
         value: "json"
       - label: "Basic"
         value: "basic"
+  debug:
+    __metadata:
+      label: "Enable debug log output"
+      description: "Enables additional log output for debug purposes"
+      type: "boolean"
+      required: true
+
+trace:
+  __metadata:
+    label: "MQ trace"
+    description: "Options for enabling MQ trace"
+  strmqm:
+    __metadata:
+      label: "Enable trace on strmqm"
+      description: "Whether to enable MQ trace on queue manager start (strmqm)"
+      type: "boolean"
+      required: false
 
 metrics:
   __metadata:
@@ -312,7 +371,7 @@ readinessProbe:
       description: "Number of times the probe can fail before taking action"
       type: "number"
       required: false
-
+    
 nameOverride:
   __metadata:
     label: "Name override"

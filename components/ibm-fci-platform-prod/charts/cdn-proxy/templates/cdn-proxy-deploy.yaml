@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "cdn-proxy.fullname" . }}
+  labels:
+{{- include "common.label.metadata" (list . (include "cdn-proxy.name" .) (include "cdn-proxy.chart" .) .Release.Name .Release.Service ) | indent 4 }}
+spec:
+  replicas: {{ .Values.cdnProxy.replicas }}
+  selector:
+    matchLabels:
+{{- include "common.selector.labels" (list . (include "cdn-proxy.name" .) .Release.Name ) | indent 6 }}
+  template:
+    metadata:
+      annotations:
+{{ include "common.meteringAnnotations" . | indent 8 }}
+      labels:
+{{- include "common.label.metadata" (list . (include "cdn-proxy.name" .) (include "cdn-proxy.chart" .) .Release.Name .Release.Service ) | indent 8 }}
+{{- include "common.using-secrets" (list "platform") | indent 8 }}
+    spec:
+{{ include "common.configureHostAliases" . | indent 6 }}
+{{ include "common.PodHostConfig" . | indent 6 }}
+      securityContext:
+{{ include "common.PodSecurityContextConfig" . | indent 8 }}
+      affinity:
+{{ include "common.ArchNodeAffinity" . | indent 8 }}
+      volumes:
+      - name: file-secrets
+        secret:
+          secretName: {{ template "cdn-proxy.core-release-name" . }}-platform-secret-files
+      - name: migration-data
+        persistentVolumeClaim:
+          claimName: {{ template "cdn-proxy.fullname" . }}-bk
+      serviceAccountName: fci-common-scripts
+      containers:
+      - name: cdn-proxy
+        image: {{ required "global.dockerRegistryPrefix must specify from which repository the docker image should be fetched." .Values.global.dockerRegistryPrefix }}/{{ .Values.cdnProxy.image.repository }}:{{ .Values.cdnProxy.image.tag }}
+        imagePullPolicy: {{ .Values.cdnProxy.image.pullPolicy }}
+        resources:
+{{ toYaml .Values.cdnProxy.resources | indent 10 }}
+{{- with .Values.cdnProxy.nodeSelector }}
+        nodeSelector:
+{{ toYaml . | indent 10 }}
+{{- end }}
+{{- with .Values.cdnProxy.affinity }}
+        affinity:
+{{ toYaml . | indent 10 }}
+{{- end }}
+{{- with .Values.cdnProxy.tolerations }}
+        tolerations:
+{{ toYaml . | indent 10 }}
+{{- end }}
+        securityContext:
+{{ include "common.RestrictedContainerSecurityContext" . | indent 10 }}
+        env:
+{{- include "common.import-secret" (list . "JWT_KEY" "platform" "JWT_KEY") | indent 8 }}
+        envFrom:
+        - configMapRef:
+            name: {{ template "cdn-proxy.fullname" . }}-cm
+        volumeMounts:
+        - name: file-secrets
+          mountPath: /code/certs/investigative-ui.pem
+          subPath: fci_universal_ks.pvtk.pem
+        - name: file-secrets
+          mountPath: /code/certs/investigative-ui.crt
+          subPath: fci_universal_ks.crt.pem
+        - name: migration-data
+          mountPath: /opt/ibm/fci-cdn-proxy/custom-bucket
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /cdn/healthcheck
+            port: 8080
+            scheme: HTTPS
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 1
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /cdn/healthcheck
+            port: 8080
+            scheme: HTTPS
+          initialDelaySeconds: 30
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 1
+      restartPolicy: Always

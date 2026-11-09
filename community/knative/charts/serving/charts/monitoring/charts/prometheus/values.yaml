@@ -1,0 +1,30 @@
+grafana:
+  image: quay.io/coreos/monitoring-grafana:5.0.3
+  replicas: 1
+  type: NodePort
+kubeControllerManager:
+  type: ClusterIP
+kubeStateMetrics:
+  addonResizer:
+    image: k8s.gcr.io/addon-resizer:1.7
+  image: quay.io/coreos/kube-state-metrics:v1.3.0
+  kubeRbacProxyMain:
+    image: quay.io/coreos/kube-rbac-proxy:v0.3.0
+  kubeRbacProxySelf:
+    image: quay.io/coreos/kube-rbac-proxy:v0.3.0
+  replicas: 1
+nodeExporter:
+  image: quay.io/prometheus/node-exporter:v0.15.2
+  kubeRbacProxy:
+    https:
+      hostPort: 9100
+    image: quay.io/coreos/kube-rbac-proxy:v0.3.0
+  type: ClusterIP
+prometheusSystem:
+  prometheus:
+    image: prom/prometheus:v2.2.1
+  replicas: 2
+prometheusSystemDiscovery:
+  type: ClusterIP
+prometheusSystemNp:
+  type: NodePort

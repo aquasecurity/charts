@@ -1,0 +1,118 @@
+{{- if .Values.isProduction }}
+
+##############################################################################
+# Persistent Volume Claims of Analysis Pipeline Services
+##############################################################################
+
+# ap-service data
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-ap-service-data
+  labels:
+{{include "instascan.labels" . | indent 4 }}  
+    release: "{{ .Release.Name }}"
+spec:
+  accessModes:
+    - {{ .Values.persistence.accessMode }}
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: {{ .Values.apMgr.storage }}
+  {{- if .Values.persistence.useDynamicProvisioning }}
+  storageClassName: {{ default nil .Values.global.storageClassName | quote }}
+  {{- else }}
+  storageClassName: {{ default "" .Values.global.storageClassName | quote }}
+  selector:
+    matchLabels:
+      type: "ap-service-data"
+  {{- end }}
+
+---
+
+{{- if not .Values.ibmPostgres.enabled }}
+
+#############################################################################
+# Persistent Volume Claims of Postgres service
+##############################################################################
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-instascan-postgres-data
+  labels:
+{{include "instascan.labels" . | indent 4 }}  
+    release: "{{ .Release.Name }}"
+spec:
+  accessModes:
+  - {{ .Values.persistence.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.postgres.storage }}
+  {{- if .Values.persistence.useDynamicProvisioning }}
+  storageClassName: {{ default nil .Values.global.storageClassName | quote }}
+  {{- else }}
+  storageClassName: {{ default "" .Values.global.storageClassName | quote }}
+  selector:
+    matchLabels:
+      type: "postgres-data"
+  {{- end }}
+
+---
+
+{{- end }}
+
+#############################################################################
+# Persistent Volume Claims of api-server service
+##############################################################################
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-instascan-api-server-files
+  labels:
+{{include "instascan.labels" . | indent 4 }}  
+    release: "{{ .Release.Name }}"
+spec:
+  accessModes:
+  - {{ .Values.persistence.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.apiServer.storage }}
+  {{- if .Values.persistence.useDynamicProvisioning }}
+  storageClassName: {{ default nil .Values.global.storageClassName | quote }}
+  {{- else }}
+  storageClassName: {{ default "" .Values.global.storageClassName | quote }}
+  selector:
+    matchLabels:
+      type: "api-server-files"
+  {{- end }}
+
+---
+
+#############################################################################
+# Persistent Volume Claims of ds-manager service
+##############################################################################
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-instascan-ds-manager-files
+  labels:
+{{include "instascan.labels" . | indent 4 }}  
+    release: "{{ .Release.Name }}"
+spec:
+  accessModes:
+  - {{ .Values.dsManager.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.dsManager.storage }}
+  {{- if .Values.persistence.useDynamicProvisioning }}
+  storageClassName: {{ default nil .Values.global.storageClassName | quote }}
+  {{- else }}
+  storageClassName: {{ default "" .Values.global.storageClassName | quote }}
+  selector:
+    matchLabels:
+      type: "ds-manager-files"
+  {{- end }}
+
+{{- end }}

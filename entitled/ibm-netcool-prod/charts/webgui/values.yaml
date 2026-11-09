@@ -1,0 +1,148 @@
+########################################################################
+#
+# Licensed Materials - Property of IBM
+#
+# 5725Q09
+#
+# (C) Copyright IBM Corp.
+#
+# 2018-2019 All Rights Reserved
+#
+# US Government Users Restricted Rights - Use, duplication or disclosure
+# restricted by GSA ADP Schedule Contract with IBM Corp.
+#
+########################################################################
+
+global:
+  # Review and accept the license terms? ['accept','not accepted']
+  license: "not accepted"
+  omnisecretname: "%s-omni-secret"
+
+  # Enable right click search humio integration
+  integrations:
+    humio:
+      url: ""
+      repository: ""
+
+  ingress:
+    port : "443"
+    prefixWithReleaseName: true
+    api:
+      # Ingress must be from: https://kubernetes.github.io/ingress-nginx/
+      # Set to true if you need/want an ingress definition.
+      # This will disable routes on OpenShift
+      enabled: false
+      # This is the ingress prefix that has been set with
+      # the  --annotations-prefix argument when configuring Ingress
+      prefix: 'nginx.ingress.kubernetes.io'
+      # This is the ingress class that has been set with
+      # the --ingress-class argument when configuring Ingress
+      class: 'nginx'
+  # Enable sub-chart resource requests
+  resource:
+    requests:
+      enable: true
+  # Define where/who the images will be pulled from
+  image:
+    # This is the artifactory server to pull the docker images from
+    repository:
+     # Secret used to access the docker repository above
+    secret: ""
+    # pullPolicy: IfNotPresent change to Always to make the latest is always picked up
+    pullPolicy: Always
+    # Use image tags instead of digests
+    useTag: true
+    # Tag to use for configuration share utility image
+    sharedTag: 1.6.3-20201201000312
+    sharedDigest: sha256:d784b16f3f3c511884f21618581f449cefb35ba67b61c3750db994b2ffc33a94
+  openshiftrencrypt: false
+  cluster:
+    # Public name or IP the deployment cluster will be accessible from.
+    fqdn: "mycluster.icp"
+
+  ldapservice:
+    name: ldapservice
+    verifypasswords : true
+    internal:
+      ldapPort: 389
+      ldapSSLPort: 636
+      suffix: "dc=mycluster,dc=icp"
+      baseDN: dc=mycluster,dc=icp
+      bindDN: "cn=admin,dc=mycluster,dc=icp"
+      userFilter: "uid=%s,ou=users"
+      groupFilter: "cn=%s,ou=groups"
+      serverType: "CUSTOM"
+  rbac:
+    create: true
+    serviceAccountName: noi-service-account
+replicaCount: 1
+image:
+  name: webgui-asm
+  tag: 1.6.3-20201202021501
+  digest: sha256:ab06a1d2994189d180e9f39e21e00f656c4e698f4bd9463e92b44e186fce18fe
+trustCertificateSecret: "%s-ibm-hdm-common-ui-tls-secret"
+
+ingress:
+  proxyReadTimeout: 300
+  proxySendTimeout: 300
+
+test:
+  image:
+    name: "configuration-share"
+    tag:  "1.6.3-20201201000312"
+    digest:  "sha256:d784b16f3f3c511884f21618581f449cefb35ba67b61c3750db994b2ffc33a94"
+
+
+webgui:
+  internal:
+    # DASH and WAS port as per Docker image.
+    dashPort: 16311
+    wasPort: 16316
+  readiness:
+    initialDelaySeconds: 300
+    periodSeconds: 60
+    timeoutSeconds: 10
+    failureThreshold: 55
+  liveness:
+    initialDelaySeconds: 3030
+    periodSeconds: 60
+    timeoutSeconds: 10
+    failureThreshold: 10
+# Times it may take for WebGUI to terminate gracefully, in seconds
+terminationGracePeriodSeconds: 120
+
+oauth2:
+  # set to true to enable advance WAS login for OAuth issues
+  trace: false
+  debug:
+    # Set to a custom redirect URI for debugging purposes only
+    redirectUri: ""
+    clientId: "debug-client-id"
+    clientSecret: "debug-client-secret"
+  redirectUri: ""
+  debug:
+    # Set to a custom redirect URI for debugging purposes only
+    redirectUri: ""
+    clientId: "debug-client-id"
+    clientSecret: "debug-client-secret"
+
+logout:
+  # Defines the redirect URL WAS nust redirect us to after a logout.
+  redirectUrl: ""
+
+services:
+  db2ese:
+    name: db2ese-service
+  objserv:
+    primary:
+      name: objserv-agg-primary
+      port: 4100
+    backup:
+      name: objserv-agg-backup
+      port: 4100
+  impactgui:
+    name: impactgui
+    port: 17311
+asm:
+  tenantId: cfd95b7e-3bc7-4006-a4a8-a73a79c71255
+  releaseName: asm

@@ -1,0 +1,104 @@
+{{- if .Values.common.tm1InternalType }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: tm1
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    paw_instance_name: {{ .Values.paw_instance_name }}
+    name: tm1
+    app: tm1
+    release: {{ .Release.Name }}
+  name: tm1
+spec:
+  strategy:
+    type: Recreate
+    rollingUpdate: null
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tm1
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      annotations:
+        hook.activate.cpd.ibm.com/command: '[]'
+        hook.deactivate.cpd.ibm.com/command: '[]'
+        cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
+        openshift.io/scc: hostmount-anyuid
+        cloudpakName: {{ .Values.cloudpakAnnotations.cloudpakName }}
+        cloudpakId: {{ .Values.cloudpakAnnotations.cloudpakId }}
+        productCloudpakRatio: {{ .Values.cloudpakAnnotations.productCloudpakRatio }}
+        productID:  {{ .Values.cloudpakAnnotations.productID }}
+        productName: "{{ .Values.productName.PATM1Server }}"
+        productMetric: "VIRTUAL_PROCESSOR_CORE"
+        productVersion: 3.5.2
+        productChargedContainers: "All"
+      creationTimestamp: null
+      labels:
+        app: tm1
+        app.kubernetes.io/name: paw
+        icpdsupport/addOnId: pa
+        icpdsupport/app: "pa-tm1"
+        cloudpakInstanceId: "{{ .Values.zenCloudPakInstanceId }}"
+        {{- include "planning-analytics.serviceid" . | indent 8 }}
+        {{- if ( .Values.createdBy )  }}
+        icpdsupport/createdBy: {{ .Values.createdBy | quote }}
+        {{- end }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+      - env:
+        - name: TM1_NAME
+          value: {{ .Values.tm1.name }}
+        - name: GID
+          value: "0"
+        - name: MAX_RELOADS
+          value: "3"
+        - name: ALWAYS_RELOAD
+          value: "on"
+        - name: LISTEN_PORT
+          value: "8080"
+        - name: MANAGE_PORT
+          value: "8081"
+        - name: MAX_MEMORY_GB
+          value: "{{ .Values.tm1.maxMemoryDisplayPAAGB }}"
+        image: {{.Values.docker_registry_prefix}}/pa-tm1-cp4d:b644CP4D
+        imagePullPolicy: Always
+        name: tm1
+        readinessProbe:
+          httpGet:
+            path: /oddt/v1/tm1s/startIfNot
+            port: 8081
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /oddt/v1/tm1s/startIfNot
+            port: 8081
+          initialDelaySeconds: 240
+          periodSeconds: 10
+        resources:
+          limits:
+            cpu: {{ .Values.tm1.cpu }}
+            memory:  {{ .Values.tm1.memory }}
+          requests:
+            cpu:  {{ .Values.tm1.cpu }}
+            memory:  {{ .Values.tm1.memory }}
+        volumeMounts:
+        - mountPath: /tm1mnt
+          name: tm1-storage
+          subPath: tm1-{{ .Release.Name }}
+        - mountPath: /jwt-cert
+          name: jwt-cert
+      restartPolicy: Always
+      volumes:
+      - name: tm1-storage
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-tm1-pvc
+      - name: jwt-cert
+        secret:
+          secretName: pa-internal-tls-cert
+{{- end }}

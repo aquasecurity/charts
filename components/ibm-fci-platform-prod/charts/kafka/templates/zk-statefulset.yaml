@@ -1,0 +1,177 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ template "kafka.fullname" . }}-zk
+  labels:
+{{- include "common.label.metadata" (list . (printf "%s-%s" (include "kafka.name" .) "zk")  (include "kafka.chart" .) .Release.Name .Release.Service ) | indent 4 }}
+spec:
+  serviceName: {{ template "kafka.fullname" . }}-zk
+{{ if .Values.enabled }}
+  replicas: {{ .Values.zookeeperReplicaCount }}
+{{ else }}
+  replicas: 0
+{{ end }}
+  selector:
+    matchLabels:
+{{- include "common.selector.labels" (list .  (printf "%s-%s" (include "kafka.name" .) "zk") .Release.Name ) | indent 6 }}
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ .Release.Name }}-data-zk
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: {{ .Values.zookeeper.dataPvcSpec.size }}
+{{- if .Values.global.persistence.useDynamicProvisioning }}
+{{-   if not .Values.zookeeper.dataPvcSpec.storageClassName }}
+      storageClassName: {{ default nil .Values.global.persistence.storageClassName | quote }}
+{{-   else }}
+      storageClassName: {{ .Values.zookeeper.dataPvcSpec.storageClassName | quote }}
+{{-   end }}
+{{- else }}
+      storageClassName: {{ default "" .Values.zookeeper.dataPvcSpec.storageClassName | quote }}
+{{- end }}
+{{- if not .Values.global.persistence.useDynamicProvisioning }}
+      selector:
+        matchLabels:
+{{- include "common.selector.labels" (list .  (printf "%s-%s" (include "kafka.name" ) "zk") .Release.Name ) | indent 10 }}
+{{ end }}
+  - metadata:
+      name: {{ .Release.Name }}-log-zk
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: {{ .Values.zookeeper.logPvcSpec.size }}
+{{- if .Values.global.persistence.useDynamicProvisioning }}
+{{-   if not .Values.zookeeper.logPvcSpec.storageClassName }}
+      storageClassName: {{ default nil .Values.global.persistence.storageClassName | quote }}
+{{-   else }}
+      storageClassName: {{ .Values.zookeeper.logPvcSpec.storageClassName | quote }}
+{{-   end }}
+{{- else }}
+      storageClassName: {{ default "" .Values.zookeeper.logPvcSpec.storageClassName | quote }}
+{{- end }}
+{{- if not .Values.global.persistence.useDynamicProvisioning }}
+      selector:
+        matchLabels:
+{{- include "common.selector.labels" (list .  (printf "%s-%s" (include "kafka.name" ) "zk-log") .Release.Name ) | indent 10 }}
+{{ end }}
+  template:
+    metadata:
+      annotations:
+{{ include "common.meteringAnnotations" . | indent 8 }}
+      labels:
+{{- include "common.label.metadata" (list . (printf "%s-%s" (include "kafka.name" .) "zk")  (include "kafka.chart" .) .Release.Name .Release.Service ) | indent 8 }}
+    spec:
+{{ include "common.configureHostAliases" . | indent 6 }}
+{{ include "common.PodHostConfig" . | indent 6 }}
+      securityContext:
+{{ include "common.PodSecurityContextConfig" . | indent 8 }}
+{{- if .Values.global.pvRequiresPermissionsFix }}
+      serviceAccountName: fci-kafka
+{{ else }}
+      serviceAccountName: fci-common
+{{ end }}      
+      affinity:
+{{ include "common.ArchNodeAffinity" . | indent 8 }}
+      volumes:
+      - name: zookeeper-tls
+        secret:
+          secretName: {{ .Release.Name }}-zookeeper-tls
+      initContainers:
+        {{- if .Values.global.pvRequiresPermissionsFix }}
+        - name: permissionsfix
+          resources:
+{{ toYaml .Values.sideCarContainers.resources | indent 12 }}
+          args:
+          - chown -R 1000:1000 /mount;
+          securityContext:
+{{ include "common.RootChownerContainerSecurityContext" . | indent 12 }}
+          command:
+          - /bin/sh
+          - -c
+          image: "{{ required "global.dockerRegistryPrefix must specify from which repository the docker image should be fetched." .Values.global.dockerRegistryPrefix }}/{{ .Values.global.commonScripts.image.repository }}:{{ .Values.global.commonScripts.image.tag }}"
+          volumeMounts:
+          - mountPath: /mount
+            name: {{ .Release.Name }}-data-zk
+        - name: permissionsfix-log
+          resources:
+{{ toYaml .Values.sideCarContainers.resources | indent 12 }}
+          args:
+          - chown -R 1000:1000 /mount;
+          securityContext:
+{{ include "common.RootChownerContainerSecurityContext" . | indent 12 }}
+          command:
+          - /bin/sh
+          - -c
+          image: "{{ required "global.dockerRegistryPrefix must specify from which repository the docker image should be fetched." .Values.global.dockerRegistryPrefix }}/{{ .Values.global.commonScripts.image.repository }}:{{ .Values.global.commonScripts.image.tag }}"
+          volumeMounts:
+          - mountPath: /mount
+            name: {{ .Release.Name }}-log-zk
+        {{- end }}
+      containers:
+        - name: zookeeper
+          image: "{{ .Values.global.dockerRegistryPrefix }}/{{ .Values.zookeeper.image.repository }}:{{ .Values.zookeeper.image.tag }}"
+          resources:
+{{ toYaml .Values.zookeeper.resources | indent 12 }}
+          imagePullPolicy: {{ .Values.zookeeper.image.pullPolicy }}
+{{ include "common.sideCarHealthCheck" . | indent 10 }}
+          securityContext:
+{{ include "common.RestrictedContainerSecurityContext" . | indent 12 }}
+          ports:
+          - containerPort: 2888
+            name: server
+          - containerPort: 3888
+            name: leader-election
+          lifecycle:
+            preStop:
+              exec:
+                command: ["zookeeper-server-stop"]
+          env:
+{{- include "common.import-secret" (list . "ZOOKEEPER_SSL_TRUSTSTORE_PASSWORD" "platform" "FCI_JKS_PASSWORD") | indent 10 }}
+{{- include "common.import-secret" (list . "ZOOKEEPER_SSL_KEYSTORE_PASSWORD" "platform" "FCI_JKS_PASSWORD") | indent 10 }}
+          - name: ZOOKEEPER_SNAPSHOT_TRUST_EMPTY
+            value: "true"
+          - name: ZOOKEEPER_TICK_TIME
+            value: "{{ .Values.zookeeper.tickTime }}"
+          - name: ZOOKEEPER_SECURE_CLIENT_PORT
+            value: "2182"
+          - name: ZOOKEEPER_SSL_HOSTNAME_VERIFICATION
+            value: "false"
+          - name: ZOOKEEPER_SSL_CLIENT_AUTH
+            value: "none"
+          - name: ZOOKEEPER_SERVER_CNXN_FACTORY
+            value: "org.apache.zookeeper.server.NettyServerCnxnFactory"
+          - name: ZOOKEEPER_SSL_KEYSTORE_LOCATION
+            value: "/zkTls/keystore.jks"
+          - name: ZOOKEEPER_SSL_TRUSTSTORE_LOCATION
+            value: "/zkTls/truststore.jks"
+          - name: ZOOKEEPER_CLIENT_PORT
+            value: "2181"
+          - name: ZOOKEEPER_ELECTION_PORT
+            value: "3888"
+          - name: ZOOKEEPER_SERVER_PORT
+            value: "2888"
+          - name: ZOOKEEPER_SERVERS
+            value: {{ include "zookeeper.servers" . }}
+          command:
+          - sh
+          - -exc
+          - |
+            ZK_FIX_HOST_REGEX="s/${HOSTNAME}\.[^:]*:/0.0.0.0:/g" && \
+            ZOOKEEPER_SERVERS=`echo $ZOOKEEPER_SERVERS | sed -e "$ZK_FIX_HOST_REGEX"` && \
+            [ -z "$ID_OFFSET" ] && ID_OFFSET=1 && \
+            export ZOOKEEPER_SERVER_ID=$((${HOSTNAME##*-} + $ID_OFFSET)) && \
+            exec /etc/confluent/docker/run
+          volumeMounts:
+            - name: {{ .Release.Name }}-data-zk
+              mountPath: /var/lib/zookeeper/data
+            - name: {{ .Release.Name }}-log-zk
+              mountPath: /var/lib/zookeeper/log
+            - name: zookeeper-tls
+              mountPath: /zkTls/keystore.jks
+              subPath: keystore.jks
+            - name: zookeeper-tls
+              mountPath: /zkTls/truststore.jks
+              subPath: truststore.jks

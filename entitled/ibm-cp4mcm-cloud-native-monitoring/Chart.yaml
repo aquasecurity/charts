@@ -1,0 +1,14 @@
+name: ibm-cp4mcm-cloud-native-monitoring
+description: Event Management and Monitoring bootstrap services for managed clusters
+version: 2.2.1
+appVersion: 2021.1.0
+keywords:
+- ICP
+- Commercial
+- amd64
+- Monitoring
+- Operations
+- DevOps
+- omaas
+kubeVersion: '>=1.11.0-0'
+tillerVersion: '>=2.12.0'

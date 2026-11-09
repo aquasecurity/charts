@@ -1,0 +1,41 @@
+global:
+  license: not accepted
+  environmentSize: size0
+  image:
+    repository: ''
+    secret: ''
+    pullPolicy: Always
+    useTag: true
+  integrations:
+    alertDetails:
+      releaseName: null
+      namespace: null
+    analyticsKafka:
+      releaseName: null
+      namespace: null
+image:
+  repository: 
+  name: noi-alert-action-service
+  tag: 5.0.64
+  digest: sha256:f4f95bd4e83312e965b94dd2d981b54d0f22de293994d78da1b0194167290052
+alertactionservice:
+  enabled: true
+  pullPolicy: Always
+topics:
+  incomingActions:
+    name: noi-actions
+  outgoingRequests:
+    name: noi-requests
+  outgoingEaActions:
+    name: ea-actions
+replicas: 3
+readiness:
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  timeoutSeconds: 10
+  failureThreshold: 10
+liveness:
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 10
+  failureThreshold: 10

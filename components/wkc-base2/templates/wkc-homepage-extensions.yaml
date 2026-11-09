@@ -1,0 +1,139 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wkc-homepage-extensions
+  labels:
+    icpdata_addon: "true"
+    icpdata_addon_version: "3.5.3"
+    app: {{ .Chart.Name }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-10"
+    "helm.sh/hook-delete-policy": before-hook-creation
+data:
+  extensions: |
+    [
+      {
+        "extension_point_id": "homepage_getting_started",
+        "extension_name": "wkc_homepage_getting_started_create_catalog",
+        "match_permissions": "manage_catalog",
+        "order_hint": 410,
+        "details": {
+          "label": "{{`{{.global_wkc_homepage_getting_started_create_catalog_label}}`}}",
+          "nav_link": "/data/catalogs/new-catalog"
+        }
+      },
+      {
+        "extension_point_id": "homepage_getting_started",
+        "extension_name": "wkc_homepage_getting_started_explore_business_terms",
+        "match_permissions": "view_governance_artifacts,author_governance_artifacts",
+        "order_hint": 420,
+        "details": {
+          "label": "{{`{{.global_wkc_homepage_getting_started_explore_business_terms_label}}`}}",
+          "nav_link": "/gov/terms"
+        },
+        "meta": {
+          "reference": {
+            "nav_item": "governance-businessTerms"
+          }
+        }
+      },
+      {
+        "extension_point_id": "homepage_getting_started",
+        "extension_name": "wkc_homepage_getting_started_explore_policies",
+        "match_permissions": "view_governance_artifacts,author_governance_artifacts",
+        "order_hint": 430,
+        "details": {
+          "label": "{{`{{.global_wkc_homepage_getting_started_explore_policies_label}}`}}",
+          "nav_link": "/gov/policies"
+        },
+        "meta": {
+          "reference": {
+            "nav_item": "governance-policies"
+          }
+        }
+      },
+      {
+        "extension_point_id": "homepage_quick_navigation",
+        "extension_name": "wkc_homepage_quick_navigation_catalogs",
+        "match_permissions": "access_catalog,manage_catalog",
+        "order_hint": 210,
+        "details": {
+          "label": "{{`{{.global_wkc_homepage_quick_navigation_catalogs_label}}`}}",
+          "nav_link": "/data/catalogs"
+        },
+        "meta": {
+          "reference": {
+            "nav_item": "catalogs-allCatalogs"
+          }
+        }
+      },
+      {
+        "extension_point_id": "homepage_card",
+        "extension_name": "wkc_homepage_card_inbox",
+        "order_hint": 300,
+        "details": {
+          "title": "{{`{{.global_wkc_tasks}}`}}",
+          "drilldown_url": "/gov/workflow/tasks/",
+          "template_type": "number_list",
+          "data_url": "/gov/exposedApi/workflow/homecard/mytasks",
+          "empty_state": {
+            "main_text": "{{`{{.global_wkc_nothing_to_show}}`}}",
+            "sub_text": "{{`{{.global_wkc_contact_administrator}}`}}"
+          }
+        }
+      },
+      {
+        "extension_point_id": "homepage_card",
+        "extension_name": "wkc_homepage_card_admin",
+        "order_hint": 320,
+        "match_permissions": "manage_governance_workflow",
+        "details": {
+          "title": "{{`{{.global_wkc_task_monitoring}}`}}",
+          "drilldown_url": "/gov/workflow/management/#monitoring",
+          "template_type": "number_list",
+          "data_url": "/gov/exposedApi/workflow/homecard/admintasks",
+          "empty_state": {
+            "main_text": "{{`{{.global_wkc_nothing_to_show}}`}}",
+            "sub_text": "{{`{{.global_wkc_contact_administrator}}`}}"
+          }
+        }
+      },
+      {
+        "extension_point_id":"homepage_card",
+        "extension_name":"wkc_homepage_card_recent_catalogs",
+        "match_permissions": "access_catalog,manage_catalog",
+        "order_hint":275,
+        "details":{
+          "title":"{{`{{.global_wkc_recent_catalogs}}`}}",
+          "drilldown_url":"/data/catalogs",
+          "template_type":"list",
+          "data_url":"/data/catalogs/proxy/catalogs/homepage/recent",
+          "empty_state":{
+            "main_text":"{{`{{.global_wkc_no_catalogs}}`}}"
+          }
+        }
+      },
+      {
+        "extension_point_id": "homepage_card",
+        "extension_name": "wkc_homepage_card_glossary_totals",
+        "order_hint": 375,
+        "match_permissions": "manage_categories,administrator,view_governance_artifacts",
+        "details": {
+          "title": "{{`{{.global_wkc_governance_artifacts}}`}}",
+          "template_type": "number_list",
+          "data_url": "/gov/exposedApi/homecard/govartifacts",
+          "empty_state": {
+            "main_text": "{{`{{.global_wkc_nothing_to_show}}`}}",
+            "sub_text": "{{`{{.global_wkc_contact_administrator}}`}}"
+          }
+        }
+      }
+    ]

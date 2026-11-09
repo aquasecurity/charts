@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hummingbird-route
+  namespace: {{ .Release.namespace }}
+  labels:
+    icpdata_addon: "true"
+    icpdata_addon_version: {{ .Chart.AppVersion }}
+    app: "{{ .Values.environment.name }}-register-route-configmap"
+{{- include "helm.labels" . | indent 4 }}
+{{- include "cloudpak.labels" . | indent 4 }}
+data:
+  nginx.conf: |
+{{ tpl (.Files.Get "conf/controlplane-nginx.conf") . | indent 4}}

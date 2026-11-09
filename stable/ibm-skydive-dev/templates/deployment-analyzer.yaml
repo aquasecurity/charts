@@ -1,4 +1,38 @@
-apiVersion: extensions/v1beta1
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: skydive-service-account
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+imagePullSecrets:
+  - name: sa-{{ .Release.Namespace }}
+{{- if ne .Values.image.secretName "" }}
+  - name: {{ .Values.image.secretName }}
+{{- end }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: skydive-default-view
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin 
+subjects:
+  - kind: ServiceAccount
+    name: skydive-service-account
+    namespace: {{ .Release.Namespace }}
+---
+apiVersion: extensions/v1beta1 
 kind: Deployment
 metadata:
   name: {{ template "fullname" . }}-analyzer
@@ -22,48 +56,66 @@ spec:
         heritage: "{{ .Release.Service }}"
         tier: analyzer
     spec:
+      serviceAccountName: skydive-service-account
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      hostPID: true
+      hostIPC: true
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
       affinity:
         {{- include "nodeaffinity" . | indent 6 }}
-      {{- if .Values.global.image.secretName }}
-      {{- if ne .Values.global.image.secretName ""}}
+      {{- if .Values.image.secretName }}
+      {{- if ne .Values.image.secretName ""}}
       imagePullSecrets:
-      - name: {{ .Values.global.image.secretName }}
+      - name: {{ .Values.image.secretName }}
       {{- end }}
       {{- end }}      
       containers:
       - name: skydive-analyzer
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
         imagePullPolicy: {{ default "" .Values.image.imagePullPolicy | quote }}
+        terminationMessagePolicy: FallbackToLogsOnError
         args:
         - analyzer
-        - --listen=0.0.0.0:8082
+        - --listen=0.0.0.0:{{ .Values.service.port }}
         ports:
         - containerPort: {{ .Values.service.port }}
         - containerPort: {{ .Values.service.port }}
           protocol: UDP
-        - containerPort: 12379
+        - containerPort: {{ .Values.etcd.port }}
+        securityContext:
+          privileged: false
+          readOnlyRootFilesystem: false
+          allowPrivilegeEscalation: false
+          runAsNonRoot: false
+          runAsUser: 0
+          capabilities:
+                add:
+                - SYS_ADMIN
+                - SYS_RESOURCE
+                - SYS_TIME
+                - NET_BROADCAST
+                - NET_ADMIN
         readinessProbe:
           httpGet:
-            port: 8082
+            port: {{ .Values.service.port }}
             path: /api/status
           initialDelaySeconds: 10
           periodSeconds: 10
         livenessProbe:
           httpGet:
-            port: 8082
+            port: {{ .Values.service.port }}
             path: /api/status
           initialDelaySeconds: 20
           periodSeconds: 10
           failureThreshold: 10
         env:
+        - name: SKYDIVE_UI
+          value: '{"theme":"light","k8s_enabled":"true","topology": {"favorites":{"infrastructure":"G.V().Has(\"Manager\",NE(\"k8s\"))","kubernetes":"G.V().Has(\"Manager\",\"k8s\")"},"default_filter":"infrastructure"}}'
         - name: SKYDIVE_ANALYZER_TOPOLOGY_PROBES
           value: "k8s"
-        - name: SKYDIVE_UI_TOPOLOGY_FAVORITES
-          value: '{"infrastructure":"G.V().Has(\"Manager\", NE(\"k8s\"))","kubernetes":"G.V().Has(\"Manager\", \"k8s\")"}'
-        - name: SKYDIVE_UI_TOPOLOGY_DEFAULT_FILTER
-          value: 'infrastructure'
-        - name: SKYDIVE_UI_THEME
-          value: "light"
       {{- if .Values.persistence.enabled }}
         - name: SKYDIVE_ANALYZER_FLOW_BACKEND
           value: "elasticsearchflow"
@@ -74,7 +126,7 @@ spec:
         - name: SKYDIVE_STORAGE_ELASTICSEARCHTOPOLOGY_DRIVER
           value: "elasticsearch"
         - name: SKYDIVE_STORAGE_ELASTICSEARCHFLOW_HOST
-          value: {{ .Values.storage.elasticsearch.host }}
+          value: {{ .Values.storage.elasticsearch.host }}:{{ .Values.storage.elasticsearch.port }}
         - name: SKYDIVE_STORAGE_ELASTICSEARCHFLOW_INDICES_TO_KEEP
           value: {{ .Values.storage.flows.indicesToKeep | quote }}
         - name: SKYDIVE_STORAGE_ELASTICSEARCHFLOW_INDEX_ENTRIES_LIMIT
@@ -88,7 +140,7 @@ spec:
         - name: SKYDIVE_STORAGE_ELASTICSEARCHFLOW_RETRY
           value: "5"
         - name: SKYDIVE_STORAGE_ELASTICSEARCHTOPOLOGY_HOST
-          value: {{ .Values.storage.elasticsearch.host }}
+          value: {{ .Values.storage.elasticsearch.host }}:{{ .Values.storage.elasticsearch.port }}
         - name: SKYDIVE_STORAGE_ELASTICSEARCHTOPOLOGY_INDICES_TO_KEEP
           value: {{ .Values.storage.topology.indicesToKeep | quote }}
         - name: SKYDIVE_STORAGE_ELASTICSEARCHTOPOLOGY_INDEX_ENTRIES_LIMIT
@@ -100,7 +152,7 @@ spec:
         - name: SKYDIVE_STORAGE_ELASTICSEARCHTOPOLOGY_BULK_MAXDELAY
           value: "10"  
         - name: SKYDIVE_STORAGE_ELASTICSEARCHTOPOLOGY_RETRY
-          value: "5"  
+          value: "5"        
       {{- end }}
         - name: SKYDIVE_EMBEDDED
           value: "true"
@@ -113,21 +165,36 @@ spec:
       {{- end }}
         resources:
 {{ toYaml .Values.resources | indent 10 }}
-
+        volumeMounts:
+        - name: ssl
+          mountPath: /etc/ssl/certs
     {{- if .Values.persistence.enabled }}
       - name: skydive-elasticsearch
-        image: elasticsearch:2
+        image: {{ .Values.elasticsearch.image.repository }}:{{ .Values.elasticsearch.image.tag }}
         ports:
-        - containerPort: 9200
+        - containerPort: {{ .Values.storage.elasticsearch.port }}
+        securityContext:
+          privileged: false
+          readOnlyRootFilesystem: false
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 1000
+          capabilities:
+                add:
+                - SYS_ADMIN
+                - SYS_RESOURCE
+                - SYS_TIME
+                - NET_BROADCAST
+                - NET_ADMIN
         readinessProbe:
           httpGet:
-            port: 9200
+            port: {{ .Values.storage.elasticsearch.port }}
             path: /
           initialDelaySeconds: 10
           periodSeconds: 10
         livenessProbe:
           httpGet:
-            port: 9200
+            port: {{ .Values.storage.elasticsearch.port }}
             path: /
           initialDelaySeconds: 20
           periodSeconds: 10
@@ -135,12 +202,16 @@ spec:
         env:
         - name: network.host
           value: "0.0.0.0"
+        - name: xpack.security.enabled
+          value: "false" 
         resources:
 {{ toYaml .Values.resources | indent 10 }}
         volumeMounts:
         - name: "{{ template "fullname" . }}-{{ .Values.dataVolume.name }}"
           mountPath: /usr/share/elasticsearch/data
+    {{- end }}      
       volumes:
+    {{- if .Values.persistence.enabled }}  
       - name: "{{ template "fullname" . }}-{{ .Values.dataVolume.name }}"   
         persistentVolumeClaim:
         {{- if .Values.dataVolume.existingClaimName }}
@@ -149,3 +220,7 @@ spec:
           claimName: {{ template "fullname" . }}-{{ .Values.dataVolume.name }}
         {{- end }}
     {{- end }}
+      - name: ssl
+        hostPath:
+          path: /etc/ssl/certs
+

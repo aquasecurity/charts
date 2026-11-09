@@ -2,11 +2,66 @@ datapower:
   __metadata:
     label: "DataPower"
     description: "Values for DataPower runtime and resources."
+  image:
+    pullSecret:
+      __metadata:
+        label: "Pull Secret"
+        description: "Secret used for pulling from private repositories."
+    repository:
+      __metadata:
+        label: "DataPower image repository"
+        description: "Repository from which to pull the DataPower image."
+    tag:
+      __metadata:
+        label: "Tag"
+        description: "A tag is a label applied to an image in a repository. Tags are how various images in a repository are distinguished from each other."
+    pullPolicy:
+      __metadata:
+        label: "Pull Policy"
+        description: "The default pull policy is IfNotPresent which causes the Kubelet to skip pulling an image if it already exists."
+        options:
+        - label: 'Always'
+          value: 'Always'
+        - label: 'Never'
+          value: 'Never'
+        - label: 'IfNotPresent'
+          value: 'IfNotPresent'
+  resources:
+    limits:
+      cpu:
+        __metadata:
+          label: "CPU limit"
+          description: "The upper limit of CPU core. Specify integers, fractions (e.g. 0.5), or millicores values(e.g. 100m, where 100m is equivalent to .1 core)."
+      memory:
+        __metadata:
+          label: "Memory limit"
+          description: "The memory upper limit in bytes. Specify integers with suffixes: E, P, T, G, M, K, or power-of-two equivalents: Ei, Pi, Ti, Gi, Mi, Ki."
+    requests:
+      cpu:
+        __metadata:
+          label: "Requested CPU"
+          description: "The minimum required CPU core. Specify integers, fractions (e.g. 0.5), or millicore values(e.g. 100m, where 100m is equivalent to .1 core)."
+      memory:
+        __metadata:
+          label: "Requested memory"
+          description: "The minimum memory in bytes. Specify integers with one of these suffixes: E, P, T, G, M, K, or power-of-two equivalents: Ei, Pi, Ti, Gi, Mi, Ki."
   env:
     workerThreads:
       __metadata:
         label: "Worker Threads"
-        description: "Set the number of worker threads DataPower uses. If set it should agree with the CPU number requested. If it is set to 0 or left empty the environment variable will not be set."
+        description: "Set the number of worker threads DataPower uses. Should agree with Requested CPUs."
+    defaultLogFormat:
+      __metadata:
+        label: "Default logging format"
+        description: "Set the type of log output for DataPower."
+  adminUserSecret:
+    __metadata:
+      label: "Admin Password Secret"
+      description: "Secret containing password information for admin user. See README."
+  replicaCount:
+    __metadata:
+      label: "Number of pods to deploy"
+      description: "This value controls how many DataPower pods are deployed."
   webGuiManagementState:
     __metadata:
       label: "Web GUI Management State"
@@ -27,7 +82,7 @@ datapower:
   gatewaySshState:
     __metadata:
       label: "Gateway SSH State"
-      description: "Enable or disable the state of the SSH management interface. Should be enabled or disabled."
+      description: "Enable or disable the state of the SSH management interface. Should be enabled or disabled. Makes container run as root."
       options:
       - label: "enabled"
         value: "enabled"
@@ -79,6 +134,11 @@ datapower:
     __metadata:
       label: "SNMP Admin State"
       description: "Enable or disable the state of the SNMP interface. Should be enabled or disabled."
+      options:
+      - label: "enabled"
+        value: "enabled"
+      - label: "disabled"
+        value: "disabled"
   snmpLocalAddress:
     __metadata:
       label: "SNMP Interface Address"
@@ -87,24 +147,79 @@ datapower:
     __metadata:
       label: "SNMP Interface Port"
       description: "Port on which to listen for SNMP requests. If this is changed, you must update the Prometheus target port."
+  additionalConfig:
+    __metadata:
+      label: "Additional DataPower Configuration"
+      description: "List of domain-configmap pairs that maps DataPower configuration to domains. See README for details."
+      type: "string"
+  additionalLocal:
+    __metadata:
+      label: "Additional DataPower Local Files"
+      description: "Configmap containing a tarred well-formed DataPower local directory. See README for details."
+  additionalCerts:
+    __metadata:
+      label: "Additional DataPower Certificates"
+      description: "List of domain-secret pairs with optional cert type that maps certificates to domains. See README for details."
+      type: "string"
+
 patternName:
   __metadata:
     label: "Pattern Name"
-    description: "Pattern of the chart to deploy. Options are RESTProxy or none"
+    description: "Pattern of the chart to deploy. Options are restProxy or none"
     options:
-    - label: "RESTProxy"
-      value: "RESTProxy"
+    - label: "restProxy"
+      value: "restProxy"
     - label: "none"
       value: "none"
+health:
+  __metadata:
+    label: "Health"
+    description: "Health check tuneables"
+  livenessPort:
+    __metadata:
+      label: "Liveness Port"
+      description: "Liveness probe listening port."
+      type: "number"
+  readinessPort:
+    __metadata:
+      label: "Readiness Port"
+      description: "Readiness probe listening port."
+      type: "number"
+
+service:
+  __metadata:
+    label: "Service"
+    description: "NodePort Service"
+  name:
+    __metadata:
+      label: "Service Name"
+      description: "Name of the external facing Service."
+  type:
+    __metadata:
+      label: "Service Type"
+      description: "Type of the external facing Service."
+      options:
+      - label: 'ClusterIP'
+        value: 'ClusterIP'
+      - label: 'NodePort'
+        value: 'NodePort'
 crypto:
   __metadata:
-    label: "Crypto"
-    description: "Values section for key and certificate."
-  frontsideKey:
+    label: "Crypto keys"
+    description: "Crypto keys needed by DataPower."
+  frontsideSecret:
     __metadata:
-      label: "Frontside Key [optional]"
-      description: "The key for use on DataPower. The value for this field should be the raw key file base64 encoded with all whitespace removed."
-  frontsideCert:
+      label: "Frontside Key/Cert Secret [optional]"
+      description: "Secret containing the key/cert pair for use on DataPower. See README Installation section for creation instructions."
+restProxy:
+  __metadata:
+    label: "REST Proxy example configuration"
+    description: "REST Proxy is a simple example configuration for DataPower."
+  backendURL:
     __metadata:
-      label: "Frontside Certificate [optional]"
-      description: "The certificate for use on DataPower. The value for this field should be the raw certificate file base64 encoded with all whitespace removed."
+      label: "Backend URL"
+      description: "URL of the backend used in the REST Proxy example configuration."
+  containerPort:
+    __metadata:
+      label: "Container Port"
+      description: "Port the container should use in the REST Proxy example."

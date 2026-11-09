@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "common-ui.fullname" . }}-nginx
+  labels:
+{{- include "common.label.metadata" (list . (include "common-ui.name" .) (include "common-ui.chart" .) .Release.Name .Release.Service ) | indent 4 }}
+data:
+{{- with .Values.nginxConfig }}
+{{    toYaml . | indent 2 }}
+{{- end }}
+{{- with .Values.global.auth }}
+{{ toYaml . | indent 2 }}
+{{- end }}
+  RELEASE_NAME: "{{ template "common-ui.core-release-name" . }}"
+  IDENTITY_SERVER_TYPE: "{{ .Values.global.IDENTITY_SERVER_TYPE }}"
+  tcpIngressSubdomain: {{ .Values.global.tcpIngressSubdomain }}
+  DB2_PROVISIONER: "{{ .Values.global.DB2_PROVISIONER }}"

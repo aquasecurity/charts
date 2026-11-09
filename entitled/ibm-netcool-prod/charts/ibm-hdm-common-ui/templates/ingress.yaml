@@ -1,0 +1,33 @@
+{{- if .Values.global.ingress.api.enabled }}
+{{- include "sch.config.init" (list . "ibm-hdm-common-ui.sch.chart.config.values") -}}
+{{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" }}
+apiVersion: networking.k8s.io/v1beta1    
+{{- else }}
+apiVersion: extensions/v1beta1           
+{{- end }}
+kind: Ingress
+metadata:
+  name: {{ include "sch.names.fullCompName" (list .) | quote }}
+  labels:
+{{ include "sch.metadata.labels.standard" (list . "") | indent 4 }}
+  annotations:
+    kubernetes.io/ingress.class: '{{ .Values.global.ingress.api.class }}'
+spec:
+  tls:
+  - hosts:
+    - {{ include "ibm-hdm-common-ui.ingress.host" . | quote }}
+    {{ if .Values.global.ingress.tlsSecret }}
+    secretName: {{ tpl .Values.global.ingress.tlsSecret . }}
+    {{ else }}
+    secretName: {{ include "sch.names.fullCompName" (list . "tls-ingress") | quote }}
+    {{ end }}
+
+  rules:
+  - http:
+      paths:
+      - backend:
+          serviceName: {{ include "sch.names.fullCompName" (list . "uiserver") | quote }}
+          servicePort: 8080
+        path: {{ .Values.ingress.path }}
+    host: {{ include "ibm-hdm-common-ui.ingress.host" . }}
+{{ end }}

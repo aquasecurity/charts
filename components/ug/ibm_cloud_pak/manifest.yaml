@@ -1,0 +1,226 @@
+images:
+- image: audit-trail-service:b89_3f31833605b3
+  references:
+  - repository: audit-trail-service:b89_3f31833605b3
+    pull-repository: cp.icr.io/cp/cpd/audit-trail-service:b89_3f31833605b3
+    pull-authorization:
+      username:
+        env: ARTIFACTORY_USERNAME
+      password:
+        env: ARTIFACTORY_PASSWORD
+- image: wkc-init-container:1.0.122
+  references:
+  - repository: wkc-init-container:1.0.122
+    pull-repository: cp.icr.io/cp/cpd/wkc-init-container:1.0.122
+    pull-authorization:
+      username:
+        env: ARTIFACTORY_USERNAME
+      password:
+        env: ARTIFACTORY_PASSWORD
+- image: finley:b4437_50f41d3dfa84cb35558c5e77ca8ef78ac7ec24bd
+  references:
+  - repository: finley:b4437_50f41d3dfa84cb35558c5e77ca8ef78ac7ec24bd
+    pull-repository: cp.icr.io/cp/cpd/finley:b4437_50f41d3dfa84cb35558c5e77ca8ef78ac7ec24bd
+    pull-authorization:
+      username:
+        env: ARTIFACTORY_USERNAME
+      password:
+        env: ARTIFACTORY_PASSWORD
+- image: gov-admin-ui:b1331_6d4a00cffa76
+  references:
+  - repository: gov-admin-ui:b1331_6d4a00cffa76
+    pull-repository: cp.icr.io/cp/cpd/gov-admin-ui:b1331_6d4a00cffa76
+    pull-authorization:
+      username:
+        env: ARTIFACTORY_USERNAME
+      password:
+        env: ARTIFACTORY_PASSWORD
+- image: gov-app-config-service:b533_18b0362b1b43
+  references:
+  - repository: gov-app-config-service:b533_18b0362b1b43
+    pull-repository: cp.icr.io/cp/cpd/gov-app-config-service:b533_18b0362b1b43
+    pull-authorization:
+      username:
+        env: ARTIFACTORY_USERNAME
+      password:
+        env: ARTIFACTORY_PASSWORD
+- image: gov-catalog-search-index:b347_d9a37d545593
+  references:
+  - repository: gov-catalog-search-index:b347_d9a37d545593
+    pull-repository: cp.icr.io/cp/cpd/gov-catalog-search-index:b347_d9a37d545593
+    pull-authorization:
+      username:
+        env: ARTIFACTORY_USERNAME
+      password:
+        env: ARTIFACTORY_PASSWORD
+- image: gov-catalog-search-service:b1125_555eaa37ff47
+  references:
+  - repository: gov-catalog-search-service:b1125_555eaa37ff47
+    pull-repository: cp.icr.io/cp/cpd/gov-catalog-search-service:b1125_555eaa37ff47
+    pull-authorization:
+      username:
+        env: ARTIFACTORY_USERNAME
+      password:
+        env: ARTIFACTORY_PASSWORD
+- image: gov-enterprise-search-ui:b1406_cfad738d05e5
+  references:
+  - repository: gov-enterprise-search-ui:b1406_cfad738d05e5
+    pull-repository: cp.icr.io/cp/cpd/gov-enterprise-search-ui:b1406_cfad738d05e5
+    pull-authorization:
+      username:
+        env: ARTIFACTORY_USERNAME
+      password:
+        env: ARTIFACTORY_PASSWORD
+- image: gov-insights-service:b877_2b91bab53a6c
+  references:
+  - repository: gov-insights-service:b877_2b91bab53a6c
+    pull-repository: cp.icr.io/cp/cpd/gov-insights-service:b877_2b91bab53a6c
+    pull-authorization:
+      username:
+        env: ARTIFACTORY_USERNAME
+      password:
+        env: ARTIFACTORY_PASSWORD
+- image: gov-quality-ui:b9095_7039690ed1f2
+  references:
+  - repository: gov-quality-ui:b9095_7039690ed1f2
+    pull-repository: cp.icr.io/cp/cpd/gov-quality-ui:b9095_7039690ed1f2
+    pull-authorization:
+      username:
+        env: ARTIFACTORY_USERNAME
+      password:
+        env: ARTIFACTORY_PASSWORD
+- image: gov-ui-commons:b479_7f96dc7ee55f
+  references:
+  - repository: gov-ui-commons:b479_7f96dc7ee55f
+    pull-repository: cp.icr.io/cp/cpd/gov-ui-commons:b479_7f96dc7ee55f
+    pull-authorization:
+      username:
+        env: ARTIFACTORY_USERNAME
+      password:
+        env: ARTIFACTORY_PASSWORD
+- image: gov-user-prefs-service:b397_fababdf1554e
+  references:
+  - repository: gov-user-prefs-service:b397_fababdf1554e
+    pull-repository: cp.icr.io/cp/cpd/gov-user-prefs-service:b397_fababdf1554e
+    pull-authorization:
+      username:
+        env: ARTIFACTORY_USERNAME
+      password:
+        env: ARTIFACTORY_PASSWORD
+- image: gremlin-console-ubi7-x86_64:0.5.2_b820_bca3c97bb844
+  references:
+  - repository: gremlin-console-ubi7-x86_64:0.5.2_b820_bca3c97bb844
+    pull-repository: cp.icr.io/cp/cpd/gremlin-console-ubi7-x86_64:0.5.2_b820_bca3c97bb844
+    pull-authorization:
+      username:
+        env: ARTIFACTORY_USERNAME
+      password:
+        env: ARTIFACTORY_PASSWORD
+- image: ia-analysis:b1919_1bb7ce1d5dcd
+  references:
+  - repository: ia-analysis:b1919_1bb7ce1d5dcd
+    pull-repository: cp.icr.io/cp/cpd/ia-analysis:b1919_1bb7ce1d5dcd
+    pull-authorization:
+      username:
+        env: ARTIFACTORY_USERNAME
+      password:
+        env: ARTIFACTORY_PASSWORD
+- image: igc-ui-react:b9131_2a6ac95d4398
+  references:
+  - repository: igc-ui-react:b9131_2a6ac95d4398
+    pull-repository: cp.icr.io/cp/cpd/igc-ui-react:b9131_2a6ac95d4398
+    pull-authorization:
+      username:
+        env: ARTIFACTORY_USERNAME
+      password:
+        env: ARTIFACTORY_PASSWORD
+- image: odf-fast-analyzer-kube:bcp4d35111_b51ea7073370
+  references:
+  - repository: odf-fast-analyzer-kube:bcp4d35111_b51ea7073370
+    pull-repository: cp.icr.io/cp/cpd/odf-fast-analyzer-kube:bcp4d35111_b51ea7073370
+    pull-authorization:
+      username:
+        env: ARTIFACTORY_USERNAME
+      password:
+        env: ARTIFACTORY_PASSWORD
+- image: omag:b39_35f0bbdc232f4
+  references:
+  - repository: omag:b39_35f0bbdc232f4
+    pull-repository: cp.icr.io/cp/cpd/omag:b39_35f0bbdc232f4
+    pull-authorization:
+      username:
+        env: ARTIFACTORY_USERNAME
+      password:
+        env: ARTIFACTORY_PASSWORD
+- image: shop4info-rest:b76_e6558f4992af
+  references:
+  - repository: shop4info-rest:b76_e6558f4992af
+    pull-repository: cp.icr.io/cp/cpd/shop4info-rest:b76_e6558f4992af
+    pull-authorization:
+      username:
+        env: ARTIFACTORY_USERNAME
+      password:
+        env: ARTIFACTORY_PASSWORD
+- image: shop4info-scheduler:b76_e6558f4992af
+  references:
+  - repository: shop4info-scheduler:b76_e6558f4992af
+    pull-repository: cp.icr.io/cp/cpd/shop4info-scheduler:b76_e6558f4992af
+    pull-authorization:
+      username:
+        env: ARTIFACTORY_USERNAME
+      password:
+        env: ARTIFACTORY_PASSWORD
+- image: shop4info-type-registry-service:b76_e6558f4992af
+  references:
+  - repository: shop4info-type-registry-service:b76_e6558f4992af
+    pull-repository: cp.icr.io/cp/cpd/shop4info-type-registry-service:b76_e6558f4992af
+    pull-authorization:
+      username:
+        env: ARTIFACTORY_USERNAME
+      password:
+        env: ARTIFACTORY_PASSWORD
+- image: shop4info-event-consumer:b76_e6558f4992af
+  references:
+  - repository: shop4info-event-consumer:b76_e6558f4992af
+    pull-repository: cp.icr.io/cp/cpd/shop4info-event-consumer:b76_e6558f4992af
+    pull-authorization:
+      username:
+        env: ARTIFACTORY_USERNAME
+      password:
+        env: ARTIFACTORY_PASSWORD
+- image: shop4info-schema-init:b76_e6558f4992af
+  references:
+  - repository: shop4info-schema-init:b76_e6558f4992af
+    pull-repository: cp.icr.io/cp/cpd/shop4info-schema-init:b76_e6558f4992af
+    pull-authorization:
+      username:
+        env: ARTIFACTORY_USERNAME
+      password:
+        env: ARTIFACTORY_PASSWORD
+- image: shop4info-mappers-service:b76_e6558f4992af
+  references:
+  - repository: shop4info-mappers-service:b76_e6558f4992af
+    pull-repository: cp.icr.io/cp/cpd/shop4info-mappers-service:b76_e6558f4992af
+    pull-authorization:
+      username:
+        env: ARTIFACTORY_USERNAME
+      password:
+        env: ARTIFACTORY_PASSWORD
+- image: shop4info-mappers-wkc:b76_e6558f4992af
+  references:
+  - repository: shop4info-mappers-wkc:b76_e6558f4992af
+    pull-repository: cp.icr.io/cp/cpd/shop4info-mappers-wkc:b76_e6558f4992af
+    pull-authorization:
+      username:
+        env: ARTIFACTORY_USERNAME
+      password:
+        env: ARTIFACTORY_PASSWORD
+- image: kafka-ubi7-x86_64:2.13-2.6.0_b820_bca3c97bb844
+  references:
+  - repository: kafka-ubi7-x86_64:2.13-2.6.0_b820_bca3c97bb844
+    pull-repository: cp.icr.io/cp/cpd/kafka-ubi7-x86_64:2.13-2.6.0_b820_bca3c97bb844
+    pull-authorization:
+      username:
+        env: ARTIFACTORY_USERNAME
+      password:
+        env: ARTIFACTORY_PASSWORD

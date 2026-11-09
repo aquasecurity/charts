@@ -1,4 +1,4 @@
-# © Copyright IBM Corporation 2018
+# © Copyright IBM Corporation 2018, 2019
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,13 +13,16 @@
 # limitations under the License.
 
 qualification:
-  levelName: "ibm-cloud-pak"
-  levelDescription: "IBM Cloud Pak"
-  issueDate: "09/2018"
-  duration: "6M"
+  levelName: "certified-ibm-cloud-pak"
+  levelDescription: "IBM certified container"
+  issueDate: "06/2019"
+  duration: "12M"
   terms: "Valid from date of issue. Security vulnerability management and enhancements are delivered on the latest version of the chart and images."
 prereqs:
   security:
-    kubernetes:
-      podSecurityPolicy:
-        name: "ibm-anyuid-psp"
+    openshift:
+      securityContextConstraints:
+        name: "ibm-anyuid-scc"
+  k8sDistros:
+    openshift:
+      semver: ">=1.11.0"

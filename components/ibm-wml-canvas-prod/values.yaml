@@ -1,0 +1,140 @@
+# Default values for wml-canvas.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+global:
+  # This value will have the unique-id of the build which created the addon injected
+  # as part of the build process.
+  cloudpakInstanceId: "set during installation"
+  annotations:
+    cloudpakName: "IBM Watson Studio Premium Extension for IBM Cloud Pak for Data"
+    cloudpakId: "497aaae00a3f402dbcbb6ee00d1b924b"
+    productMetric: "VIRTUAL_PROCESSOR_CORE"
+    productChargedContainers: "All"
+    productCloudpakRatio: "1:1"
+    productID: "497aaae00a3f402dbcbb6ee00d1b924b"
+    productName: "IBM SPSS Modeler"
+    productVersion: "3.5.1"
+
+  image:
+    pullPolicy: "IfNotPresent"
+
+  clusterDomain: svc.cluster.local
+
+  addOnPodLabels:
+    addOnId: "spss-modeler"
+    icpApp: "api"
+    spssApp: "spss-modeler-app"
+
+  ibmProduct: "zen"
+
+  buildVersion: "0.0"
+
+  flowSession:
+    cpuLimits: 4
+    memLimits: 16Gi
+
+  runAsUser: "1000320999"
+  editor:
+    sa: cpd-editor-sa
+  viewer:
+    sa: cpd-viewer-sa
+
+  watsonStudio:
+    url: "https://internal-nginx-svc:12443"
+    operatingEnvironment: "local"
+    deploymentTarget: "icp4data"
+    trustSelfSignedCertificates: false
+
+  auth:
+    icp4d:
+      # ICP4D Authentication related settings. Enabled for local.
+      enabled: true
+      publicKeyUrl: "https://internal-nginx-svc:12443/auth/jwtpublic"
+      authorizationUrl: "/auth/login/zen-login.html"
+      callbackUrl: "/auth/iamid/callback"
+      logoutUrl: "/home"
+
+  nginx:
+    enabled: true
+    internalSSLCertificate:
+      fileName: "nginx_internal_certificate.pem"
+      mountFolder: "/etc/certificates"
+    importSSLCertificate:
+      enabled: true
+      certificateSecret:
+        name: internal-nginx-svc-tls
+        key: certificate.pem
+    internalSSLCertificate:
+      # The name of the certificate file we are going to mount, so the container code can trust it.
+      fileName: "nginx_internal_certificate.pem"
+      # The folder into which the certificate will be mounted.
+      mountFolder: "/etc/certificates"
+
+  docker:
+    useNameSpace: false
+    useImagePullSecret: false
+
+  redis:
+    enabled: true
+    configMap: "redis-ha-configmap"
+
+  modelViewer:
+    # Where can we access the model viewer ?
+    url: "https://internal-nginx-svc:12443/model-viewer"
+
+  canvasApi:
+    # Where can the canvas components call to reach the canvas-api REST service ?
+    url: "https://internal-nginx-svc:12443/canvas_api"
+
+  commonApi:
+    url: "https://internal-nginx-svc:12443"
+
+  commonUI:
+    url: "https://internal-nginx-svc:12443"
+
+  flowApi:
+    nginxPath: "canvas_api"
+
+  modelerFlowApi:
+    nginxPath: "canvas_api"
+    url: "https://internal-nginx-svc:12443/canvas_api"
+
+  wml:
+    # Tells the canvas service how it can connect to the machine learning api
+    url: "https://internal-nginx-svc:12443"
+# end of global value settings
+
+# Values specific to the canvas API deployment.
+flow-api:
+  image:
+    repository: flow-api
+    tag: "2033-x86-64"
+
+flow-ui:
+  image:
+    repository: flow-ui
+    tag: "9251-x86-64"
+
+preInstaller:
+  image:
+    repository: pre-installer
+    tag: "917-x86-64"
+
+flowSession:
+  image:
+    repository: flow-session
+    tag: "8029-x86-64"
+
+modeler-flow-api:
+  image:
+    repository: modeler-flow-api
+    tag: "0.1.113-sb-change-docker-image-name-x86-64"
+
+runtimes:
+  workerNodes: 30
+
+# Setting this allows an override of the name of kube objects created by this chart.
+# Not defining them makes lint fail.
+nameOverride: ""
+fullnameOverride: ""

@@ -1,0 +1,8 @@
+elasticsearch:
+  enabled: true
+prometheus:
+  enabled: true
+zipkin:
+  enabled: false
+zipkinInMem:
+  enabled: true

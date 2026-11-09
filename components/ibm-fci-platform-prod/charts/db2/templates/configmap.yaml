@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "db2.fullname" . }}
+  labels:
+{{- include "common.label.metadata" (list . (include "db2.name" .) (include "db2.chart" .) .Release.Name .Release.Service ) | indent 4 }}
+{{- with .Values.config }}
+data:
+{{ toYaml . | indent 2 }}
+{{- end }}
+{{-   if not .Values.META_STORAGE_CLASS }}
+  META_STORAGE_CLASS: {{ default nil .Values.global.persistence.storageClassName | quote }}
+{{-   else }}
+  META_STORAGE_CLASS: {{ .Values.META_STORAGE_CLASS | quote }}
+{{-   end }}
+{{-   if not .Values.DATA_STORAGE_CLASS }}
+  DATA_STORAGE_CLASS: {{ default nil .Values.global.persistence.storageClassName | quote }}
+{{-   else }}
+  DATA_STORAGE_CLASS: {{ .Values.DATA_STORAGE_CLASS | quote }}
+{{-   end }}
+{{-   if not .Values.BACKUP_STORAGE_CLASS }}
+  BACKUP_STORAGE_CLASS: {{ default nil .Values.global.persistence.storageClassName | quote }}
+{{-   else }}
+  BACKUP_STORAGE_CLASS: {{ .Values.BACKUP_STORAGE_CLASS | quote }}
+{{-   end }}  

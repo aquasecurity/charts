@@ -1,0 +1,74 @@
+global:
+  deploymentTarget: "icp4data"
+  dockerRegistryPrefix: ""
+  podLabels:
+    icpdsupport/app: "ui"
+  podAnnotations:
+    productName: "IBM Watson Knowledge Catalog for IBM Cloud Pak for Data"
+    productID: "37fee7ff6f7c45fcac254d413693017f"
+    productVersion: "3.5.0"
+    productMetric: "VIRTUAL_PROCESSOR_CORE"
+fullnameOverride: wdp-profiling-ui
+minReplicas: 1
+maxReplicas: 1
+app_name: wdp-profiling-ui
+secret_object_name: secret-wdp-profiling-ui
+image:
+  repository: ubi/wdp-profiling-ui
+  tag: build_version
+repository:
+  secret:
+    name: ""
+resources:
+  limits:
+    cpu: 100m
+    memory: 512Mi
+  requests:
+    cpu: 10m
+    memory: 128Mi
+ports:
+  targetPort: 8443
+  externalPort: 443
+livenessProbe:
+  initialDelaySeconds: 180
+  timeoutSeconds: 15
+  periodSeconds: 120
+  successThreshold: 1
+  failureThreshold: 10
+readinessProbe:
+  initialDelaySeconds: 120
+  timeoutSeconds: 15
+  periodSeconds: 60
+  successThreshold: 1
+  failureThreshold: 10
+environment:
+   WDP_PROFILING_UI_URL: "wdp-profiling-ui-ugi1dev.stage1.mybluemix.net"
+   CF_DOMAIN: "stage1.eu-gb.bluemix.net"
+   BM_DOMAIN: "stage1.mybluemix.net"
+   GATEWAY_URL: "https://$(CUSTOM_DOMAIN)"
+   ENTRY: "wdp-shaper"
+   STAGE: "ugi1dev"
+   NODE_ENV: production
+   NODE_MODULES_CACHE: "false"
+   CF_STAGING_TIMEOUT: 30
+   ENABLE_MONITORING: "false"
+   ENABLE_PDT: "true"
+   ENABLE_NOTCLASSIFIED: "true"
+   K8S: "true"
+   DEPLOYMENT_TARGET: "icp"
+   BM_APP_VERSION_ENDPOINT: "profiles/version"
+   config__session__key: "datacatalog"
+   BM_APP_HOST: "wdp-profiling-ui-ugi"
+   DUMMY_ENV: false
+   redisSsl:
+    name: config__composeRedis__certificate
+    secret: redis-ha-cert
+    key: cacertb64.pem
+   redisUrl:
+     name: config__composeRedis__url
+     secret: redis-ha
+     key: redis-url-ssl
+   redisHost:
+    name: config__composeRedis__tlsServer
+    secret: redis-ha-secret-host-and-port
+    key: redis-host

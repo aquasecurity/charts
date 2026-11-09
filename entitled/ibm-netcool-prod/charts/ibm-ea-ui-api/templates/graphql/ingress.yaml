@@ -1,0 +1,35 @@
+{{- if .Values.global.ingress.api.enabled }}
+{{- if .Values.ingress.enabled -}}
+{{- include "sch.config.init" (list . "ibm-ea-ui-api.sch.chart.config.values") -}}
+{{- $compName :=  .sch.chart.components.graphql.name -}}
+{{- $serviceName := include "sch.names.fullCompName" (list . $compName) -}}
+{{- $servicePort := .sch.chart.components.graphql.servicePort }}
+{{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" }}
+apiVersion: networking.k8s.io/v1beta1    
+{{- else }}
+apiVersion: extensions/v1beta1           
+{{- end }}
+kind: Ingress
+metadata:
+  name: {{ $serviceName }}
+  labels:
+{{ include "sch.metadata.labels.standard" (list . $compName) | indent 4 }}
+  annotations:
+    kubernetes.io/ingress.class: '{{ .Values.global.ingress.api.class }}'
+spec:
+  {{ if .Values.global.ingress.tlsSecret }}
+  tls:
+  - hosts:
+    - {{ include "ibm-ea-ui-api.ingress.host" . | quote }}
+    secretName: {{ tpl .Values.global.ingress.tlsSecret . }}
+  {{ end }}
+  rules:
+  - http:
+      paths:
+      - backend:
+          serviceName: {{ $serviceName }}
+          servicePort:  {{ $servicePort }}
+        path: {{ .Values.ingress.path }}
+    host: {{ include "ibm-ea-ui-api.ingress.host" . }}
+{{- end -}}
+{{- end -}}

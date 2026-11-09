@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "global-name-mgmt.fullname" . }}
+  labels:
+{{- include "common.label.metadata" (list . (include "global-name-mgmt.name" .) (include "global-name-mgmt.chart" .) .Release.Name .Release.Service ) | indent 4 }}
+spec:
+{{ include "common.scaleDownIfDisabled" . | indent 2 }}
+  selector:
+    matchLabels:
+{{- include "common.selector.labels" (list . (include "global-name-mgmt.name" .) .Release.Name ) | indent 6 }}
+  template:
+    metadata:
+      annotations:
+{{ include "common.meteringAnnotations" . | indent 8 }}
+      labels:
+{{- include "common.label.metadata" (list . (include "global-name-mgmt.name" .) (include "global-name-mgmt.chart" .) .Release.Name .Release.Service ) | indent 8 }}
+{{- include "common.using-secrets" (list "platform") | indent 8 }}
+    spec:
+      serviceAccountName: fci-common
+{{ include "common.configureHostAliases" . | indent 6 }}
+{{ include "common.PodHostConfig" . | indent 6 }}
+      securityContext:
+{{ include "common.PodSecurityContextConfig" . | indent 8 }}
+      volumes:
+        - name: gnm-data-volume
+          persistentVolumeClaim:
+            claimName: {{ template "global-name-mgmt.fullname" . }}
+        - name: file-secrets
+          secret:
+            secretName: {{ .Release.Name }}-platform-secret-files
+      containers:
+        - name: global-name-mgmt
+          image: "{{ required "global.dockerRegistryPrefix must specify from which repository the docker image should be fetched." .Values.global.dockerRegistryPrefix }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+{{ include "common.readinessProbe" . | indent 10 }}
+{{ include "common.livenessProbe" . | indent 10 }}
+          securityContext:
+{{ include "common.RestrictedContainerSecurityContext" . | indent 12 }}
+          envFrom:
+          - configMapRef:
+              name: {{ template "global-name-mgmt.fullname" . }}
+          env:
+{{- include "common.import-secret" (list . "GNM_ssl_ks_password" "platform" "FCI_JKS_PASSWORD") | indent 10 }}
+          ports:
+          - containerPort: 14500
+          - containerPort: 14501
+          volumeMounts:
+            - name: file-secrets
+              mountPath: /opt/IBM/GNM/wlp/usr/servers/gnmServer/resources/security/fci_universal_ks.jks
+              subPath: fci_universal_ks.jks
+            - mountPath: /opt/IBM/GNM/data
+              name: gnm-data-volume  
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+      affinity:
+{{ include "common.ArchNodeAffinity" . | indent 8 }}
+    {{- with .Values.affinity }}
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

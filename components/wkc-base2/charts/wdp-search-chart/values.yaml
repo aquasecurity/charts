@@ -1,0 +1,118 @@
+---
+global:
+  installCerts: true
+  deploymentTarget: "icp4data"
+  dockerRegistryPrefix: ""
+  podLabels:
+    icpdsupport/app: "api"
+  podAnnotations:
+    productName: "wdp search servies"
+    productID: "37fee7ff6f7c45fcac254d413693017f"
+    productVersion: "1.0"
+    productMetric: "VIRTUAL_PROCESSOR_CORE"
+minReplicas: 1
+maxReplicas: 1
+fullnameOverride: wdp-search
+image:
+  repository: "ubi/wdp-search"
+  tag: build_version
+  pullPolicy: "IfNotPresent"
+repository:
+  secret:
+    name: ""
+resources:
+  limits:
+    cpu: 300m
+    memory: 1500Mi
+  requests:
+    cpu: 20m
+    memory: 700Mi
+ports:
+  targetPort: 9443
+  externalPort: 443
+livenessProbe:
+  initialDelaySeconds: 180
+  timeoutSeconds: 15
+  periodSeconds: 120
+  successThreshold: 1
+  failureThreshold: 10
+readinessProbe:
+  initialDelaySeconds: 120
+  timeoutSeconds: 15
+  periodSeconds: 60
+  successThreshold: 1
+  failureThreshold: 10
+environment:
+  bmAppName: "wdp-search"
+  bmAppVersionEndpoint: "v2/recommendations/version"
+  wdpHostDomain:
+    configMapName: wdp-config
+    hostKey: host
+    icp4dHostKey: icp4d-host
+  gateWayHost: "$(GATEWAY_HOST)"
+  gateWayUrl: "https://$(GATEWAY_HOST)"
+  iamUrl: "https://$(ICP4D_HOST)"
+  icp4dUrl: "https://$(ICP4D_HOST)"
+  trustAllSslCert : "\"true\""
+  environmentName: "ugiinstall"
+  environmentType: "ugi"
+  deployTarget: "ugi"
+  deploymentTarget: "icp"
+  gatewayConfigured: "\"false\""
+  componentId: "wdp-search"
+  disableEtcdLocking: "\"true\""
+  ibmCosEndPoint: "NA"
+  cloudantDb: "wdpsearch_book_keeping"
+  cloudantRaDb: "wdpsearch_ra_book_keeping"
+  databaseListDb: wdpsearch_databases_list
+  logDbNamePrefix: ugi1dev
+  maxDigitalExhaustWorkers: 1
+  numberOfRetries: 5
+  thresHoldTime: 15
+  updateDesignDocs: true
+  useDatabaseList: false
+  maxRecommendedAssets: 20
+  staggerBuilderThreads: true
+  enableETCDV3: "\"false\""
+  cloudantApiPassword:
+    name: CLOUDANT_APIKEY_PASSWORD
+    secret: wdp-cloudant-creds
+    key: password
+  cloudantApiUrl:
+    name: CLOUDANT_APIKEY_URL
+    secret: wdp-cloudant-url
+    key: cloudant-url.txt
+  cloudantApiUser:
+    name: CLOUDANT_APIKEY_USER
+    secret: wdp-cloudant-creds
+    key: username
+  cloudantLogDbPass:
+    name: CLOUDANT_LOG_DB_PASSWORD
+    secret: wdp-cloudant-creds
+    key: password
+  cloudantLogDbUrl:
+    name: CLOUDANT_LOG_DB_URL
+    secret: wdp-cloudant-url
+    key: cloudant-url.txt
+  cloudantLogDbUser:
+    name: CLOUDANT_LOG_DB_USER
+    secret: wdp-cloudant-creds
+    key: username
+  cloudantPassword:
+    name: CLOUDANT_PASSWORD
+    secret: wdp-cloudant-creds
+    key: password
+  cloudantUrl:
+    name: CLOUDANT_URL
+    secret: wdp-cloudant-url
+    key: cloudant-url.txt
+  cloudantUser:
+    name: CLOUDANT_USER
+    secret: wdp-cloudant-creds
+    key: username
+  serviceId:
+    name: SERVICE_ID
+    secret: wdp-service-id
+    key: service-id-credentials
+securityContext:
+  runAsUser:

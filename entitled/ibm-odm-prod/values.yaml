@@ -1,0 +1,333 @@
+# Default values for odmcharts.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# Accept the terms of the IBM license by setting the license parameter to "true"
+license: false
+
+# Users password is required if authSecretRef is not set.
+# Set the password for odm default users.
+usersPassword: ""
+
+image:
+  repository: ""
+  tag: 8.11.0.1
+  pullPolicy: IfNotPresent
+## Optionally specify an list of imagePullSecrets.
+## Secrets must be manually created in the namespace.
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+  pullSecrets: []
+  # - admin.registrykey
+  # - admin.registrykey
+
+## Architecture - e.g. amd64, ppc64le. If left empty, the architecture will be determined automatically.
+## You can use kubectl version command to determine the architecture on the desired worker node.
+  arch: "amd64"
+
+serviceAccountName: ""
+
+service:
+  enableTLS: true
+  type: NodePort
+  enableRoute: false
+  hostname: ""
+  ingress:
+    enabled: false
+    annotations:
+    tlsHosts: []
+    tlsSecretRef:
+    host:
+
+decisionServerRuntime:
+  enabled: true
+  tagOrDigest:
+  replicaCount: 1
+  loggingRef:
+  jvmOptionsRef:
+  xuConfigRef:
+  webConfigRef:
+  extendRoleMapping: false
+  enableTLSAuth:
+  initContainer:
+    image:
+    command:
+    configRef:
+    configOidcRef:
+    resources:
+      requests:
+        cpu: 200m
+        memory: 100Mi
+      limits:
+        cpu: 500m
+        memory: 200Mi
+    existingClaimName:
+    env:
+  contextRoot:
+  resources:
+    requests:
+      cpu: 500m
+      memory: 512Mi
+      ephemeral-storage: 50Mi
+    limits:
+      cpu: 2
+      memory: 4096Mi
+      ephemeral-storage: 500Mi
+  autoscaling:
+    enabled: false
+    minReplicas: 2
+    maxReplicas: 3
+    targetAverageUtilization: 75
+
+decisionServerConsole:
+  tagOrDigest:
+  loggingRef:
+  jvmOptionsRef:
+  extendRoleMapping: false
+  title:
+  description:
+  initContainer:
+    image:
+    command:
+    configRef:
+    configOidcRef:
+    resources:
+      requests:
+        cpu: 200m
+        memory: 100Mi
+      limits:
+        cpu: 500m
+        memory: 200Mi
+    existingClaimName:
+    env:
+  contextRoot:
+  resources:
+    requests:
+      cpu: 500m
+      memory: 512Mi
+      ephemeral-storage: 50Mi
+    limits:
+      cpu: 2
+      memory: 1024Mi
+      ephemeral-storage: 500Mi
+
+decisionCenter:
+  enabled: true
+  tagOrDigest:
+  persistenceLocale: en_US
+  replicaCount: 1
+  customlibPvc:
+  loggingRef:
+  jvmOptionsRef:
+  webConfigRef:
+  extendRoleMapping: false
+  disableAllAuthenticatedUser: false
+  initContainer:
+    image:
+    command:
+    configRef:
+    configOidcRef:
+    resources:
+      requests:
+        cpu: 200m
+        memory: 100Mi
+      limits:
+        cpu: 500m
+        memory: 200Mi
+    existingClaimName:
+    env:
+  contextRoot:
+  refererList:
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1500Mi
+      ephemeral-storage: 50Mi
+    limits:
+      cpu: 2
+      memory: 4096Mi
+      ephemeral-storage: 500Mi
+  autoscaling:
+    enabled: false
+    minReplicas: 2
+    maxReplicas: 3
+    targetAverageUtilization: 75
+
+
+decisionRunner:
+  enabled: true
+  tagOrDigest:
+  replicaCount: 1
+  loggingRef:
+  jvmOptionsRef:
+  extendRoleMapping: false
+  initContainer:
+    image:
+    command:
+    configRef:
+    configOidcRef:
+    resources:
+      requests:
+        cpu: 200m
+        memory: 100Mi
+      limits:
+        cpu: 500m
+        memory: 200Mi
+    existingClaimName:
+    env:
+  contextRoot:
+  resources:
+    requests:
+      cpu: 500m
+      memory: 512Mi
+      ephemeral-storage: 50Mi
+    limits:
+      cpu: 2
+      memory: 4096Mi
+      ephemeral-storage: 500Mi
+  autoscaling:
+    enabled: false
+    minReplicas: 2
+    maxReplicas: 3
+    targetAverageUtilization: 75
+  resURL:
+
+internalDatabase:
+  databaseName: odmdb
+  tagOrDigest:
+  user: odmusr # deprecated, please use secretCredentials
+  password: "odmpwd" # deprecated, please use secretCredentials
+  secretCredentials: ""
+  populateSampleData: false
+  persistence:
+    enabled: true
+    useDynamicProvisioning: false
+    storageClassName: ""
+    resources:
+      requests:
+        storage: 5Gi
+  resources:
+    requests:
+      cpu: 500m
+      memory: 512Mi
+      ephemeral-storage: 50Mi
+    limits:
+      cpu: 2
+      memory: 4096Mi
+      ephemeral-storage: 500Mi
+  runAsUser: 26
+
+externalDatabase:
+  type: ""
+  serverName: ""
+  databaseName: ""
+  user: "" # deprecated, please use secretCredentials
+  password: "" # deprecated, please use secretCredentials
+  secretCredentials: ""
+  port: ""
+  sslSecretRef:
+  ## Optionally specify a list of driversUrl using --set externalDatabase.driversUrl="{url1,url2}" in cli
+  driversUrl: []
+  # - url1
+  # - url2
+  decisionServer:
+    type: ""
+    serverName: ""
+    databaseName: ""
+    user: "" # deprecated, please use secretCredentials
+    password: "" # deprecated, please use secretCredentials
+    secretCredentials: ""
+    port: ""
+    sslSecretRef:
+    ## Optionally specify a list of driversUrl using --set externalDatabase.driversUrl="{url1,url2}" in cli
+    driversUrl: []
+    # - url1
+    # - url2
+  decisionCenter:
+    type: ""
+    serverName: ""
+    databaseName: ""
+    user: "" # deprecated, please use secretCredentials
+    password: "" # deprecated, please use secretCredentials
+    secretCredentials: ""
+    port: ""
+    sslSecretRef:
+    ## Optionally specify a list of driversUrl using --set externalDatabase.driversUrl="{url1,url2}" in cli
+    driversUrl: []
+    # - url1
+    # - url2
+externalCustomDatabase:
+  datasourceRef:
+  driverPvc:
+
+readinessProbe:
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  failureThreshold: 45
+  timeoutSeconds: 5
+
+livenessProbe:
+  initialDelaySeconds: 300
+  periodSeconds: 30
+  failureThreshold: 4
+  timeoutSeconds: 5
+
+customization:
+  vault: ""
+  securitySecretRef:
+  baiEmitterSecretRef:
+  authSecretRef:
+  dedicatedNodeLabel:
+  runAsUser: 1001
+  kubeVersion: "ODM on K8s"
+  productName:
+  productID:
+  productVersion:
+  cloudpakID:
+  cloudpakVersion:
+  deployForProduction: true
+  meteringServerUrl:
+  meteringSendPeriod:
+  usageMeteringSecretRef:
+  trustedCertificateList:
+  enableFips: false
+  disableWSJavaAgent: false
+
+dba:
+# if no rootCaSecretRef is defined then no keytoolinit init-container
+  rootCaSecretRef:
+  ldapSslSecretRef:
+  passwordSecretRef:
+  keytoolInitContainer:
+    image:
+    imagePullPolicy:
+    imagePullSecret:
+
+oidc:
+  enabled: false
+  serverUrl:
+  registrationUrl:
+  adminRef:
+  redirectUrisRef:
+  clientRef:
+  provider:
+  allowedDomains:
+  initContainer:
+    image:
+    command:
+    configRef:
+    resources:
+      requests:
+        cpu: 200m
+        memory: 100Mi
+      limits:
+        cpu: 500m
+        memory: 200Mi
+    existingClaimName:
+    env:
+
+networkPolicy:
+  # Enable creation of NetworkPolicy resources.
+  enabled: true
+  # For Kubernetes v1.4, v1.5 and v1.6, use 'extensions/v1beta1'
+  # For Kubernetes v1.7, use 'networking.k8s.io/v1'
+  apiVersion: networking.k8s.io/v1

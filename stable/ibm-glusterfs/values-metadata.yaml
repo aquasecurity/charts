@@ -198,6 +198,15 @@ gluster:
           description: "The memory limit"
           type: "string"
           required: true
+  sshdPort:
+    __metadata:
+      name: "sshdPort"
+      label: "GlusterFS SSHD Port"
+      description: "SSH Daemon port for GlusterFS Pod"
+      type: "number"
+      immutable: false
+      required: true
+      hidden: true
 
 ###############################################################################
 ## Heketi Configuration Parameters
@@ -247,6 +256,14 @@ heketi:
       type: "string"
       immutable: false
       required: true
+  dbSyncupDelay:
+    __metadata:
+      name: "dbSyncupDelay"
+      label: "Heketi DB syncup delay"
+      description: "Delay in seconds to syncup heketi DB data with backup secret"
+      type: "number"
+      immutable: false
+      required: true
   authSecret:
     __metadata:
       name: "authSecret"
@@ -290,6 +307,39 @@ heketi:
           description: "The memory limit"
           type: "string"
           required: true
+  tls:
+    generate:
+      __metadata:
+        name: "generate"
+        label: "Generate SSL Certs"
+        description: "Whether to create a certificate using the ICP Certificate Authority and save it in the secret named below, or whether the secret already exists"
+        type: "boolean"
+        immutable: false
+        required: true
+    issuer:
+      __metadata:
+        name: "issuer"
+        label: "Issuer"
+        description: "Name of the issuer"
+        type: "string"
+        immutable: false
+        required: true
+    issuerKind:
+      __metadata:
+        name: "issuerKind"
+        label: "Issuer Kind"
+        description: "Kind of the issuer"
+        type: "string"
+        immutable: false
+        required: true
+    secretName:
+      __metadata:
+        name: "secretName"
+        label: "TLS Secret Name"
+        description: "Specifies the name of the secret for the certificate that has to be used in heketi server"
+        type: "string"
+        immutable: false
+        required: true
 
 ###############################################################################
 ## Heketi Topology Configuration Parameters

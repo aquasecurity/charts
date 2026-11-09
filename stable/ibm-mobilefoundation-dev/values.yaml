@@ -1,0 +1,51 @@
+###############################################################################
+# Licensed Materials - Property of IBM.
+# Copyright IBM Corporation 2018. All Rights Reserved.
+# U.S. Government Users Restricted Rights - Use, duplication or disclosure
+# restricted by GSA ADP Schedule Contract with IBM Corp.
+#
+# Contributors:
+# IBM Corporation - initial API and implementation
+###############################################################################
+
+###############################################################################
+# Default values for ibm-mobilefirst-foundation-server
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+###############################################################################
+
+###############################################################################
+## Architecture - e.g. amd64, s390x, ppc64le. If left empty, arch type will try
+## to be determined. 
+## You can use kubectl version command to determine the architecture on the 
+## desired worker node. 
+###############################################################################
+arch:
+  amd64: "3 - Most preferred"
+  ppc64le: "2 - No preference"
+  s390x: "2 - No preference"
+
+###############################################################################
+## Common image variables
+###############################################################################
+image:
+  repository: ibmcom/ibm-mobilefoundation-ce
+  tag: 1.2.0
+  pullPolicy: IfNotPresent
+ingress:
+  hostname: ""
+  secret: ""
+  sslPassThrough: false
+https: true
+replicas: 1
+keystoreSecret: ""
+###############################################################################
+## Resource constraints
+###############################################################################
+resources:
+  requests:
+    cpu: 1000m
+    memory: 1024Mi
+  limits:
+    cpu: 1000m
+    memory: 2048Mi

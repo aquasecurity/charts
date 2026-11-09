@@ -1,0 +1,244 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: {{ .Values.common.appName }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    name: wa-proxy{{ .Values.instanceIdWithinNamespace }}
+    release: {{ .Release.Name }}
+    paw_instance_name: {{ .Values.paw_instance_name }}
+  name: wa-proxy{{ .Values.instanceIdWithinNamespace }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.waProxy.replicas }}
+  selector:
+    matchLabels:
+      name: wa-proxy{{ .Values.instanceIdWithinNamespace }}
+  template:
+    metadata:
+      annotations:
+        hook.activate.cpd.ibm.com/command: '[]'
+        hook.deactivate.cpd.ibm.com/command: '[]'        
+        cloudpakName: {{ .Values.cloudpakAnnotations.cloudpakName }}
+        cloudpakId: {{ .Values.cloudpakAnnotations.cloudpakId }}
+        productCloudpakRatio: {{ .Values.cloudpakAnnotations.productCloudpakRatio }}
+        productName: {{ .Values.productName.PAWorkSpace }}
+        productID:  {{ .Values.cloudpakAnnotations.productID }}
+        productMetric: "VIRTUAL_PROCESSOR_CORE"
+        productVersion: 3.5.2
+        productChargedContainers: "All"
+      labels:
+        app.kubernetes.io/name: {{ .Values.common.appName }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/managed-by: {{ .Release.Service }}
+        icpdsupport/addOnId: pa
+        icpdsupport/app: "pa-workspace" 
+        cloudpakInstanceId: "{{ .Values.zenCloudPakInstanceId }}"
+        {{- include "planning-analytics.serviceid" . | indent 8 }}
+        {{- if ( .Values.createdBy )  }}
+        icpdsupport/createdBy: {{ .Values.createdBy | quote }}
+        {{- end }} 
+        helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+        name: wa-proxy{{ .Values.instanceIdWithinNamespace }}
+        pa-paw-secret: {{ .Values.secrets.pawSecretVersion }}
+        release: {{ .Release.Name }}
+        version: "1.0.633-ubi7"
+        pa-cacerts-secret: {{ .Values.secrets.cacertVersion }}
+        paw_instance_name: {{ .Values.paw_instance_name }}
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: beta.kubernetes.io/arch
+                operator: In
+                values:
+                - {{ .Values.arch }}
+      volumes:
+        - name: pa-cookie-key
+          secret:
+            secretName: pa-cookie-key{{ .Values.instanceIdWithinNamespace }}
+        - name: pa-credential-store-key
+          secret:
+            secretName: pa-credential-store-key{{ .Values.instanceIdWithinNamespace }}
+        - name: pa-cacerts
+          secret:
+            secretName: pa-cacerts{{ .Values.instanceIdWithinNamespace }}
+        - name: jwt-cert
+          emptyDir:
+            medium: "{{ .Values.waProxy.emptyDirMedium }}"
+            sizeLimit: "{{ .Values.waProxy.emptyDirSizeLimit }}"
+        - name: jwt-key
+          secret:
+            secretName: pa-internal-tls-cert{{ .Values.instanceIdWithinNamespace }}
+      initContainers:
+        - name: wa-proxy-jwt-init
+          image:  {{ .Values.docker_registry_prefix }}/pa-wa-proxy:1.0.633-ubi7
+          command: ["/bin/sh"]
+          args: ["-c", "curl -k https://ibm-nginx-svc/auth/jwtcert > /jwt/jwtcert"]
+          resources:
+            limits:
+              cpu: "{{ .Values.waProxy.cpuLimit }}"
+              memory: "{{ .Values.waProxy.memoryLimit }}"
+            requests:
+              cpu: "{{ .Values.waProxy.cpuRequestLimit }}"
+              memory: "{{ .Values.waProxy.memoryRequestLimit }}"
+          securityContext:
+            runAsNonRoot: true
+{{- if not (.Capabilities.APIVersions.Has "security.openshift.io/v1") }} 
+            runAsUser: 2000
+{{- end }} 
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            readOnlyRootFilesystem: false
+            allowPrivilegeEscalation: false
+          env:
+          volumeMounts:
+            - name: jwt-cert
+              mountPath: /jwt
+      containers:
+        - name: wa-proxy
+          image: {{ .Values.docker_registry_prefix }}/pa-wa-proxy:1.0.633-ubi7
+          ports:
+            - containerPort: 1331
+              protocol: TCP
+            - containerPort: 1338
+              protocol: TCP
+          env:
+            - name: TM1Location
+              value: "{{ .Values.common.tm1Location }}"
+            - name: TM1ApplicationsLocation
+              value: "{{ .Values.common.tm1ApplicationsLocation }}"
+            - name: IBMCognosGateway
+              value: "{{ .Values.waProxy.ibmCognosGatewayUrl }}"
+            - name: IBMCognosServlet
+              value: "{{ .Values.common.ibmCognosServlet }}"
+            - name: TM1APIPort
+              value: "{{ .Values.common.tm1APIPort }}"
+            - name: PROXY_TIMEOUT
+              value: "{{ .Values.common.proxyTimeoutSeconds }}"
+            - name: AFFINITY
+              value: "true"
+            - name: PAAuthMode
+              value: "{{ .Values.waProxy.paLoginMode }}"
+            - name: TM1LoginServerURL
+              value: "{{ .Values.waProxy.tm1LoginUrl }}"
+            - name: CAMLoginNamespace
+              value: "{{ .Values.waProxy.camLoginNamespace }}"
+            - name: SESSION_TIMEOUT
+              value: "{{ .Values.waProxy.sessionTimeout }}"
+            - name: CREDENTIAL_STORE_KEY_FILE
+              value: "/run/secrets/paw/credential-store-key/tls.key"
+            - name: COOKIE_SECRET_KEY_FILE
+              value: "/run/secrets/paw/cookie-key/tls.key"
+            - name: ENABLE_USER_IMPORT
+              value: "{{ .Values.waProxy.enableUserImport }}"
+            - name: SESSION_COOKIE_SECURE
+              value: "{{ .Values.common.secureSessionCookie }}"
+            - name: REDIS_SENTINEL
+              value: "{ \"name\": \"redis-cluster{{ .Values.instanceIdWithinNamespace }}\", \"sentinels\": [{ \"host\": \"sentinel1{{ .Values.instanceIdWithinNamespace }}.{{ .Release.Namespace }}.{{ .Values.common.internalDomainName }}\", \"port\": 26379 }, { \"host\": \"sentinel2{{ .Values.instanceIdWithinNamespace }}.{{ .Release.Namespace }}.{{ .Values.common.internalDomainName }}\", \"port\": 26379 }, { \"host\": \"sentinel3{{ .Values.instanceIdWithinNamespace }}.{{ .Release.Namespace }}.{{ .Values.common.internalDomainName }}\", \"port\": 26379 }], \"tls\": true }"
+            - name: ENABLE_VIEW_EXCHANGE
+              value: "{{ .Values.waProxy.enableViewExchange }}"
+            - name: CSP_FRAME_ANCESTORS
+              value: "{{ .Values.waProxy.cspFrameAncestors }}"
+            - name: X_FRAME_OPTIONS
+              value: "{{ .Values.waProxy.xFrameOptions }}"
+            - name: API_ALLOW_ORIGINS
+              value: "{{ .Values.waProxy.apiAllowOrigins }}"
+            - name: SSL_CA_BUNDLE_FILE
+              value: "/run/config/cacerts.pem"
+            - name: PAW_INSTANCE
+              value: "{{ .Values.instanceIdWithinNamespace }}"              
+            - name: JWT_CERT_FILE
+              value: "/jwt/jwtcert"
+            - name: "JWT_LOGIN_REDIRECT_URL"
+              value: {{ .Values.waProxy.jwtRedirectURL }}{{ .Release.Name }}
+            - name: JWT_SESSION_KEY_FILE
+              value: "/jwt-key/tls.key"
+            - name: CONFIG_NAME
+              value: "paw-cp4d"
+              # Websheets should be enabled when TM1 is external, OR when PASS /is/ running internally
+              # I.e. if TM1 is internal, but PASS wasn't deployed, then it should be disabled.
+            {{- if and (.Values.common.tm1InternalType) (.Values.common.webappsEnabled) }}
+            - name: PROFILE_OVERRIDES
+              value: "{ \"deployment\":{\"name\":\"cp4d\"},\"welcome\": {\"enableWebsheets\": true},\"gemini\": {\"tm1Websheet\": \"enabled\",\"allowSaveWebsheets\": \"enabled\"}}"
+            {{- else if and (.Values.common.tm1InternalType) (not .Values.common.webappsEnabled) }}
+            - name: PROFILE_OVERRIDES
+              value: "{ \"deployment\":{\"name\":\"cp4d\"}}"
+            {{- else }}
+            - name: PROFILE_OVERRIDES
+              value: "{ \"welcome\": {\"enableWebsheets\": true},\"gemini\": {\"tm1Websheet\": \"enabled\",\"allowSaveWebsheets\": \"enabled\"}}"
+            {{- end }}
+          resources:
+            limits:
+              cpu: "{{ .Values.waProxy.cpuLimit }}"
+              memory: "{{ .Values.waProxy.memoryLimit }}"
+            requests:
+              cpu: "{{ .Values.waProxy.cpuRequestLimit }}"
+              memory: "{{ .Values.waProxy.memoryRequestLimit }}"
+          securityContext:
+            runAsNonRoot: true
+{{- if not (.Capabilities.APIVersions.Has "security.openshift.io/v1") }} 
+            runAsUser: 2000
+{{- end }} 
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            readOnlyRootFilesystem: false
+            allowPrivilegeEscalation: false
+          volumeMounts:
+            - name: pa-cookie-key
+              mountPath: /run/secrets/paw/cookie-key
+            - name: pa-credential-store-key
+              mountPath: /run/secrets/paw/credential-store-key
+            - name: pa-cacerts
+              mountPath: /run/config
+            - name: jwt-cert
+              mountPath: /jwt
+            - name: jwt-key
+              mountPath: "/jwt-key"
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 1
+            initialDelaySeconds: 300
+            tcpSocket:
+              port: 1331
+            periodSeconds: 2
+          livenessProbe:
+            failureThreshold: 1
+            initialDelaySeconds: 300
+            tcpSocket:
+              port: 1338
+            periodSeconds: 2
+          readinessProbe:
+            failureThreshold: 1
+            periodSeconds: 2
+            tcpSocket:
+              port: 1331
+          readinessProbe:
+            failureThreshold: 1
+            periodSeconds: 2
+            tcpSocket:
+              port: 1338
+      hostNetwork: false
+      hostIPC: false
+      hostPID: false
+      restartPolicy: Always
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+

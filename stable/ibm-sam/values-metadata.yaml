@@ -1,0 +1,497 @@
+
+#
+# This file contains the meta-data which is used by the ICP UI when
+# when configuring the helm chart installation.
+#
+
+###############################################################################
+# Global variables
+
+global:
+  __metadata:
+    label: "Global configuration"
+    description: "Configuration details which will be used by each of the Docker containers associated with this environment."
+
+  # Image Variables.
+  image:
+    label: "Image"
+    description: "Stored instance of a container that holds a set of software needed to run an application."
+    repository:
+      __metadata:
+        name: "Repository"
+        label: "ISAM image repository"
+        description: "Docker registry to pull the ISAM image from."
+        type: "string"
+        immutable: false
+        required: true
+    dbrepository:
+      __metadata:
+        name: "DB Repository"
+        label: "ISAM database image repository"
+        description: "Docker registry to pull the ISAM postgresql image from."
+        type: "string"
+        immutable: false
+        required: true
+    tag:
+      __metadata:
+        name: "Tag"
+        label: "Image tag"
+        description: "A tag is a label applied to an image in a repository. Tags are how various images in a repository are distinguished from each other."
+        type: "string"
+        immutable: false
+        required: true
+    pullPolicy:
+      __metadata:
+        name: "pullPolicy"
+        label: "Image pull policy"
+        description: "The default pull policy is IfNotPresent which causes the Kubelet to skip pulling an image if it already exists."
+        type: "string"
+        immutable: false
+        required: true
+        options:
+        - label: "Always"
+          value: "Always"
+        - label: "Never"
+          value: "Never"
+        - label: "IfNotPresent"
+          value: "IfNotPresent"
+
+  # Credentials for the docker registry.
+  imageCredentials:
+    label: "Docker registry credential information"
+    description: "Credential information for Docker Store."
+    dockerSecret:
+      __metadata:
+        name: "dockerSecret"
+        label: "Existing docker secret"
+        description: "The name of an existing secret which contains the docker credentials."
+        type: "string"
+        immutable: false
+        required: true
+
+  container:
+    label: "Docker container configuration"
+    description: "Configuration details associated with the definition of the environment containers."
+    snapshot:
+      __metadata:
+        name: "snapshot"
+        label: "Snapshot"
+        description: "The name of the configuration data snapshot that is to be used when starting the container. Defaults to the latest published configuration."
+        type: "string"
+        immutable: false
+        required: false
+    fixpacks:
+      __metadata:
+        name: "fixpacks"
+        label: "Fixpacks"
+        description: "A space-separated ordered list of fix packs to be applied when starting the container."
+        type: "string"
+        immutable: false
+        required: false
+    adminSecret:
+      __metadata:
+        name: "adminSecret"
+        label: "Existing administrator password secret"
+        description: "The name of an existing secret which contains the administrator password (key: adminPassword)."
+        type: "string"
+        immutable: false
+        required: false
+    autoReloadInterval:
+      __metadata:
+        name: "autoReloadInterval"
+        label: "Auto reload interval"
+        description: "The interval, in seconds, that the runtime containers will wait before checking to see if the configuration has been updated."
+        type: "number"
+        required: false
+
+  # Persistence Configuration.
+  persistence:
+    label: "Data persistence configuration"
+    description: "Configuration details associated with the persistence of data."
+    enabled:
+      __metadata:
+        name: "enabled"
+        label: "Enable persistence storage for ISAM"
+        description: "Select this checkbox to store ISAM data on a persistent volume so that the data is preserved if the pod is stopped."
+        type: "boolean"
+        immutable: false
+        required: true
+    useDynamicProvisioning:
+      __metadata:
+        name: "useDynamicProvisioning"
+        label: "Use dynamic provisioning"
+        description: "Select this checkbox to allow the cluster to automatically provision new storage resource and create PersistentVolume objects."
+        type: "boolean"
+        immutable: false
+        required: true
+
+###############################################################################
+# Configuration container variables.
+
+isamconfig:
+  __metadata:
+    label: "Configuration Utility"
+    description: "Configuration details associated with the configuration utility."
+
+  # Resource Configuration.
+  resources:
+    label: "Resource quotas"
+    description: "Configuration details associated with resource allocation."
+    requests:
+      cpu: 
+        __metadata: 
+          label: "CPU request"
+          description: "The minimum required CPU core. Specify integers, fractions (e.g. 0.5), or millicore values(e.g. 100m, where 100m is equivalent to .1 core)."
+          type: "string"
+          required: true   
+      memory: 
+        __metadata: 
+          label: "Memory request"
+          description: "The minimum memory in bytes. Specify integers with one of these suffixes: E, P, T, G, M, K, or power-of-two equivalents: Ei, Pi, Ti, Gi, Mi, Ki."
+          type: "string"
+          required: true   
+    limits:
+      cpu: 
+        __metadata: 
+          label: "CPU limit"
+          description: "The upper limit of CPU core. Specify integers, fractions (e.g. 0.5), or millicores values(e.g. 100m, where 100m is equivalent to .1 core)."
+          type: "string"
+          required: true   
+      memory: 
+        __metadata: 
+          label: "Memory limit"
+          description: "The memory upper limit in bytes. Specify integers with suffixes: E, P, T, G, M, K, or power-of-two equivalents: Ei, Pi, Ti, Gi, Mi, Ki."
+          type: "string"
+          required: true   
+  
+  # Service Configuration.
+  service:
+    label: "Service configuration"
+    description: "Configuration details associated with the service to be created."
+    type: 
+      __metadata:
+        name: "Type"
+        label: "Service type"
+        description: "An API object that describes how to access applications, such as a set of Pods, and can describe ports and load-balancers."
+        type: "string"
+        immutable: false
+        required: true
+        options:
+          - label: "ClusterIP"
+            value: "ClusterIP"
+          - label: "NodePort"
+            value: "NodePort"
+
+  # Data Volume Configuration.
+  dataVolume:
+    label: "Data volume configuration"
+    description: "Configuration details associated with the data volume."
+    existingClaimName:
+      __metadata:
+        name: "existingClaimName"
+        label: "Existing volume claim"
+        description: "By default a new persistent volume claim will be created. Specify an existing claim here if one is available."
+        type: "string"
+        immutable: false
+        required: false
+    storageClassName:
+      __metadata:
+        name: "storageClassName"
+        label: "Storage class name"
+        description: "Choose a specific storage class name. Defaults to the default storage class in the cluster."
+        type: "string"
+        immutable: false
+        required: false
+    size:
+      __metadata:
+        name: "size"
+        label: "Size of the volume claim."
+        description: "Defaults to 20Gi of storage. The volume must be large enough to store the configuration data for the ISAM environment."
+        type: "string"
+        immutable: false
+        required: true
+
+###############################################################################
+# Web Reverse Proxy container variables.
+
+isamwrp:
+  __metadata:
+    label: "Web Reverse Proxy"
+    description: "Configuration details associated with the secure Web Reverse Proxy."
+
+  # Container Configuration.
+  container:
+    label: "Container configuration"
+    description: "Configuration details associated with the Web reverse proxy service to be created."
+    instances: 
+      __metadata:
+        name: "instances"
+        label: "List of instances"
+        description: "An array of WRP instances to create (instance names)."
+        type: "string"
+        required: true
+    replicas: 
+      __metadata:
+        name: "replicas"
+        label: "Number of replicas"
+        description: "The number of replicas of each unique WRP instance to create."
+        type: "number"
+        required: true
+
+  # Resource Configuration.
+  resources:
+    label: "Resource quotas"
+    description: "Configuration details associated with resource allocation."
+    requests:
+      cpu: 
+        __metadata: 
+          label: "CPU request"
+          description: "The minimum required CPU core. Specify integers, fractions (e.g. 0.5), or millicore values(e.g. 100m, where 100m is equivalent to .1 core)."
+          type: "string"
+          required: true   
+      memory: 
+        __metadata: 
+          label: "Memory request"
+          description: "The minimum memory in bytes. Specify integers with one of these suffixes: E, P, T, G, M, K, or power-of-two equivalents: Ei, Pi, Ti, Gi, Mi, Ki."
+          type: "string"
+          required: true   
+    limits:
+      cpu: 
+        __metadata: 
+          label: "CPU limit"
+          description: "The upper limit of CPU core. Specify integers, fractions (e.g. 0.5), or millicores values(e.g. 100m, where 100m is equivalent to .1 core)."
+          type: "string"
+          required: true   
+      memory: 
+        __metadata: 
+          label: "Memory limit"
+          description: "The memory upper limit in bytes. Specify integers with suffixes: E, P, T, G, M, K, or power-of-two equivalents: Ei, Pi, Ti, Gi, Mi, Ki."
+          type: "string"
+          required: true   
+  
+  # Service Configuration.
+  service:
+    label: "Service configuration"
+    description: "Configuration details associated with the service to be created."
+    type: 
+      __metadata:
+        name: "Type"
+        label: "Service type"
+        description: "An API object that describes how to access applications, such as a set of Pods, and can describe ports and load-balancers."
+        type: "string"
+        immutable: false
+        required: true
+        options:
+          - label: "ClusterIP"
+            value: "ClusterIP"
+          - label: "NodePort"
+            value: "NodePort"
+
+###############################################################################
+# Runtime container variables.
+
+isamruntime:
+  __metadata:
+    label: "Runtime"
+    description: "Configuration details associated with the federation and advanced access control runtime."
+
+  # Container Configuration.
+  container:
+    label: "Container configuration"
+    description: "Configuration details associated with the runtime service to be created."
+    enabled: 
+      __metadata:
+        name: "enabled"
+        label: "Enabled"
+        description: "Whether the runtime service is enabled or not."
+        type: "boolean"
+        immutable: false
+        required: true
+    replicas: 
+      __metadata:
+        name: "replicas"
+        label: "Number of replicas"
+        description: "The number of replicas of the runtime service to create."
+        type: "number"
+        required: true
+
+  # Resource Configuration.
+  resources:
+    label: "Resource quotas"
+    description: "Configuration details associated with resource allocation."
+    requests:
+      cpu: 
+        __metadata: 
+          label: "CPU request"
+          description: "The minimum required CPU core. Specify integers, fractions (e.g. 0.5), or millicore values(e.g. 100m, where 100m is equivalent to .1 core)."
+          type: "string"
+          required: true   
+      memory: 
+        __metadata: 
+          label: "Memory request"
+          description: "The minimum memory in bytes. Specify integers with one of these suffixes: E, P, T, G, M, K, or power-of-two equivalents: Ei, Pi, Ti, Gi, Mi, Ki."
+          type: "string"
+          required: true   
+    limits:
+      cpu: 
+        __metadata: 
+          label: "CPU limit"
+          description: "The upper limit of CPU core. Specify integers, fractions (e.g. 0.5), or millicores values(e.g. 100m, where 100m is equivalent to .1 core)."
+          type: "string"
+          required: true   
+      memory: 
+        __metadata: 
+          label: "Memory limit"
+          description: "The memory upper limit in bytes. Specify integers with suffixes: E, P, T, G, M, K, or power-of-two equivalents: Ei, Pi, Ti, Gi, Mi, Ki."
+          type: "string"
+          required: true   
+
+###############################################################################
+# Distributed session cache container variables.
+
+isamdsc:
+  __metadata:
+    label: "Distributed Session Cache"
+    description: "Configuration details associated with the distributed session cache."
+
+  # Container Configuration.
+  container:
+    label: "Container configuration"
+    description: "Configuration details associated with the DSC service to be created."
+    enabled: 
+      __metadata:
+        name: "enabled"
+        label: "Enabled"
+        description: "Whether the DSC service is enabled or not."
+        type: "boolean"
+        immutable: false
+        required: true
+    useReplica: 
+      __metadata:
+        name: "useReplica"
+        label: "Use replica"
+        description: "Whether the DSC service should be replicated for HA."
+        type: "boolean"
+        immutable: false
+        required: true
+
+  # Resource Configuration.
+  resources:
+    label: "Resource quotas"
+    description: "Configuration details associated with resource allocation."
+    requests:
+      cpu: 
+        __metadata: 
+          label: "CPU request"
+          description: "The minimum required CPU core. Specify integers, fractions (e.g. 0.5), or millicore values(e.g. 100m, where 100m is equivalent to .1 core)."
+          type: "string"
+          required: true   
+      memory: 
+        __metadata: 
+          label: "Memory request"
+          description: "The minimum memory in bytes. Specify integers with one of these suffixes: E, P, T, G, M, K, or power-of-two equivalents: Ei, Pi, Ti, Gi, Mi, Ki."
+          type: "string"
+          required: true   
+    limits:
+      cpu: 
+        __metadata: 
+          label: "CPU limit"
+          description: "The upper limit of CPU core. Specify integers, fractions (e.g. 0.5), or millicores values(e.g. 100m, where 100m is equivalent to .1 core)."
+          type: "string"
+          required: true   
+      memory: 
+        __metadata: 
+          label: "Memory limit"
+          description: "The memory upper limit in bytes. Specify integers with suffixes: E, P, T, G, M, K, or power-of-two equivalents: Ei, Pi, Ti, Gi, Mi, Ki."
+          type: "string"
+          required: true   
+
+###############################################################################
+# postgresql container variables.
+
+isampostgresql:
+  __metadata:
+    label: "PostgreSQL"
+    description: "Configuration details associated with the demonstration PostgreSQL database."
+
+  # Container Configuration.
+  container:
+    label: "Container configuration"
+    description: "Configuration details associated with the demonstration PostgreSQL service to be created."
+    enabled: 
+      __metadata:
+        name: "enabled"
+        label: "Enabled"
+        description: "Whether the demonstration PostgreSQL service is enabled or not."
+        type: "boolean"
+        immutable: false
+        required: true
+    keySecret:
+      __metadata:
+        name: "keySecret"
+        label: "Existing key secret"
+        description: "An existing secret which contains the key files for the PostgreSQL service."
+        type: "string"
+        immutable: false
+        required: false
+  
+  # Resource Configuration.
+  resources:
+    label: "Resource quotas"
+    description: "Configuration details associated with resource allocation."
+    requests:
+      cpu: 
+        __metadata: 
+          label: "CPU request"
+          description: "The minimum required CPU core. Specify integers, fractions (e.g. 0.5), or millicore values(e.g. 100m, where 100m is equivalent to .1 core)."
+          type: "string"
+          required: true   
+      memory: 
+        __metadata: 
+          label: "Memory request"
+          description: "The minimum memory in bytes. Specify integers with one of these suffixes: E, P, T, G, M, K, or power-of-two equivalents: Ei, Pi, Ti, Gi, Mi, Ki."
+          type: "string"
+          required: true   
+    limits:
+      cpu: 
+        __metadata: 
+          label: "CPU limit"
+          description: "The upper limit of CPU core. Specify integers, fractions (e.g. 0.5), or millicores values(e.g. 100m, where 100m is equivalent to .1 core)."
+          type: "string"
+          required: true   
+      memory: 
+        __metadata: 
+          label: "Memory limit"
+          description: "The memory upper limit in bytes. Specify integers with suffixes: E, P, T, G, M, K, or power-of-two equivalents: Ei, Pi, Ti, Gi, Mi, Ki."
+          type: "string"
+          required: true   
+
+  # Data Volume Configuration.
+  dataVolume:
+    label: "Data volume configuration"
+    description: "Configuration details associated with the data volume."
+    existingClaimName:
+      __metadata:
+        name: "existingClaimName"
+        label: "Existing volume claim"
+        description: "By default a new persistent volume claim will be created. Specify an existing claim here if one is available."
+        type: "string"
+        immutable: false
+        required: false
+    storageClassName:
+      __metadata:
+        name: "storageClassName"
+        label: "Storage class name"
+        description: "Choose a specific storage class name. Defaults to the default storage class in the cluster."
+        type: "string"
+        immutable: false
+        required: false
+    size:
+      __metadata:
+        name: "size"
+        label: "Size of the volume claim."
+        description: "Defaults to 20Gi of storage. The volume must be large enough to store the runtime database for the ISAM environment."
+        type: "string"
+        immutable: false
+        required: true
+

@@ -1,0 +1,166 @@
+# Create a Deployment component for Operators which inlcudes 2 containers "ansible" and "operator"  
+{{- $founationsRepo := (include "foundations.repository" .) }}
+{{- $solutionsRepo := (include "solutions.repository" .) }}
+{{- range $op,$v := .Values.global.operators }}
+{{- $ndx := index $.Values.global.images $op }}
+{{- $registry := ternary $founationsRepo $solutionsRepo (eq "middleware" $op) }}
+{{- $image := printf "%s/%s:%s" $founationsRepo $ndx.image $ndx.tag }}
+{{- $csns := $.Values.global.csNamespace | default "kube-system" }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $op }}
+  labels:
+    name: {{ $op }}
+    app.kubernetes.io/name: {{ $op }}
+    helm.sh/chart: {{ $.Chart.Name }}
+    release: {{ $.Release.Name }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+  annotations:
+    cloudpakId: {{ $.Values.cloudpak.id }}
+    cloudpakName: {{ $.Values.cloudpak.name }}
+    cloudpakVersion: {{ $.Values.cloudpak.version }}
+    productID: {{ $.Values.product.id }}
+    productName: {{ $.Values.product.name }}
+    productVersion: {{ $.Values.product.version }}
+    productMetric: {{ $.Values.product.metric | default "" }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ $op }}
+  template:
+    metadata:
+      labels:
+        name: {{ $op }}
+        app.kubernetes.io/name: {{ $op }}
+        helm.sh/chart: {{ $.Chart.Name }}
+        release: {{ $.Release.Name }}
+        app.kubernetes.io/instance: {{ $.Release.Name }}
+        app.kubernetes.io/managed-by: {{ $.Release.Service }}
+      annotations:
+        cloudpakId: {{ $.Values.cloudpak.id }}
+        cloudpakName: {{ $.Values.cloudpak.name }}
+        cloudpakVersion: {{ $.Values.cloudpak.version }}
+        productID: {{ $.Values.product.id }}
+        productName: {{ $.Values.product.name }}
+        productVersion: {{ $.Values.product.version }}
+        productMetric: {{ $.Values.product.metric | default "" }} 
+    spec:
+      serviceAccountName: ibm-isc-operators
+      hostPID: false
+      hostIPC: false
+      hostNetwork: false
+      securityContext:
+        runAsUser: 1001
+        runAsNonRoot: true
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: beta.kubernetes.io/arch
+                operator: In
+                values:
+                 - {{ $.Values.global.arch | default "amd64" }}
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                - {{ $op }}
+            topologyKey: kubernetes.io/hostname
+      dnsConfig:
+        options:
+        - name: single-request-reopen
+      {{- if $.Values.global.nodeSelector }}
+      nodeSelector:
+        {{- toYaml $.Values.global.nodeSelector | nindent 8 }}
+      {{- end }}
+    {{- if $.Values.global.tolerations }}
+      tolerations:
+        {{- toYaml $.Values.global.tolerations | nindent 8 }}
+    {{- end }}
+      containers:
+        - name: operator
+{{- if $v.go }}
+          command:
+          - /manager
+          args:
+          - --enable-leader-election
+{{- end }}
+          securityContext:
+            privileged: false
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            runAsNonRoot: true
+            capabilities:
+              drop:
+              - ALL
+          image: {{ $image }}
+          imagePullPolicy: {{ $.Values.global.imagePullPolicy | default "IfNotPresent" }}
+          {{- if eq "enabled" ( $.Values.global.resourceManagement | default "enabled" ) }}
+          resources:
+          {{- toYaml $v.resources | nindent 14 }}
+          {{- end }}
+          livenessProbe:
+            failureThreshold: 3
+            exec:
+              command: 
+              - /usr/bin/true
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            failureThreshold: 3
+            exec:
+              command: 
+              - /usr/bin/true
+            initialDelaySeconds: 5
+            periodSeconds: 10
+{{- if $v.go }}
+          env:
+            - name: WATCH_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+{{- else }}
+          volumeMounts:
+          - mountPath: /tmp/ansible-operator/runner
+            name: runner
+          env:
+            - name: WATCH_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: OPERATOR_NAME
+              value: {{ $op }}
+            - name: REPO_URL
+              value: {{ $registry }}
+            - name: REPO_PULLS
+              value: ibm-isc-pull-secret
+{{- if $.Values.global.somaxconn }}
+            - name: SOMAXCONN
+              value: "{{ $.Values.somaxconn }}"
+{{- end }}
+            - name: CLOUD_TYPE
+              value: {{ $.Values.global.cloudType | default "notset" }}
+            - name: RESOURCE_MANAGEMENT
+              value: {{ $.Values.global.resourceManagement | default "enabled" }}
+            - name: ANSIBLE_DEBUG_LOGS
+              value: "True"
+      imagePullSecrets:
+        - name: ibm-isc-pull-secret
+        - name: sa-{{ $.Release.Namespace }}
+      volumes:
+        - name: runner
+          emptyDir: {}
+{{- end }}
+---
+{{ end }}

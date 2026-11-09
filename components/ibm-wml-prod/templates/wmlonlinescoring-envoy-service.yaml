@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: wml-deployment-envoy
+    chart: "{{ .Chart.Name }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+    app.kubernetes.io/managed-by: {{.Release.Service | quote }}
+    app.kubernetes.io/instance: {{.Release.Name | quote }}
+    app.kubernetes.io/name: "{{ .Release.Name }}"
+    helm.sh/chart: "{{.Chart.Name}}-{{.Chart.Version}}"
+    icpdsupport/addOnId: wml 
+    icpdsupport/app: api     
+  name: wml-deployment-envoy
+spec:
+  type: ClusterIP
+  selector:
+    app: wml-deployment-envoy
+  ports:
+   - protocol: TCP
+     port: 17600
+     targetPort: 17600
+status:
+  loadBalancer: {}     

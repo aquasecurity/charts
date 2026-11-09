@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ .Values.environment.name }}-load-db-specs-script"
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: "{{ .Values.environment.name }}-load-db-specs-script"
+{{- include "helm.labels" . | indent 4 }}
+{{- include "cloudpak.labels" . | indent 4 }}
+  annotations:
+    "helm.sh/hook": "pre-install,pre-upgrade"
+    "helm.sh/hook-weight": "1"
+    "helm.sh/hook-delete-policy": before-hook-creation
+data:
+  load-db-specs.sh: |-
+{{ .Files.Get "conf/load-db-specs.sh" | indent 4 }}
+{{- if .Values.sparkMetastoredb.cockroachdb }}
+  load_db.py: |-
+{{ .Files.Get "conf/load_db_cockroach.py" | indent 4 }}
+  create_tables.sql: |-
+{{ .Files.Get "conf/create_cockroach_tables.sql" | indent 4 }}
+{{- else }}
+  load_db.py: |-
+{{ .Files.Get "conf/load_db_postgres.py" | indent 4 }}
+  create_tables.sql: |-
+{{ .Files.Get "conf/create_postgres_tables.sql" | indent 4 }}
+{{- end }}

@@ -1,0 +1,43 @@
+# Change license to true to indicate you have read and agree to license agreements
+license: false
+
+global:
+  architecture: amd64
+  runAsUser: "1000330999" 
+  dockerRegistryPrefix: "set_during_install"
+  cloudpakInstanceId: "set_during_install"
+  ibmProduct: "zen"
+  viewer:
+    sa: "cpd-viewer-sa"
+  editor:
+    sa: "cpd-editor-sa"
+    
+runtimes:
+  workerNodes: 50
+  preloadRuntimes: true
+        
+initJob:
+  image:
+    name: wslocal-rstudio-init
+    tag: cpd350-24-amd64
+  runAsUser: "1000320999"
+            
+rstudioServer:
+  image:     
+    name: wslocal-runtime-rstudio
+    tag: cpd350-275-amd64
+
+shinyServer:
+  image:     
+    name: wslocal-runtime-shiny
+    tag: cpd350-107-amd64
+        
+annotations:
+  cloudpakName: IBM Cloud Pak for Data
+  cloudpakId: eb9998dcc5d24e3eb5b6fb488f750fe2
+  productCloudpakRatio: 1:1
+  productMetric: VIRTUAL_PROCESSOR_CORE
+  productChargedContainers: All
+  productID: eb9998dcc5d24e3eb5b6fb488f750fe2
+  productName: IBM Watson Studio
+  productVersion: 3.5.0

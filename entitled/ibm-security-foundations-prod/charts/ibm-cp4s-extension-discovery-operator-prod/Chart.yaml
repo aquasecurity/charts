@@ -1,0 +1,14 @@
+apiVersion: v2
+appVersion: "1.4.0.0"
+description: IBM Cloud Pak for Security Extension Discovery Operator
+name: ibm-cp4s-extension-discovery-operator-prod
+icon: "http://raw.githubusercontent.com/IBM/charts/master/logo/IBM-Security-icon.png"
+version: 1.0.8
+keywords:
+  - amd64
+  - Commercial
+  - Security
+  - ICPRHOCP
+  - Connector
+  - Extensions
+kubeVersion: ">=1.16.0"

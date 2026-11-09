@@ -1,0 +1,45 @@
+################################################################################
+#                                                                              #
+#         Congratulations on installing CP4S Security Solutions !               #
+#                                                                              #
+################################################################################
+
+Once the install of ibm-security-solutions-prod has completed, to verify the outcome execute the following:
+
+1. Using the <RELEASE_NAME> specified, the following commands can be used to view the status of the installation.
+
+
+    a. helm ls <RELEASE_NAME> --tls
+
+    Expected Result: The ibm-security-solutions-prod should be in a Deployed state.
+    
+
+    b. helm status <RELEASE_NAME> --tls
+
+    Expected Result: The ibm-security-solutions-prod resources should listed as STATUS: DEPLOYED and list all resources deployed.
+    
+
+    c. Execute the helm tests to verify installation helm test <RELEASE_NAME> --cleanup --tls
+
+    Expected Result: All Helm Tests should have a status of PASSED
+
+
+    d. The checkcr.sh script checks the status of the CP4S installation process. The script should be executed specifying the namespace to which the CP4S was deployed by the customer.
+
+      ibm-security-foundations-prod/ibm_cloud_pak/pak_extensions/support/checkcr.sh <NAMESPACE> --all
+
+    Expected Result: There are no  failures returned from executing  checkcr.sh
+
+
+    e. Verify that the ibm-security-solutions-prod pods are starting correctly. You can monitor the progress of pod startup by running a command such as:
+
+      kubectl get pods -l release=<RELEASE> --watch
+
+
+    f. You can monitor the overall state of the ISCSequence by running the command:
+
+      kubectl get iscsequence  
+
+      OR 
+
+      watch kubectl get iscsequence

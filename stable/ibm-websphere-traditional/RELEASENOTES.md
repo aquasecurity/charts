@@ -1,7 +1,7 @@
 
-# What’s new in Chart Version 1.0.0
+# What’s new in Chart Version 1.3.0
 
-Initial release of WebSphere Application Server traditional Base edition helm chart.
+1. Added support for IBM Cloud Private with OpenShift.
 
 ## Breaking Changes
 
@@ -14,14 +14,14 @@ Initial release of WebSphere Application Server traditional Base edition helm ch
 ## Prerequisites
 
 * Tiller >= v2.9.1
-* For all others, refer to [Requirements in README.md](README.md)
+* For all others, refer to prerequisites in README.md
 
 ## Documentation
 
-Please refer to [README.md](README.md)
+Please refer to README.md
 
 ## Limitations
-
+* Currently only AMD64 (or INTEL 64bit) architecture is supported
 * Redirects (30x):
 
   When there are server initiated redirects the `Location` header might use container port (eg. 9443) instead of Ingress 
@@ -37,10 +37,23 @@ Please refer to [README.md](README.md)
   
 ## Known Issues
 
-* None
+* Upgrading to version 1.3.0:
+   
+  Currently provided Docker images are run using user with UID of `1001` (was) and GID of `0` (root). To avoid other issues please make sure you are using latest version of base image.
+
+  When 1.1.0 version of Helm chart is used, container is forced to run as user `1000` and `persistence.fsGroupID` is `1000`. It is recommened to set `persistence.fsGroupID` to `""` when upgrading.
+  
+  If persistence of logs is enabled in previous helm release and you encounter errors such as `java.io.FileNotFoundException: /opt/IBM/WebSphere/AppServer/profiles/AppSrv01/logs/server1/logViewer.pos (Permission denied)` after upgrade then set `pod.security.securityContext.runAsUser` to `1000` in order to be able to access persistent files.
+
+  If your pod fails to start after upgrade and your Docker image is still running as UID `1000` then set `pod.security.securityContext.runAsUser` to `1000` during upgrade.
+
+  Istio sidecar injection is not supported in namespaces associated with [`ibm-restricted-psp`](https://ibm.biz/cpkspec-psp#podsecuritypolicy-reference), [`ibm-restricted-scc`](https://ibm.biz/cpkspec-scc#securitycontextconstraint-reference) or the custom ones defined in the README file. To get around this problem, you would need to associate your namespace with [`ibm-privileged-psp`](https://ibm.biz/cpkspec-psp#podsecuritypolicy-reference) or [`ibm-privileged-scc`](https://ibm.biz/cpkspec-scc#securitycontextconstraint-reference). This because, sidecar pods must have the `NET_ADMIN` capability allowed.
 
 ## Version History
 
 | Chart | Date          | IBM Cloud Private Supported | Details                      |
 | ----- | ------------- | --------------------------- | ---------------------------- |
+| 1.3.0 | JUL 15, 2019   | >=3.1.0                     | Added support for IBM Cloud Private with OpenShift |
+| 1.2.0 | APR 19, 2019   | >=3.1.0                     | Added support for ingress hosts and secret name; Updated Kibana dashboards; Added security extension points for pod and image |
+| 1.1.0 | JAN 31, 2019   | >=3.1.0                     | Added support for more configurable parameters; Added Kibana dashboards |
 | 1.0.0 | NOV 16, 2018   | >=3.1.0                     | Initial release              |

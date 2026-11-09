@@ -1,0 +1,74 @@
+{{- if eq .Values.global.deploymentTarget "icp4data" }}
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: wkc-post-install-config
+  labels:
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app: {{ .Chart.Name }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "-10"
+    "helm.sh/hook-delete-policy": before-hook-creation
+data:
+  post-install.sh: |
+    set -e
+    LogMsg(){
+        logMsg="$1"
+        echo "["$(date +"%d-%B-%Y %R %Z")"]" ${logMsg}
+      }
+    LogError(){
+        LogMsg "ERROR: $@"
+      }
+    LogWarn(){
+        LogMsg "WARNING: $@"
+      }
+    LogInfo(){
+        LogMsg "INFO: $@"
+      }
+
+    ADMIN_UID=1000330999
+
+    LogInfo "Waiting for usermgmt pod to be ready"
+    kubectl wait --for=condition=ready --timeout=90m pod/$(kubectl get pod -l component=usermgmt -o jsonpath="{.items[0].metadata.name}")
+
+    LogInfo "Waiting for wkc-glossary-service pod to be ready"
+    kubectl wait --for=condition=ready --timeout=90m pod/$(kubectl get pod -l app.kubernetes.io/name=wkc-glossary-service -o jsonpath="{.items[0].metadata.name}")
+    
+    LogInfo "Waiting for wdp-policy-service pod to be ready"
+    kubectl wait --for=condition=ready --timeout=90m pod/$(kubectl get pod -l app.kubernetes.io/name=wdp-policy-service -o jsonpath="{.items[0].metadata.name}")
+
+    LogInfo "Reading metakey"
+    mk=$(cat /user-home/_global_/security/artifacts/metakey | tr -d '\n' )
+
+    LogInfo "Chek status of categories bootstrap process..."
+    LogInfo "Getting a short lived token"
+    ttoken=$(curl -ks -X POST -H "metakey: $mk" -H "uid: $ADMIN_UID" -H 'lifetime: 0.10'  https://usermgmt-svc:3443/v1/usermgmt/getTimedToken  | sed -e 's/.*"accessToken":"//g' -e 's/".*//g')
+    boot_status=$(curl -k -s -X GET -H "Content-Type: application/json" -H "accept: application/json" -H "Authorization: Bearer $ttoken" "https://wkc-glossary-service:443/v3/categories/collaborators/bootstrap/status" | tr -d " \t\n\r" | sed -e 's/.*"status":"//g' -e 's/".*//g')
+    
+    if [ "$boot_status" != "NOT_STARTED" ]; then
+       LogInfo "Categories bootstrap process status - $boot_status"
+       LogInfo "Skipping categories bootstrap process..."
+    else
+       LogInfo "Trigger categories bootstrap process..."
+       LogInfo "Getting a short lived token"
+       ttoken=$(curl -ks -X POST -H "metakey: $mk" -H "uid: $ADMIN_UID" -H 'lifetime: 0.10'  https://usermgmt-svc:3443/v1/usermgmt/getTimedToken  | sed -e 's/.*"accessToken":"//g' -e 's/".*//g')
+       http_code=$(curl -k -s -w "%{http_code}" -X POST -H "Content-Type: application/json" -H "accept: application/json" -H "Authorization: Bearer $ttoken" "https://wkc-glossary-service:443/v3/categories/collaborators/bootstrap" -d "{}" -o /dev/null)
+       if [ "$http_code" != "202" ]; then
+          LogError "Trigger categories bootstrap process did not returned 202 http code, instead it returned : $http_code"
+          exit 1
+       fi
+       LogInfo "Triggered categories bootstrap process..."
+    fi
+    
+    LogInfo "Calling BG api to create OOTB artifacts"
+    ttoken=$(curl -ks -X POST -H "metakey: $mk" -H "uid: $ADMIN_UID" -H 'lifetime: 0.10'  https://usermgmt-svc:3443/v1/usermgmt/getTimedToken  | sed -e 's/.*"accessToken":"//g' -e 's/".*//g')
+    curl --connect-timeout 180 --max-time 1200 -k -X POST 'https://wkc-glossary-service:443/v3/glossary_terms/admin/initialize_content'  -H "accept: application/json"  -H "Authorization: Bearer $ttoken" -H "Content-Type: application/json" -d "{}"
+    
+{{- end }}

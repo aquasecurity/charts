@@ -1,0 +1,1202 @@
+
+IBM Transformation Extender Advanced v10.0.2.2
+
+## What's New 
+
+ITXA 10.0.2.2 Certified Container release.
+See IBM ITXA Documentation for a full list of [what's new in ITXA 10.0.2.2.](https://www.ibm.com/docs/en/stea/10.0.0?topic=welcome-whats-new-in-version-1002)
+
+## Introduction
+[IBM Transformation Extender Advanced (ITXA)](https://www.ibm.com/docs/en/stea/10.0) includes support for Enveloping, De-enveloping, and processing of Standards based documents.  This includes validation and acknowledgement generation.  It also supports tranformation via either the IBM Transformation Extender (ITX) or Sterling B2BI Integrator core engines.  ITXA can also leverage the ITX Financial Payment, Supply Chain, or HealthCare packs to support industry specific standards.
+
+## Notes
+* ITXA user passwords are stored in the database. It is highly recommend that encryption is enabled for the database used for ITXA.
+
+## Chart Details
+
+This chart deploys Transformation Extender Advanced on a container management platform with the following resources deployments
+
+* Create a deployment `<release name>-ibm-itxa-prod-itxauiserver` for ITXA UI application server with 1 replica by default. 
+* Create a deployment `<release name>-ibm-itxa-prod-itxadatasetup`. It is used for performing Database Initialization Job for ITXA that is required to deploy and run the ITXA application.
+* Create a service `<release name>-ibm-itxa-prod-itxauiserver`. This service is used to access the ITXA application server using a consistent IP address.
+* Create a ConfigMap `itxa-config`. This is used to provide ITXA configuration.
+* service-account will be created if the parameter `.Values.global.serviceAccount.create` is set to true.  The service account will be created with name provided in the parameter `.Values.global.serviceAccount.name`. If the parameter `.Values.global.serviceAccount.create` is set to false, the service account will not be created and you have to specify already created service account in the parameter `.Values.global.serviceAccount.name`. If not specified the service account name, then service account `default` will be used.
+
+**Note** : `<release name>` refers to the name of the helm release and `<server name>` refers to the app server name.
+
+## Prerequisites
+## Quickstart Checklist
+
+Note: The steps below are for a new install.  To upgrade from a previous non-containerized install or containerized deployment of ITXA, see [Upgrading the Chart](#upgrading-the-chart) below.
+
+1. Redhat Openshift Container Platform version 4.19, 4.20, 4.21 and 4.22 or Kubernetes Cluster version 1.32 to 1.36 is available.
+2. Ensure that all images are downloaded from the IBM Entitled Registry and pushed to an image registry accessible by the cluster.  See [Downloading Artifacts](https://www.ibm.com/docs/en/stea/10.0?topic=images-downloading-artifacts) for more details.
+3. [Download the helm chart](https://www.ibm.com/docs/en/stea/10.0?topic=da-downloading-certified-container-helm-charts-from-chart-repository) from the IBM Charts repository and Extract to a working directory.
+4. If integrating ITXA with B2BI, it is recommended to install ITXA and B2BI in the same namespace.  If not you will need to duplicate the Persistent Volume (PV) and create separate Persistent Volume Claims (PVCs) in each namespace.
+5. The ITXA PVC is automatically created for you based on settings in values.yaml under global.persistence section. If you enable dynamic provisioning, the PV will also be created for you at deployment time. If you disable dynamic provisioning, you need to create PV using the sample  [Persistent Volume yaml](#install-persistent-related-objects-in-openshift) below. The storage class you use must support ReadWriteMany (RWX) Storage since the volume will be shared between the ITXA and B2BI Pods.
+6. Determine Subdomain for your cluster using the info from [Identify Sub Domain Name of your cluster](#identify-sub-domain-name-of-your-cluster) below.  This info will be needed later in values.yaml.
+7. Create The following Kubernetes Secrets per [the instructions below](#install-persistent-related-objects-in-openshift): itxa-db-secret, tls-itxa-secret, itxa-ingress-secret and itxa-user-secret.
+8. Create Role, RBAC, Pod Security Policy, Cluster Role, Cluster Rolebinding, and Security Context Constraint [using sample yamls below](#podsecuritypolicy-requirements)
+    **Red Hat OpenShift SecurityContextConstraints Requirements** and **PodSecurityPolicy Requirements**
+9. Configure the proper JDBC driver to match the Database you are using. Populate `global.database.dbDriver` in values.yaml with valid values `ojdbc17-23.26.2.0.0.jar`, `db2jcc4.jar` or `mssql-jdbc-13.2.1.jre11.jar` for supported databases Oracle, DB2 or MSSQL respectively. 
+For detailed instructions see [Specifying the proper database driver](#specifying-the-proper-database-driver) below.
+10. Populate necessary sections in the values.yaml that is included with the helm chart.
+    1.  Set License to true.
+    2.  Add proper images and tags and pull secret for your repo.
+    3.  Add proper secret names to match the secrets you created.
+    4.  Update the itxauiserver.ingress.host to match the appname and subdomain you determined in step 6 above.
+11.  User 1001 must have access to the NFS volume mounted via the PVC.  How you do this varies depending on what storage provider you are using.  In some cases you can do it directly from the NFS share, in other cases you may need to mount the PVC via a container running as root and run:
+        - `chown -R 1001 /[mounted dir]`
+        - `chgrp -R 0 /[mounted dir]`
+        - `chmod -R 770 /[mounted dir]`
+
+12. If user needs to install any of the packs, refer the section below [Adding ITXA Packs](#adding-itxa-packs) to modify the itxa-init-db image, add the packs, and push the new image to your repo. Once db init image is modified with packs, edit values.yaml as shown below.  If you are not installing or upgrading any packs, you must still complete this step to do DB setup, just leave all deployPacks settings set to false.
+
+After modifying itxa-init-db image, you can install dbinit and UI server at the same time as follows.
+
+### Install ITXA dbinit and UI Server at the same time
+Configure image repository to pull the image. Please see [Configuring the image repository either at global level or Image level](#Configuring-the-image-repository-either-at-global-level-or-Image-level) below.
+
+Set itxadbinit to true. 
+
+Set the itxaUI to true
+
+Set the packs to true under deployPacks for any pack you want to install or upgrade.
+
+```
+ install:
+  itxaUI:
+    enabled: true
+  itxadbinit:
+    enabled: true
+	
+itxadatasetup:
+  dbType: <DB_TYPE>
+  deployPacks:
+    edi: true
+    fsp: true
+    hc: true
+```	
+
+Before installing, you should dry run your configuration to validate the generated manifests and verify them against the cluster:
+`helm install <releasename> -f ibm-itxa-prod/values.yaml ./ibm-itxa-prod --timeout 3600s --debug --dry-run`
+
+Then run helm install pointing to the values.yaml you've been editing. For example to use the values.yaml and helm charts in the default ibm-itxa-prod directory run:  
+`helm install <releasename> -f ibm-itxa-prod/values.yaml ./ibm-itxa-prod --timeout 3600s --debug`.  
+
+This will initialize the Database with the proper tables.  This can take several minutes to an hour depending on database latency and resources. This will also install the ITXA UI.
+	
+Then, run  `helm upgrade` with the same command line you ran for helm install above.
+	
+   Verify the ITXA UI pod comes up and you can connect to it via `https://[hostname]/spe/myspe` with ID "admin" and the password you specified in the parameter `adminPassword` of `itxa-user-secret.yaml` file.
+   Hostname should match the app and subdomain name you determined above.  For example `https://itxa.mycluster.mydomain.com`
+
+
+## Detailed Instructions
+
+
+## Installing the Chart (Installing the ITXA UI Server)
+
+Prepare a custom values.yaml file based on the [Configuration](#Configuration) section. Ensure that application license is accepted by setting the value of `global.license` to true.
+
+Note:
+
+1. Ensure that all the sections in values.yaml like global, itxauiserver, itxadatasetup and metering are correctly populated before installing ITXA UI Server. A sample values.yaml is provided in the helm charts.
+
+
+### Helm Install
+
+### Configure  repository (Below content explains how to configure the repository (NFS Share folder) on a NFS server.)
+Refer the URL for NFS server: https://www.linuxtechi.com/setup-nfs-server-on-centos-8-rhel-8/
+Make sure you have set the permissions on the repository correctly.
+You can do that by mounting the above folder into a node and execute below cmds on NFS server.
+
+- `sudo chown -R 1001 /[mounted dir]`
+- `sudo chgrp -R 0 /[mounted dir]`
+- `sudo chmod -R 770 /[mounted dir]`
+
+The above cmds make sure the repository folders and files have right permissions for the pods to access them.
+As mentioned, the owner of the files in repository folders, is the user 1001 and group as root.
+Also the rwx permissions are 770.
+
+### Identify Sub Domain Name of your cluster
+
+- Steps to find Sub Domain Name. 
+  You would need this information when you need to provide a hostname to provide to ingress and in sign-in certificates.
+  Taking an example of a cluster web console URL - `https://console-openshift-console.somename.os.mycompany.com`
+  1. Identify the cluster name in the console URL, for eg somename is the cluster name.
+  2. Identify the base domain which is placed after the cluster name. In above the base domain is os.mycompany.com.
+  3. So sub domain name is derived as - app.<cluster name>.<base domain> i.e. apps.somename.os.mycompany.com
+
+# Install Persistent related objects in Openshift
+
+- Note - The charts are bundled with sample files as templates , you can use these to plugin in your configuration and create pre-req objects. They are packaged in prereqs.zip along with the chart.
+
+1. Download the charts from IBM site.
+2. Create a storage class and persistent volume with access mode as 'Read Write Many' with minimum 12GB space.
+
+- Create persistent volume, itxa_pv.yaml file as below -
+
+```yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: itxa-pv
+  labels:
+    intent: itxa-logs
+spec:
+  accessModes:
+  - ReadWriteMany
+  capacity:
+    storage: 12Gi
+  nfs:
+    path: /shared/nfs
+    server: my.nfs.server.com
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: itxa-sc
+```
+
+`oc create -f itxa_pv.yaml`
+
+- Create a Storage class, file itxa_sc.yaml as below -
+
+```yaml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: itxa-sc
+parameters:
+  type: pd-standard
+provisioner: kubernetes.io/gce-pd
+reclaimPolicy: Retain
+volumeBindingMode: Immediate
+
+```
+
+`oc create -f itxa_sc.yaml`
+
+* Create a Database secret, file itxa-db-secret.yaml as below -
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: itxa-db-secret
+type: Opaque
+stringData:
+  dbUser: xxxx
+  dbPassword: xxxx
+  dbHostIp: "1.2.3.4"
+  databaseName: dbname
+  dbPort: "50000"
+  #The following dbCurrentSchema parameter is added to mention schema name for DB2(schema name should be in CAPS).
+  dbCurrentSchema: xxxx
+```
+`oc create -f itxa-db-secret.yaml`
+
+3. Create a secret tls-itxa-secret.yaml with a password for Liberty Keystore pkcs12.
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: tls-itxa-secret
+type: Opaque
+stringData:
+  tlskeystorepassword: [tlskeystore password]
+```
+`oc create -f tls-itxa-secret.yaml`
+Password can be anything, it will be used by Liberty for keystore access.
+You will need to mention this secret name in Values.global.tlskeystoresecret field.
+
+4. If you choose to create a self signed certificate for ingress, please follow below steps. 
+  Create certificate and key for ingress - ingress.crt and key ingress.key
+  This is for creating the cert allowing the ingress object to enable HTTPS for ITXA.
+  Prereq is to select a ingress host for launching ITXA.
+  
+  e.g. machine-specific ingress host.
+  Pleae note the ingress host should end in the subdomain name of your machine.
+ 
+  cmd - 
+  `openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ./ingress.key -out ./ingress.crt -subj "/CN=[ingress_host]/O=[ingress_host]"`
+  
+  cmd - 
+  `oc create secret tls itxa-ingress-secret --key ingress.key --cert ingress.crt`
+ * You need to refer this secret name into values.yaml - itxauiserver.ingress.ssl.secretname
+ * Also enable ssl by setting itxauiserver.ingress.ssl.enabled to true.
+
+For **production environments** it is strongly recommended to obtain a CA certified TLS certificate and create a secret manually such as in the steps below.
+
+ 1. Obtain a CA certified TLS certificate for the given `itxauiserver.ingress.host` in the form of key and certificate files.
+ 2. Create a secret from the above key and certificate files by running:
+```
+	oc create secret tls <release-name>-ingress-secret --key <file containing key> --cert <file containing certificate> -n <namespace>
+```
+ 3. Use the created secret as the value for the parameter `itxauiserver.ingress.ssl.secretname`.
+
+ 4. Set the following variables in the values.yaml
+    1. Set the Registry from where you will pull the images-
+        e.g. global.image.repository: "cp.icr.io/ibm-itxa" 
+    2. Set the image names -
+        e.g. itxauiserver.image.name: itxa-ui-server
+        e.g. itxauiserver.image.tag: 10.0.1.3-x86_64
+    3. Set the ingress host
+        * Note: The ingress host should end in same subdomain as the cluster node.
+    4. Check the ingress tls secret name is set correctly as per cert created above, in place of itxauiserver.ingress.ssl.secretname
+
+### Steps to set a default Password
+1. Before installing ITXA UI Server create a secret file `itxa-user-secret.yaml`.
+
+  Example: Replace <ADMIN_USER_PASSWORD> with password
+  ```yaml
+  apiVersion: v1
+  kind: Secret
+  metadata:
+    name: "<secrets_name>"
+  type: Opaque
+  stringData:
+    adminPassword: "<ADMIN_USER_PASSWORD>"
+  ```
+ 2. Create secret using following command
+
+     ```
+     kubectl create -f itxa-user-secret.yaml
+     ```
+
+ 3. Provide the secret name in values.yaml in itxauiserver section against the field userSecret
+    Example 
+     ```
+     itxauiserver:
+       --------------
+       --------------
+       userSecret: "itxa-user-secret"
+      ```
+
+
+### To install the chart with the release name `my-release` via cmd line:
+
+1. Ensure that the chart is downloaded locally by following the instructions given [here.](https://www.ibm.com/docs/en/stea/10.0?topic=da-downloading-certified-container-helm-charts-from-chart-repository)
+2. Check the settings are good in values.yaml by simulating the install chart.
+   cmd - helm template --name=my-release [chartpath]
+   This should give you all kubernetes objects which would be getting deployed on Openshift.
+   This cmd won't actually install kubernetes objects.
+
+3. You can install ITXA initdb and UI application at the same time by setting both 'global.install.itxaUI.enabled' and 'global.install.itxadbinit.enabled' to 'true'. You can also install the applications individually by setting the 'enabled' flags to 'true' for specific applications.
+   
+4. To install initdb and UI Application at the same time, run the following command:
+
+```
+helm install my-release [chartpath] --timeout 3600 --set global.license=true, global.install.itxaUI.enabled=true, global.install.itxadbinit.enabled=true
+```
+
+5. Test the health of the pods -
+
+Depending on the capacity of the kubernetes worker node and database connectivity, the whole deploy process can take on average
+
+- 1-2 minutes for 'installation against a pre-loaded database' and
+- 15-20 minutes for 'installation against a fresh new database'
+
+When you check the deployment status, the following values can be seen in the Status column:
+– Running: This container is started.
+– Init: 0/1: This container is pending on another container to start.
+
+You may see the following values in the Ready column:
+– 0/1: This container is started but the application is not yet ready.
+– 1/1: This application is ready to use.
+
+Run the following command to make sure there are no errors in the log file:
+
+```
+oc logs <pod_name> -n <namespace> -f
+```
+
+Test the installation - 
+
+Check if the routes are created by running command - 
+```
+oc get routes
+```
+
+You can get the application 
+ITXA UI Login - https://[hostname]/spe/myspe
+
+
+## PodSecurityPolicy Requirements
+
+With Kubernetes v1.25, the Pod Security Policy (PSP) API has been removed and replaced with Pod Security Admission (PSA) contoller. Kubernetes PSA conroller enforces predefined Pod Security levels at the namespace level. The Kubernetes Pod Security Standards defines three different levels: privileged, baseline, and restricted. Refer to Kubernetes [Pod Security Standards] ( https://kubernetes.io/docs/concepts/security/pod-security-standards/) documentation for more details. For users upgrading from older Kubernetes version to v1.25 or higher, refer to Kubernetes Migrate from PSP documentation to help with migrating from PodSecurityPolicies to the built-in Pod Security Admission controller.
+For users continuing on older Kubernetes versions (<1.25) and using PodSecurityPolicies, choose either a predefined PodSecurityPolicy or have your cluster administrator create a custom PodSecurityPolicy for you. Below is an optional custom PSP definition based on the IBM restricted PSP.
+
+- Custom PodSecurityPolicy definition:
+
+```yaml
+apiVersion: apps/v1
+kind: PodSecurityPolicy
+metadata:
+  annotations:
+    kubernetes.io/description: "This policy allows pods to run with
+      any UID and GID, but preventing access to the host."
+  name: ibm-itxa-anyuid-psp
+spec:
+  allowPrivilegeEscalation: true
+  fsGroup:
+    rule: RunAsAny
+  requiredDropCapabilities:
+  - MKNOD
+  allowedCapabilities:
+  - SETPCAP
+  - AUDIT_WRITE
+  - CHOWN
+  - NET_RAW
+  - DAC_OVERRIDE
+  - FOWNER
+  - FSETID
+  - KILL
+  - SETUID
+  - SETGID
+  - NET_BIND_SERVICE
+  - SYS_CHROOT
+  - SETFCAP
+  runAsUser:
+    rule: RunAsAny
+  seLinux:
+    rule: RunAsAny
+  supplementalGroups:
+    rule: RunAsAny
+  volumes:
+  - configMap
+  - emptyDir
+  - projected
+  - secret
+  - downwardAPI
+  - persistentVolumeClaim
+  forbiddenSysctls:
+  - '*'
+```
+
+To create a custom PodSecurityPolicy, create a file `itxa_psp.yaml` with the above definition and run the below command
+
+```
+oc create -f itxa_psp.yaml
+```
+
+- Custom ClusterRole and RoleBinding definitions:
+
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  annotations:
+  name: ibm-itxa-anyuid-clusterrole
+rules:
+- apiGroups:
+  - extensions
+  resourceNames:
+  - ibm-itxa-anyuid-psp
+  resources:
+  - podsecuritypolicies
+  verbs:
+  - use
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: ibm-itxa-anyuid-clusterrole-rolebinding
+  namespace: <namespace>
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: ibm-itxa-anyuid-clusterrole
+subjects:
+- apiGroup: rbac.authorization.k8s.io
+  kind: Group
+  name: system:serviceaccounts:<namespace>
+
+```
+
+The `<namespace>` in the above definition should be replaced with the namespace of the target environment.
+To create a custom ClusterRole and RoleBinding, create a file `itxa_psp_role_and_binding.yaml` with the above definition and run the below command
+
+```
+oc create -f itxa_psp_role_and_binding.yaml
+```
+
+## Red Hat OpenShift SecurityContextConstraints Requirements
+
+The Helm chart is verified with the predefined `SecurityContextConstraints` named [`anyuid.`](https://ibm.biz/cpkspec-scc) 
+Run the following command to bind this predefined scc `anyuid` to the ServiceAccount <serviceaccount> on target namespace as <namespace>.
+
+```
+oc adm policy add-scc-to-user anyuid system:serviceaccount:[namespace]:[serviceaccount]
+	
+```
+
+Alternatively, you can use a custom `SecurityContextConstraints`. Ensure that you bind the `SecurityContextConstraints` resource to the target namespace prior to installation.
+
+### SecurityContextConstraints Requirements
+
+Below is a sample custom SecurityContextConstraints definition:
+
+```yaml
+apiVersion: security.openshift.io/v1
+kind: SecurityContextConstraints
+metadata:
+  annotations:
+  name: ibm-itxa-scc
+allowHostDirVolumePlugin: false
+allowHostIPC: false
+allowHostNetwork: false
+allowHostPID: false
+allowHostPorts: false
+allowPrivilegedContainer: false
+allowedCapabilities: []
+allowedFlexVolumes: []
+defaultAddCapabilities: []
+fsGroup:
+  type: MustRunAs
+  ranges:
+    - max: 65535
+      min: 1
+readOnlyRootFilesystem: false
+requiredDropCapabilities:
+  - ALL
+runAsUser:
+  type: MustRunAsRange
+seccompProfiles:
+  - docker/default
+seLinuxContext:
+  type: RunAsAny
+supplementalGroups:
+  type: MustRunAs
+  ranges:
+    - max: 65535
+      min: 1
+volumes:
+  - configMap
+  - downwardAPI
+  - emptyDir
+  - persistentVolumeClaim
+  - projected
+  - secret
+priority: 0
+```
+
+To create the custom `SecurityContextConstraint`, create a yaml file with the custom `SecurityContextConstraint` definition and run the following command:
+
+```
+kubectl create -f <custom-scc.yaml>
+```
+
+## Red Hat OpenShift Seccomp Profile Support
+Helm chart introduces support for enabling a default Seccomp Profile (`restricted` or `restricted-v2`) through the `defaultSeccompProfile.enabled` property in `values.yaml`.
+
+To ensures proper file permissions and avoids failures when container is running under `restricted` SCCs, patch the namespace to use UID `1001` and GID `0`.
+
+```
+oc patch namespace <namespace> -p '{"metadata": {"annotations": {"openshift.io/sa.scc.uid-range": "1001/10000"}}}'
+oc patch namespace <namespace> -p '{"metadata": {"annotations": {"openshift.io/sa.scc.supplemental-groups": "0/10000"}}}'
+```
+
+## Configuration
+
+### Configuring the image repository either at global level or Image level
+The image repository can be configured at two levels in `values.yaml`:
+1. Image level - overrides global settings for specific components (resourcesInit, itxauiserver, or itxadbinit)
+2. Global level - applies to all images
+
+
+Image-Level Configuration
+
+When the following parameters are configured at the component level, the image will be pulled from the specified repository:
+e.g: resourcesInit section in values.yaml:
+```
+resourcesInit:
+    enabled: true
+    image:
+      repository: "cp.icr.io/cp/ibm-itxa"
+      pullSecret: "er-secret"
+      name: itxa-resources
+      tag: <image_tag>
+      #digest: <image_digest>
+      pullPolicy: "IfNotPresent"
+```
+
+Fallback to Global Repository
+
+If the repository parameter is commented out or not specified in a component section for any image, then the deployment will fall back to the global repository defined in `.Values.global.repository`.
+
+Configuration Priority:
+1. Image-level repository (if specified)
+2. Global `.Values.global.repository` (if Image-level is not specified)
+
+### Ingress
+
+- For ITXA UI Server Ingress can be enabled by setting the parameter `itxauiserver.ingress.enabled` as true. If ingress is enabled, then the application is exposed as a `ClusterIP` service, otherwise the application is exposed as `NodePort` service. It is recommended to enable and use ingress for accessing the application from outside the cluster. For production workloads, the only recommended approach is Ingress with cluster ip. Do not use NodePort.
+
+- `itxauiserver.ingress.host` - the fully-qualified domain name that resolves to the IP address of your cluster’s proxy node. Based on your network settings it may be possible that multiple virtual domain names resolve to the same IP address of the proxy node. Any of those domain names can be used. For example "example.com" or "test.example.com" etc.
+
+#### Specifying the proper database driver
+
+The jdbc jars are bundled in the image "itxa-resources". These jars will be available in the ITXA containers at location /ibm/resources. So now, customer does not need to upload jars either in S3 Object or store in NFS Share.
+
+Populate following fields in values.yaml to use these jdbc jars present inside the containers.
+a. Set global.resourcesInit.enabled to true.
+b. Provide image name and tag for "itxa-resources".
+c. For S3 storage, uncomment the following fields:
+global.database.s3host, global.database.s3bucket, global.database.dbDriver
+
+Example resourcesInit section in values.yaml:
+
+```
+resourcesInit:
+enabled: true
+image:
+name: itxa-resources
+tag: <tag_name>
+#digest: sha256:1d9045511c1203e6d6d25ed32c700dfca230076412915857c2c40b1409151b7c
+pullPolicy: "Always"
+```
+
+If you are using S3 Object or store in NFS Share and not "itxa-resources", then you need to download the required jdbc jar for the database and copy it on S3 storage or NFS share. For more details on jdbc version for the database you are using, please see [ here ](https://www.ibm.com/docs/en/stea/10.0.2?topic=prerequisites-database-configuration-parameters) 
+
+### Installation of new database
+
+This will create the required database tables and factory data in the database.
+
+
+1. Create db2 database user.
+2. Create db2 database and grant the necessary priviledges. For more details on creation of database with multiple schema, please see [ here ](https://www.ibm.com/docs/en/stea/10.0.2?topic=prerequisites-database-configuration-parameters) 
+3. Add following properties in `itxa-db-secret.yaml` file.
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: <secrets_name>
+type: Opaque
+stringData:
+  dbUser: <DB_USER>
+  dbPassword: <DB_PASSWORD>
+  dbHostIp: "<DB_HOST>"
+  databaseName: <DATABASE_NAME>
+  dbPort: "<DB_PORT>"
+  accessKey: "<ACCESS_KEY>"
+  secretKey: "<SECRET_KEY>"
+  #The following dbCurrentSchema parameter is added to mention schema name for DB2(schema name should be in CAPS).
+  dbCurrentSchema:: "<DB_SCHEMA_NAME>"
+
+```
+
+3.  Create secret using following command
+    ```
+    oc create -f itxa-db-secret.yaml
+    ```
+
+#### Once secret is created using above steps, make following changes in `values.yaml` file in order to install new database.
+
+```yaml
+global:
+  appSecret: "<SECRET_NAME_CREATED_USING_ABOVE_STEPS>"
+  database:
+    dbvendor: <DBTYPE>
+
+  install:
+    itxaUI:
+      enabled: false
+    itxadbinit:
+      enabled: false
+
+itxadatasetup:
+  dbType: "oracle"
+  deployPacks:
+    edi: true
+    fsp: true
+    hc: true
+  tenantId: ""
+  ignoreVersionWarning: true
+  loadFactoryData: "install"
+```
+
+Then run helm install command to install database.
+
+```
+ helm install my-release [chartpath] --timeout 3600
+```
+
+
+## Upgrading the Chart
+
+Please note,
+1. For any upgrade, loadFactoryData needs to be installed
+2. deployPacks works only if loadFactoryData is installed
+3. loadFactoryData set to donotinstall or blank when you are on same version of ITXA and just want to refresh image for security or moving from IIM to container of the same version without any changes in the packs.
+
+### ITXA Upgrade Scenarios
+
+| Scenarios and Example                                   | Current Setup of ITXA | ITXA Upgrade | Packs Change | itxadatasetup.loadFactoryData | itxadatasetup.deployPacks|
+|---------------------------------------------------------|------------------------|--------------|-------------|-------------------------------|--------------------------|
+| 1. IIM / Container to Container 10.0.1.11               | Container / IIM       | Yes          | Yes          | install                       | true                     |
+| 2. IIM / Container to Container 10.0.1.11               | Container / IIM       | Yes          | No           | install                       | false                    |
+| 3. IIM / Container 10.0.1.11 to Container 10.0.1.11     | Container / IIM       | No           | Yes          | install                       | true                     |
+| 4. Image Refresh for security issues                    | Container only        | No           | No           | donotinstall or blank         | false                    |
+| 5. IIM 10.0.1.11 to Container 10.0.1.11                 | IIM only              | No           | No           | donotinstall or blank         | false                    |
+
+### Upgrading the Chart from a Non-Containerized Install
+
+These charts do support upgrading from a non containerized install.  The differences from a new install are listed below.  The container will be installed on a Kubernetes or OCP worker node, but can use the same database as the non containerized deployment. Any db schema changes for the new version are done as part of the upgrade and connot be rolled back.
+
+If you are on a 10.0.1.7 or earlier version of non-containerized ITXA : 
+
+1.  Make a backup of the database so it can be rolled back if issues occur. Different databases and database configurations may have varying steps on backing them up so it is important to refer to your database provider's instructions for this step.
+2.  Follow Steps 1-11 in the [Quick Start Checklist](#quickstart-checklist) above.  When filling out the itxa-db-secret in step 7, make sure to use the same schema, credentials and connection info as your current ITXA database including admin user password in itxa-user-secret file. 
+3.  As part of upgrade, you need to use new ITX pack version supported by ITXA 10.0.2.2. Follow the instructions in Step 12 as listed and create a new dbinit image including new packs.  
+4.  Continue with Step 13 after dbinit is done to deploy the ITXA UI.
+
+If you are already on 10.0.2.2 non-containerized ITXA : 
+
+1. Make a backup of the database. Different databases and database configurations may have varying steps on backing them up so it is important to refer to your database provider's instructions for this step.
+2. Follow Steps 1-11 in the [Quick Start Checklist](#quickstart-checklist) above.  When filling out the itxa-db-secret in step 7, make sure to use the same schema, credentials and connection info as your current ITXA database including admin user password in itxa-user-secret file. 
+3. As you are already on 10.0.2.2, you don't need to deploy dbinit and directly proceed to deploy ITXA UI by setting `itxadatasetup.loadFactoryData` parameter  to `donotinstall` or blank,  and set  `itxadatasetup.deployPacks` parameter to true for packs visibility in UI as per entitlement. 
+
+
+### Upgrading the chart to apply configuration file changes or new ITXA patched images without updating the ITXA version
+
+Often security patches are released that do not change the core ITXA version and therefore do not require any database schema changes.
+
+You may want to upgrade your deployment when:
+- you have updated one or more configuration files such as `customer_overrides.properties`, `dbprops.cfg`, `itxa-ui-jvm.options`, or `itxa-ui-server.xml`
+- you want to apply patched container image for application server for the same ITXA version
+
+Update the following entries in `values.yaml` :
+1. Set `itxadatasetup.loadFactoryData` to `donotinstall` or leave it blank.
+2. Set `global.install.itxadbinit.enabled` to `false` so that the DB setup job is not started.
+
+Then run the following command to upgrade your deployment:
+
+```
+helm upgrade my-release -f values.yaml [chartpath] --timeout 3600
+```
+## Adding ITXA Packs
+
+In order to use the ITXA Financial Payments, HealthCare, or Supply Chain Packs, they must be manually added to the itxa-init-db image.
+To do this:
+1.  Download any ITXA packs you have entitlement for to a local directory.
+2.  Create the following file below and name it `Dockerfile`.  You can remove any copy commands for packs you do not have.
+```
+FROM <repo location>/itxa-init-db:<tag>
+COPY <local dir>/spe_edi_pack_for_ALL.jar /opt/IBM/spe/.
+COPY <local dir>/spe_fsp_pack_for_ALL.jar /opt/IBM/spe/.
+COPY <local dir>/spe_hc_pack_for_ALL.jar /opt/IBM/spe/.
+```
+Save the image and run `docker build -t itxa-init-db:<newTag> -f Dockerfile .`
+
+To do this, you must create a Dockerfile and run `docker build <directory containing Dockerfile>` to build a new version of the itxa-init-db image containing the packs
+
+This will build the image and load it to the docker repo on your local machine.  From there you can use docker tag and docker push to provide a new image tag and push to your internal repo.
+
+## Uninstalling the Chart
+
+To uninstall/delete the `my-release` deployment run the command:
+
+```
+ helm delete my-release  --tls
+```
+
+Note: If you need to clean the installation you may also consider deleting the secrets and peristent volume created as part of prerequisites.
+
+### The following table lists the configurable parameters for the ITXA UI Server and ITXA DB Init charts.
+
+Parameter                                        | Description                                                          | Default 
+-------------------------------------------------|----------------------------------------------------------------------| -------------
+`itxauiserver.replicaCount`                       | Number of itxauiserver instances                                      | `1`
+`itxauiserver.image`                              | Docker image details of itxauiserver                                  | `itxa-ui-server`
+`itxauiserver.runAsUser`                          | Needed for non OpenShift Container Platform cluster                                           | `1001`
+`itxauiserver.config.vendor`                      | ITXA Vendor                                                           | `websphere`
+`itxauiserver.config.vendorFile`                  | ITXA Vendor file                                                      | `servers.properties`
+`itxauiserver.config.serverName`                  | App server name                                                      | `DefaultAppServer`
+`itxauiserver.config.jvm`                         | Server min/max heap size and jvm parameters                          | `1024m` min, `2048m` max, no parameters
+`itxauiserver.livenessCheckBeginAfterSeconds`     | Approx wait time(secs) to begin the liveness check                   | `600`
+`itxauiserver.livenessFailRestartAfterMinutes`    | Approx time period (mins) after which server is restarted if liveness check keeps failing for this period | `10`
+`itxauiserver.service.type`                       | Service type                                                         | `NodePort`
+`itxauiserver.service.http.port`                  | HTTP container port                                                  | `9080`
+`itxauiserver.service.http.nodePort`              | HTTP external port                                                   | `30083`
+`itxauiserver.service.https.port`                 | HTTPS container port                                                 | `9443`
+`itxauiserver.service.https.nodePort`             | HTTPS external port                                                  | `30446`
+`itxauiserver.resources`                          | CPU/Memory resource requests/limits                                  | Memory: `2560Mi`, CPU: `1`
+`itxauiserver.ingress.enabled`                    | Whether Ingress settings enabled                                     | true
+`itxauiserver.ingress.host`                       | Ingress host                                                         |
+`itxauiserver.ingress.backendProtocol`            | Protocol (HTTP/HTTPS) used by Ingress to connect to the backend service| `http`
+`itxauiserver.ingress.controller`                 | Controller class for ingress controller                              | nginx
+`itxauiserver.ingress.contextRoots`               | Context roots which are allowed to be accessed through ingress       | ["spe","adminCenter","/"]
+`itxauiserver.ingress.annotations`                | Annotations for the ingress resource                                 |
+`itxauiserver.ingress.ssl.enabled`                | Whether SSL enabled for ingress                                      | true
+`itxauiserver.ingress.routeTimeout`               | Set the route timeout, default is 1 hour
+`itxauiserver.podLabels`                          | Custom labels for the itxauiserver pod                                  |
+`itxauiserver.tolerations`                        | Tolerations for itxauiserver pod. Specify in accordance with k8s PodSpec.tolerations.         |
+`itxauiserver.importcert.secretname`              | Secret name consisting of certificate to be imported into OC.
+`itxauiserver.readinessProbePath`                 | Path for Readiness Probe
+`itxauiserver.userSecret`                         | Secret name consisting of default admin password.
+section "Affinity and Tolerations". | 
+`itxauiserver.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution`      | k8s PodSpec.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution. Refer section "Affinity and Tolerations". | 
+`itxauiserver.nodeAffinity.preferredDuringSchedulingIgnoredDuringExecution`     | k8s PodSpec.nodeAffinity.preferredDuringSchedulingIgnoredDuringExecution. Refer section "Affinity and Tolerations". | 
+`itxauiserver.podAffinity.requiredDuringSchedulingIgnoredDuringExecution`       | k8s PodSpec.podAffinity.requiredDuringSchedulingIgnoredDuringExecution. Refer section "Affinity and Tolerations". |
+`itxauiserver.podAffinity.preferredDuringSchedulingIgnoredDuringExecution`      | k8s PodSpec.podAffinity.preferredDuringSchedulingIgnoredDuringExecution. Refer section "Affinity and Tolerations". | 
+`itxauiserver.podAntiAffinity.requiredDuringSchedulingIgnoredDuringExecution`   | k8s PodSpec.podAntiAffinity.requiredDuringSchedulingIgnoredDuringExecution. Refer section "Affinity and Tolerations". |
+`itxauiserver.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution`  | k8s PodSpec.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution. Refer section "Affinity and Tolerations". | 
+`itxauiserver.podAntiAffinity.replicaNotOnSameNode` | Directive to prevent scheduling of replica pod on the same node. valid values: `prefer`, `require`, blank. Refer section "Affinity and Tolerations". | `prefer`
+`itxauiserver.podAntiAffinity.weightForPreference`  | Preference weighting 1-100. Used if 'prefer' is specified for `itxauiserver.podAntiAffinity.replicaNotOnSameNode`. Refer section "Affinity and Tolerations". | 100 
+`global.license`                                  | Set the value to true in order to accept the application license | false
+`global.image.repository`                      | Registry for ITXA images                               |Entitled Repo- cp.icr.io/ibm-itxa, OpenShift Container Platform Internal Repo for default namespace - image-registry.openshift-image-registry.svc:5000/default
+`global.image.pullsecret`                      | Used in imagePullSecrets of Pods, please see above - Pre-requisite steps .. Option 1 and 2 |
+`global.appSecret`                             | ITXA DB Secret Name.  Used to store DB connection info  | `itxa-db-secret`
+`global.tlskeystoresecret`                     | ITXA TLS Keystore Secret for Liberty keystore password pkcs12     | `tls-store-secret`
+`global.persistence.claims.name`               | Persistent volume name                                               | `itxa-nfs-claim`
+`global.persistence.securityContext.fsGroup`   | File system group id to access the persistent volume                 | 0
+`global.persistence.securityContext.supplementalGroup`| Supplemental group id to access the persistent volume          | 0
+`global.database.dbvendor`                     | DB Vendor DB2/Oracle                                                 | DB2
+`global.database.schema`                       | Database schema name.For Db2 it is defaulted as `global.database.dbname` and for Oracle it is defaulted as `global.serviceAccount.name`                    | Service account name                                                 |
+`global.arch`                                  | Architecture affinity while scheduling pods                          | amd64: `2 - No preference`, ppc64le: `2 - No preference`
+`global.install.itxaUI.enabled`          | Install ITXA UI Server                                                 |
+`global.install.itxadbinit.enabled`         | Run Database Initialization Job                                                |
+`networkPolicy.allowAllIngress`                | Allow ingress from all namespaces if `true`                                                                     | `false`                    
+`networkPolicy.allowNsIngress`                 | Allow ingress from selected namespaces (`ingress` group and `kube-system`) and pods                                 | `true`                     
+`networkPolicy.allowAllEgress`                 | Allow egress to all IPs (0.0.0.0/0) if `true`                                                                   | `false`                    
+`networkPolicy.egress.enabled`                 | Enable egress restrictions. All dependent properties below are only effective if this is `true`.                | `false`                    
+`networkPolicy.egress.dbAccess.enabled`        | Allow egress to the database IP (effective only if `networkPolicy.egress.enabled` is `true`)                        | `true`                     
+`networkPolicy.egress.dbAccess.cidr`           | CIDR of database IP to allow (effective only if `networkPolicy.egress.enabled` is `true`)                           | `"9.46.243.79/32"`         
+`networkPolicy.egress.dbAccess.ports`          | List of TCP ports to allow for database access (effective only if `networkPolicy.egress.enabled` is `true`)         | `[9080, 9443, 25010, 443]` 
+`networkPolicy.egress.internalNetwork.enabled` | Allow egress to internal network IP range (effective only if `networkPolicy.egress.enabled` is `true`)              | `true`                     
+`networkPolicy.egress.internalNetwork.cidr`    | CIDR of internal network IPs to allow (effective only if `networkPolicy.egress.enabled` is `true`)                  | `"192.168.1.0/24"`         
+`networkPolicy.egress.internalNetwork.ports`   | List of TCP ports to allow for internal network access (effective only if `networkPolicy.egress.enabled` is `true`) | `[9080, 9443]`             
+`resourceControls.podLimits.enabled`           | Enable/disable LimitRange enforcement                                      | `false`
+`resourceControls.podLimits.maxCpu`            | Maximum CPU per container                                      |
+`resourceControls.podLimits.maxMemory`         | Maximum memory per container                                       |
+`resourceControls.podLimits.minCpu`            | Minimum CPU per container                                     |
+`resourceControls.podLimits.minMemory`         | Minimum memory per container                                      |
+`resourceControls.podLimits.maxPodCpu`         | Maximum CPU per pod                                     |
+`resourceControls.podLimits.maxPodMemory`      | Maximum memory per pod                                     |
+`resourceControls.podLimits.annotations`       | Custom annotations for LimitRange resource                                      |
+`resourceControls.resourceQuota.enabled`       | Enable/disable ResourceQuota enforcement                               | `false`
+`resourceControls.resourceQuota.maxPods`       | Maximum pods in namespace                |
+`resourceControls.resourceQuota.requestsCpu`   | Total CPU requests                        |
+`resourceControls.resourceQuota.requestsMemory`| Total memory requests                    |
+`resourceControls.resourceQuota.limitsCpu`     | Total CPU limits                         |
+`resourceControls.resourceQuota.limitsMemory`  | Total memory limits                         |
+`resourceControls.resourceQuota.maxPvcs`       | Maximum persistent volume claims                        |
+`resourceControls.resourceQuota.annotations`   | Custom annotations for ResourceQuota resource            |
+`initContainerResources.requests.cpu`          | Guaranteed CPU for init containers               | `250m` 
+`initContainerResources.requests.memory`       |  Guaranteed memory for init containers                | `256Mi`
+`initContainerResources.limits.cpu`            |  Maximum CPU for init containers                             | `1`
+`initContainerResources.limits.memory`         |  Maximum memory for init containers                | `1Gi`
+
+
+
+## Affinity and Tolerations
+The chart provides various ways in the form of node affinity, pod affinity, pod anti-affinity and tolerations to configure advance pod scheduling in kubernetes. 
+Refer the kubernetes documentation for details on usage and specifications for the below features.
+
+* Tolerations - This can be configured using parameter `itxauiserver.tolerations` for the itxauiserver and similarly for OC.
+
+* Node affinity - This can be configured using parameters `itxauiserver.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution`, `itxauiserver.nodeAffinity.preferredDuringSchedulingIgnoredDuringExecution` for the itxauiserver, and parameters `itxauiserver.common.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution`, `itxauiserver.common.nodeAffinity.preferredDuringSchedulingIgnoredDuringExecution` for the itxauiserver.
+Depending on the architecture preference selected for the parameter `global.arch`, a suitable value for node affinity is automatically appended in addition to the user provided values.
+
+* Pod affinity - This can be configured using parameters `itxauiserver.podAffinity.requiredDuringSchedulingIgnoredDuringExecution`, `itxauiserver.podAffinity.preferredDuringSchedulingIgnoredDuringExecution` for the appserver, and parameters `itxauiserver.common.podAffinity.requiredDuringSchedulingIgnoredDuringExecution`, `itxauiserver.common.podAffinity.preferredDuringSchedulingIgnoredDuringExecution` for the itxauiserver.
+
+* Pod anti-affinity - This can be configured using parameters `itxauiserver.podAntiAffinity.requiredDuringSchedulingIgnoredDuringExecution`, `itxauiserver.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution` for the appserver, and parameters `itxauiserver.common.podAntiAffinity.requiredDuringSchedulingIgnoredDuringExecution`, `itxauiserver.common.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution` for the itxauiserver.
+Depending on the value of the parameter `podAntiAffinity.replicaNotOnSameNode`, a suitable value for pod anti-affinity is automatically appended in addition to the user provided values. This is to configure whether replicas of a pod should be scheduled on the same node. If the value is `prefer` then `podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution` is automatically appended whereas if the value is `require` then `podAntiAffinity.requiredDuringSchedulingIgnoredDuringExecution` is appended. If the value is blank, then no pod anti-affinity value is automatically appended. If the value is `prefer` then the weighting for the preference is set using the parameter `podAntiAffinity.weightForPreference` which should be specified in the range 1-100.
+
+## Readiness and Liveness
+Readiness and liveness checks are provided for the application server pods as applicable.
+
+1. Application Server pod
+The following parameters can be used to tune the readiness and liveness checks for application server pods.
+
+* `itxauiserver.livenessCheckBeginAfterSeconds` - This can be used to specify the delay in starting the liveness check for the application server. The default value is 900 seconds (15 minutes).
+* `itxauiserver.livenessFailRestartAfterMinutes` - This can be used to specify the approximate time period, after which the pod will get restarted if the liveness check keeps on failing continuously for this period of time. The default value is 10 minutes.
+
+For E.g. if the values for `itxauiserver.livenessCheckBeginAfterSeconds` `itxauiserver.livenessFailRestartAfterMinutes` are `900` and `10` respectively, and the application server pod is not able to start up successfully after `25` minutes, then it will be restarted.
+Further, after the application server has started up successfully, if the liveness check keeps failing continuously for a period of `10` minutes, then it will be restarted.
+
+## Secure database(SSL) Connection:
+
+### Oracle:
+#### Steps to enable SSL on oracle server:
+1. Login with oracle user
+2. Check where oracle is installed on oracle server i.e. check the ORACLE_HOME path. e.g: /u01/app/oracle/product/19.0.0/dbhome_1
+3. Run following commands: 
+- Create wallet folder. e.g: `mkdir -p /u01/app/oracle/wallet`
+- Create a new auto-login wallet.
+  ```
+  orapki wallet create -wallet "/u01/app/oracle/wallet" -pwd WalletPasswd123 -auto_login
+  ```
+- Create a self-signed certificate and load it into the wallet.
+   ```
+   orapki wallet add -wallet "/u01/app/oracle/wallet" -pwd WalletPasswd123 -dn "CN=`hostname`" -keysize 1024 -self_signed -validity 3650
+   ```
+- Check the contents of the wallet. Notice the self-signed certificate is both a user and trusted certificate.
+  ```
+  orapki wallet display -wallet "/u01/app/oracle/wallet" -pwd WalletPasswd123
+  ``` 	
+- Export the certificate, so we can load it into the client machine later.
+   ```
+   orapki wallet export -wallet "/u01/app/oracle/wallet" -pwd WalletPasswd123 -dn "CN=`hostname`" -cert /tmp/`hostname`-certificate.crt
+   ```
+- Check the certificate has been exported as expected.	
+  ```
+  cat /tmp/`hostname`-certificate.crt
+  ```
+- Modify sqlnet.ora and listener.ora. Sample files are shown below. Make sure you modify these files with oracle user.
+ 
+   Modify sqlnet.ora to specify WALLET_LOCATION, SQLNET.AUTHENTICATION_SERVICES, SSL_CLIENT_AUTHENTICATION and SSL_CIPHER_SUITES.
+   Modify listener.ora to specify SSL_CLIENT_AUTHENTICATION, WALLET_LOCATION and modify the listener list.
+   
+   sample files for reference:
+   ```
+   # sqlnet.ora Network Configuration File: /u01/app/oracle/product/19.0.0/dbhome_1/network/admin/sqlnet.ora
+   # Generated by Oracle configuration tools.
+
+   NAMES.DIRECTORY_PATH= (TNSNAMES, EZCONNECT)
+
+   WALLET_LOCATION =
+      (SOURCE =
+        (METHOD = FILE)
+        (METHOD_DATA =
+          (DIRECTORY = /u01/app/oracle/wallet)
+        )
+      )
+
+   SQLNET.AUTHENTICATION_SERVICES = (TCPS,NTS,BEQ)
+   SSL_CLIENT_AUTHENTICATION = FALSE
+   SSL_CIPHER_SUITES = (SSL_RSA_WITH_AES_256_CBC_SHA, SSL_RSA_WITH_3DES_EDE_CBC_SHA)
+
+   SSL_VERSIION = 1.2 or 1.1 or 1.0
+
+   ```
+   
+   ```
+   # listener.ora Network Configuration File: /u01/app/oracle/product/19.0.0/dbhome_1/network/admin/listener.ora
+   # Generated by Oracle configuration tools.
+
+  SID_LIST_LISTENER =
+    (SID_LIST =
+      (SID_DESC =
+        (GLOBAL_DBNAME = orcl)
+        (ORACLE_HOME = /u01/app/oracle/product/19.0.0/dbhome_1)
+        (SID_NAME = ORCL)
+      )
+    )
+
+  SSL_CLIENT_AUTHENTICATION = FALSE
+
+  WALLET_LOCATION =
+    (SOURCE =
+      (METHOD = FILE)
+      (METHOD_DATA =
+        (DIRECTORY = /u01/app/oracle/wallet)
+      )
+    )
+
+  LISTENER =
+    (DESCRIPTION_LIST =
+      (DESCRIPTION =
+        (ADDRESS = (PROTOCOL = TCP)(HOST = dustcart1.fyre.ibm.com)(PORT = 1521))
+        (ADDRESS = (PROTOCOL = IPC)(KEY = EXTPROC1521))
+        (ADDRESS = (PROTOCOL = TCPS)(HOST = dustcart1.fyre.ibm.com)(PORT = 2484))
+      )
+    )
+
+  ADR_BASE_LISTENER = /u01/app/oracle
+
+   ```
+
+- Restart the listener.
+  `lsnrctl stop`
+  `lsnrctl start`
+
+#### Steps to be performed on client machine:
+1. Copy the database certificate created above /tmp/`hostname`-certificate.crt on cluster where you install the charts.
+2. Create the secret for database server certificate using below command:
+   ```
+   oc create secret generic oracle-cert-secret --from-file=cert=<Name-of-DB-Server-Certificate>`
+   ```
+3. Populate the fields in charts in Values.yaml.
+   Set `global.secureDBConnection.enabled` to `true` and `global.secureDBConnection.dbservercertsecretname` with above secret name i.e. "oracle-cert-secret"
+4. Then install the charts.   
+
+### DB2:
+#### Steps to enable SSL on DB2 server:
+1. Login with db2inst1 user.
+2. Check where sqllib is present by using command:
+   ```
+   find / -name sqllib
+   ```
+   e.g: /home/db2inst1/sqllib
+   
+   Go to folder where this sqllib is present. i.e. cd /home/db2inst1
+3. Run following command: 
+- Create key database.
+  ```
+  gsk8capicmd_64 -keydb -create -db "mydbserver.kdb" -pw "myServerPassw0rdpw0" -stash
+  ```
+- Add a certificate for your server to your key database.
+  ```
+  gsk8capicmd_64 -cert -create -db "mydbserver.kdb" -pw "myServerPassw0rdpw0" -label "myselfsigned" -dn "CN=rhyme1.fyre.ibm.com,O=IBM,OU=IBM,L=Pune,ST=Maharashtra,C=IN" -san_dnsname "rhyme1.fyre.ibm.com" -san_ipaddr <ip_addr>
+  ```
+  Make sure you have specified your db hostname in CN.
+- Extract the certificate you just created to a file named `mydbserver.arm`
+  ```
+  gsk8capicmd_64 -cert -extract -db "mydbserver.kdb" -pw "myServerPassw0rdpw0" -label "myselfsigned" -target "mydbserver.arm" -format ascii -fips
+  ```
+- Run following commands to set the following configuration parameters. Make sure you use your key database filename, stash filename, ssl label in commands.
+  ```
+  db2 get dbm cfg  | grep SSL_SVR_KEYDB
+	
+  db2 update dbm cfg using SSL_SVR_KEYDB /home/db2inst1/mydbserver.kdb
+
+  db2 get dbm cfg  | grep SSL_SVR_KEYDB
+
+  db2 get dbm cfg  | grep SSL_SVR_STASH
+
+  db2 update dbm cfg using SSL_SVR_STASH /home/db2inst1/mydbserver.sth
+
+  db2 get dbm cfg  | grep SSL_SVR_STASH
+
+  db2 get dbm cfg | grep SSL_SVR_LABEL
+
+  db2 update dbm cfg using SSL_SVR_LABEL myselfsigned
+
+  db2 get dbm cfg | grep SSL_SVR_LABEL
+
+  db2 get dbm cfg  | grep SSL_SVCENAME	
+
+  db2 update dbm cfg using SSL_SVCENAME 50001
+
+  db2 get dbm cfg  | grep SSL_SVCENAME
+
+  db2 get dbm cfg | grep SSL_VERSIONS
+
+  db2 update dbm cfg using SSL_VERSIONS TLSv12
+
+  db2 get dbm cfg | grep SSL_VERSIONS
+  ```
+- Add the value SSL to the DB2COMM registry variable. Run commands:
+  ```
+  db2set
+  db2set -i db2inst1 DB2COMM=SSL,TCPIP
+  db2set
+  ```
+- Restart the DB2 instance.
+  ```
+  db2stop
+  db2start
+  ```
+#### Steps to be performed on client machine:
+1. Copy the database certificate created above `mydbserver.arm` on cluster where you install the charts.
+2. Create the secret for database server certificate using below command:
+   ```
+   oc create secret generic db2-cert-secret --from-file=cert=<Name-of-DB-Server-Certificate>`
+   ```
+3. Populate the fields in charts in Values.yaml.
+   set `global.secureDBConnection.enabled` to `true` and `global.secureDBConnection.dbservercertsecretname` with above secret name i.e. "db2-cert-secret"
+4. Then install the charts.
+
+
+## Backup/recovery process
+Back up of persistent data for ITXA falls in two types - Database and the Repository.
+Database back up needs to be taken on regular basis as a back up plan.
+Similary the repository folders should be backed up on regular basis to back up the models xml files and other properties defined as a part of repository.
+Since the application pods are stateless , there is no backup/recovery process required for the pods.
+If needed the application once deployed can be deleted using helm del [release-name]
+If needed the applicatin can be rolledback using helm rollback [release-name] 0
+
+## Customizing server.xml for Liberty 
+### You can customize the server.xml of liberty via helm charts. 
+There is a provided itxa-ui-server.xml , which will be deployed as server.xml to the liberty application.
+* Warning - Please don't change out of the box settings provided in server xml, it may impact the application.
+
+
+## Resource Controls Section Parameters
+
+### A. Pod Limits (`resourceControls.podLimits`)
+
+Controls resource limits at the **container and pod level** using Kubernetes LimitRange:
+
+| Parameter | Description |  Default Value
+|-----------|---------------|-------------|
+| `resourceControls.podLimits.enabled` | Enable/disable LimitRange enforcement |
+| `resourceControls.podLimits.maxCpu` |  Maximum CPU per container  |
+| `resourceControls.podLimits.maxMemory` | Maximum memory per container  |
+| `resourceControls.podLimits.minCpu` |  Minimum CPU per container  |
+| `resourceControls.podLimits.minMemory` |  Minimum memory per container  |
+| `resourceControls.podLimits.maxPodCpu` |  Maximum CPU per pod  |
+| `resourceControls.podLimits.maxPodMemory` |  Maximum memory per pod  |
+| `resourceControls.podLimits.annotations` |  Custom annotations for LimitRange resource |
+
+**Purpose:**
+- Prevents any single container from consuming excessive resources
+- Enforces minimum resource requests for stability
+
+### B. Resource Quota (`resourceControls.resourceQuota`)
+
+Controls resource limits at the **namespace level** using Kubernetes ResourceQuota:
+
+| Parameter | Description | Default Value
+|-----------|---------------|-------------|
+| `resourceControls.resourceQuota.enabled` | Enable/disable ResourceQuota enforcement |
+| `resourceControls.resourceQuota.maxPods` | Maximum pods in namespace  |
+| `resourceControls.resourceQuota.requestsCpu` |  Total CPU requests  |
+| `resourceControls.resourceQuota.requestsMemory` | Total memory requests  |
+| `resourceControls.resourceQuota.limitsCpu` |  Total CPU limits  |
+| `resourceControls.resourceQuota.limitsMemory` |  Total memory limits  |
+| `resourceControls.resourceQuota.maxPvcs` | Maximum persistent volume claims |
+| `resourceControls.resourceQuota.annotations` | Custom annotations for ResourceQuota resource |
+
+**Purpose:**
+- Ensures fair resource distribution across namespace
+- Protects cluster from namespace-level resource exhaustion
+
+**Calculation Logic:**
+```
+Total Worker Capacity: 3 workers × 8 CPU × 16GB = 24 CPU, 48GB
+Requests (50%): 12 CPU, 24GB (guaranteed resources)
+Limits (75%): 18 CPU, 36GB (burst capacity)
+Max Pods: 15 (conservative ~5 per worker node)
+```
+
+```yaml
+resourceControls:
+  podLimits:
+    enabled: true
+    maxCpu: "8"
+    maxMemory: "16Gi"
+    minCpu: "100m"
+    minMemory: "128Mi"
+    maxPodCpu: "8"
+    maxPodMemory: "16Gi"
+    annotations: {}
+  
+  resourceQuota:
+    enabled: true
+    maxPods: "15"
+    requestsCpu: "12"
+    requestsMemory: "24Gi"
+    limitsCpu: "18"
+    limitsMemory: "36Gi"
+    maxPvcs: "10"
+    annotations: {}
+```
+
+
+### C. Init Container Resources (`initContainerResources`)
+
+#### Purpose
+Init containers (ITX init, resources-init, itxauiserver-init) now have explicit resource specifications to:
+- Comply with LimitRange requirements
+- Prevent pod creation failures
+- Ensure predictable resource allocation during initialization
+
+#### Parameters
+
+| Parameter | Description | Description |
+|-----------|---------------|-------------|
+| `initContainerResources.requests.cpu` | Guaranteed CPU for init containers (0.5 cores) | `500m` 
+| `initContainerResources.requests.memory` |  Guaranteed memory for init containers (512 MiB) | `512Mi`
+| `initContainerResources.limits.cpu` |  Maximum CPU for init containers (2 cores) | `2`
+| `initContainerResources.limits.memory` |  Maximum memory for init containers (2 GiB) | `2Gi`
+
+#### Configuration Example
+```yaml
+itxauiserver:
+  initContainerResources:
+    requests:
+      cpu: 500m      # 0.5 CPU cores guaranteed
+      memory: 512Mi  # 512 MiB guaranteed
+    limits:
+      cpu: 2         # Maximum 2 CPU cores
+      memory: 2Gi    # Maximum 2 GiB
+```
+
+**Applied to:**
+- `itx-init` container (ITX runtime initialization)
+- `resources-init` container (database driver deployment)
+- `itxauiserver-init` container (application server initialization)
+
+**Important Notes:**
+- These limits must comply with the LimitRange `podLimits.maxCpu` and `podLimits.maxMemory` values
+- If init container limits exceed LimitRange maximums, pod creation will fail
+- Adjust these values based on your cluster's LimitRange configuration
+
+### D. Data Setup Job Resources (`itxadbinit.resources`)
+
+#### Purpose
+The `itxadatasetup` job requires explicit resource specifications to:
+- Prevent scheduling failures due to insufficient node resources
+- Comply with LimitRange requirements
+- Ensure predictable resource allocation during database initialization
+
+#### Parameters
+
+| Parameter | Default Value | Description |
+|-----------|---------------|-------------|
+| `requests.ephemeral-storage` | `500Mi` | Guaranteed ephemeral storage (500 MiB) |
+| `requests.memory` | `1Gi` | Guaranteed memory (1 GiB) |
+| `requests.cpu` | `500m` | Guaranteed CPU (0.5 cores) |
+| `limits.ephemeral-storage` | `1000Mi` | Maximum ephemeral storage (1000 MiB) |
+| `limits.memory` | `4Gi` | Maximum memory (4 GiB) |
+| `limits.cpu` | `2` | Maximum CPU (2 cores) |
+
+#### Configuration Example
+```yaml
+itxadbinit:
+  resources:
+    requests:
+      ephemeral-storage: 500Mi
+      memory: 1Gi
+      cpu: 500m
+    limits:
+      ephemeral-storage: 1000Mi
+      memory: 4Gi
+      cpu: 2
+```
+
+**Applied to:**
+- `itxadatasetup` job main container (database initialization and factory data loading)
+
+**Init Containers:**
+- `itx-init` and `resources-init` containers use `initContainerResources`
+
+**Important Notes:**
+- Adjust memory/CPU based on your database size and complexity
+- Ensure limits comply with LimitRange `maxCpu` and `maxMemory` values
+- If job fails to schedule, reduce memory/CPU requests to fit available node capacity
+
+## Limitations
+
+1.  Getting permission errors on persistent volume access when I try to deploy the chart.
+
+This is due to the container user (UID 1001) not having the appropriate permissions on the NFS file share that is used for the PV and PVC.  If you have access to the NFS storage directly you can add this user.  Otherwise another option if you are using OCP is to deploy a container with root access, connect it to the PVC, run the chmod from that container, then exit and delete the POD/deployment.  One way to do this is described below.
+
+Create Busybox deployment and set proper access on ITXA file share.
+  1.  Create a busybox deployment yaml that mounts the same pvc name that you are using for the itxa common pvc.
+  2.  Create the deployment using `oc create -f busybox.yaml`
+  3.  This will create the deployment, but it may not deploy a pod due to incompatible security settings.  This is fine.
+  4.  Deploy a debug pod with root access based on the busybox deployment.  `oc debug busybox --as-root -n <project_name>`
+  5.  Once the container comes up, open the terminal for it, change to the directory where you mounted the PVC and change permissions.
+        - `chown -R 1001 /[mounted dir]`
+        - `chgrp -R 0 /[mounted dir]`
+        - `chmod -R 770 /[mounted dir]`
+        Note you only have to do this once unless you delete and recreate the volume.  Once the permissions are set properly they won't need to be touched again if you uninstall and reinstall the chart.
+  6.  Once you are done you can delete the deployment which will also delete the pod.
+
+  2.  Getting a nonfatal general error when itxa-init-db job tries to run which fails the installation.
+
+  The DB init job fails to complete and in the logs you see:
+
+  Caused by: <openjpa-2.4.3-r422266:1833086 nonfatal general error> org.apache.openjpa.persistence.PersistenceException: DB2 SQL Error: SQLCODE=-613, SQLSTATE=54008, SQLERRMC=PRIM_KEY..., DRIVER=4.32.28 {stmnt -1060018007 CREATE TABLE SPE_CODELIST_ITEM_COLUMN (PRIM_KEY VARCHAR(1072) NOT NULL, COLUMN_NAME VARCHAR(255), COLUMN_VALUE VARCHAR(255), ITEM_KEY VARCHAR(816), LIST_KEY VARCHAR(304), PRIMARY KEY (PRIM_KEY))} [code=-613, state=54008]
+
+  This is caused by the database being set up to use 4k pages.  4k pages are too small for a varchar(1024) primary key resulting in the error.
+
+  To correct this, you will need to drop the existing tablespace and recreate the appropriate tablespaces to use 32k pages.
+
+
+## Resources Required
+
+Redhat Openshift Container Platform version 4.19, 4.20, 4.21 and 4.22 or Kubernetes Cluster version 1.32 to 1.36

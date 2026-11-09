@@ -1,0 +1,367 @@
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+artifacts:
+  artifactsPvc:
+    pvProvisioning: NamedStorageClass
+    storageClassName: storage_class_name_
+
+cs:
+  rbac:
+    create: false
+  csPvc:
+    enabled: true
+    accessModes: ReadWriteMany
+    pvProvisioning: NamedStorageClass
+    storageClassName: storage_class_name_
+    # if your not using dynamic provisioning, you can use selectors to
+    # refine the binding process. You cannot specify a selector if your using dynamic provisioning!
+    selector:
+      label: ""
+      value: ""
+    size: 10Gi
+
+ds:
+  ingress:
+    enabled: false
+  route:
+    enabled: false
+  ds:
+    hpa:
+      enabled: false
+
+rs:
+  ingress:
+    enabled: false
+  route:
+    enabled: false
+  rs:
+    hpa:
+      enabled: false
+
+nginx-ingress:
+  controller:
+    ingressClass: canginx
+    scope:
+      enabled: true
+    containerPort:
+      http: 8080
+      https: 8443
+    service:
+      type: ClusterIP
+      enableHttp: true
+      enableHttps: true
+      targetPorts:
+        http: 8080
+        https: 8443
+    podSecurityContext:
+      runAsNonRoot: true
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+    extraArgs:
+      v: 3
+      #    annotations-prefix: 'ingress.kubernetes.io'
+      enable-ssl-passthrough: 'true'
+      http-port: 8080
+      https-port: 8443
+    resources:
+      limits:
+        cpu: ".5"
+        memory: "300Mi"
+      requests:
+        cpu: ".3"
+        memory: "100Mi"
+
+    config:
+      enable-underscores-in-headers: "true"
+      #    log-format-upstream: '[$the_real_ip] - $remote_user [$time_local] "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent" $request_length $request_time [$proxy_upstream_name] $upstream_addr $upstream_response_length $upstream_response_time $upstream_status $req_id "$http_host" "$sent_http_host" ($sent_http_set_cookie) "$http_cookie" [$request_body]'
+      log-format-upstream: '[$the_real_ip] - $remote_user [$time_local] "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent" $request_length $request_time [$proxy_upstream_name] $upstream_addr $upstream_response_length $upstream_response_time $upstream_status $req_id "$http_host" "$sent_http_host" ($sent_http_set_cookie) "$http_cookie"'
+      ssl-redirect: "false"
+      proxy-body-size: "15m"
+      proxy-buffer-size: "3m"
+      proxy-read-timeout: "300"
+      proxy-send-timeout: "300"
+      client-body-buffer-size: "3m"
+      client-body-timeout: "300"
+      enable-access-log-for-default-backend: "true"
+  #      error-log-level: "debug"
+
+  ## Enable RBAC as per https://github.com/kubernetes/ingress/tree/master/examples/rbac/nginx and https://github.com/kubernetes/ingress/issues/266
+  rbac:
+    create: false
+
+  podSecurityPolicy:
+    enabled: false
+
+  serviceAccount:
+    name: "cognos-nginx-ingress-service-account"
+
+  defaultBackend:
+    enabled: false
+    service:
+      servicePort: 18080
+
+# All values under global can be seem by all charts and sub-charts
+global:
+  zenServiceInstanceId: "123456789"
+  cloudpakInstanceId: "123-456-789"
+  zenControlPlaneNamespace: zen
+  imagePullSecrets: artifactorypullsecret
+  docker_registry_prefix: "registry_prefix"
+  repositoryValueOff: false
+  inactivityTimeoutSeconds: 3600
+  deployment:
+    progressDeadlineSeconds: 1800
+  cs:
+    databaseTlsEnabled: false
+    # external content store or embedded one (db2)
+    databaseExternal: true
+    # the following fields are needed for external content store.
+    databaseProvider: db_provider_
+    databaseUser: db_user_
+    databasePass: db_pass_
+    databaseHost: db_host_
+    databasePort: db_port_
+    databaseName: db_name_
+    # sample Oracle specifier only used if databaseExternal = true and databaseProvider = OracleAdvanced
+    # databaseName|Port|Host are ignored as they are included in specifier string
+    databaseOracleNet8: "(DESCRIPTION=(ADDRESS=(PROTOCOL=tcps)(HOST=hostname)(PORT=2484))(CONNECT_DATA=(SERVICE_NAME=dbservicename)))"
+    databaseCertAlias: ""
+
+  ## CA Edition - Endor
+  caEdition: endor
+
+  ## Creating a PPA Package
+  ppaChart: false
+
+  ## Running in ICP4Data
+  icp4Data: false
+  icp4DataVersion: "0.0.0"
+  sanDNSName: "cm-0 biapp ds cgs rs localhost"
+
+  ## tls enabled
+  ## secretName is set to one provided by CPD / ICP4D
+  tls:
+    enabled: false
+    secretKeyPath:  /home/ibmuser/key.pem;
+    secretCertPath: /home/ibmuser/crt.pem;
+    cognosCAPath:   /home/ibmuser/cognos/analytics/configuration/data/cm.crt;
+
+  nginxProxyIPV6:
+    enabled: true
+
+  # For ICP4D, we need to get the certificate to validate JWT token. The following end-url token returns that cert.
+  icp4DataJWTCertHost: https://ibm-nginx-svc
+  icp4DataJWTCertPath: /auth/jwtcert
+
+  # used when you are trying to test the charts with an image branch other than "master"
+  branchTag: ''
+
+  initialAdminCamId: ""
+
+  # Used to set the format of http access_log sent to stdout; defaults to a custom format "nocookies".
+  # Other valid values are "main" and "custom" (which does log cookies).
+  http:
+    logformat:
+      formatName: "nocookies"
+
+  configDataPvc:
+    enabled: true
+    pvProvisioning: NamedStorageClass
+    accessModes: ReadWriteMany
+    storageClassName: storage_class_name_
+    # if your not using dynamic provisioning, you can use selectors to
+    # refine the binding process. You cannot specify a selector if your using dynamic provisioning!
+    selector:
+      label: ""
+      value: ""
+    size: 100Mi
+
+  configOverridesPvc:
+    enabled: true
+    pvProvisioning: NamedStorageClass
+    accessModes: ReadWriteMany
+    storageClassName: storage_class_name_
+    # if your not using dynamic provisioning, you can use selectors to
+    # refine the binding process. You cannot specify a selector if your using dynamic provisioning!
+    selector:
+      label: ""
+      value: ""
+    size: 200Mi
+
+  pvc:
+    artifacts:
+      enabled: true
+  #    pvProvisioning: DefaultStorageClass
+  #    accessModes: ReadWriteMany
+  #    storageClassName: ""
+  #    # if your not using dynamic provisioning, you can use selectors to
+  #    # refine the binding process. You cannot specify a selector if your using dynamic provisioning!
+  #    selector:
+  #      label: ""
+  #      value: ""
+  #    size: 1Gi
+  ###############################################################################
+  ## for github.com charts
+  ###############################################################################
+  # Specify architecture (amd64, ppc64le, s390x) and weight to be
+  # used for scheduling as follows :
+  #   0 - Do not use
+  #   1 - Least preferred
+  #   2 - No preference
+  #   3 - Most preferred
+  ## comment out or remove if not github.ibm chart
+  arch:
+    amd64: "3 - Most preferred"
+
+  ###############################################################################
+  ## for PPA charts
+  ###############################################################################
+  ## Architecture - e.g. amd64, s390x, ppc64le. If left empty, arch type will try
+  ## to be determined.
+  ## Note: 'kubectl version' returns platform of given cluster
+  ## remove the arch comment and use the following nodeAffinity for PPA charts, can be removed if github.ibm chart
+  #  arch: ""
+
+  image:
+    #    registry: registry.local:5000
+    registry: hyc-ca-container-docker-local.artifactory.swg-devops.com
+
+  base:
+    image:
+      repository: /ca-endor-k8s/
+      name: ca-base
+      tag:  1.7.4
+      resources:
+        # We usually recommend not to specify default resources and to leave this as a conscious
+        # choice for the user. This also increases chances charts run on environments with little
+        # resources, such as Minikube. If you do want to specify resources, uncomment the following
+        # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+        # limits:
+        limits:
+          cpu: "2"
+          memory: "8Gi"
+        requests:
+          cpu: "1"
+          memory: "4Gi"
+  #      pullPolicy: Always
+  java:
+    image:
+      repository: /ca-endor-k8s/
+      name: ca-java-base
+      tag:  1.7.5
+      resources:
+        # We usually recommend not to specify default resources and to leave this as a conscious
+        # choice for the user. This also increases chances charts run on environments with little
+        # resources, such as Minikube. If you do want to specify resources, uncomment the following
+        # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+        # limits:
+        limits:
+          cpu: "1"
+          memory: "500Mi"
+        requests:
+          cpu: "1"
+          memory: "500Mi"
+    #      pullPolicy: Always
+    #  ubiMinimal:
+    #    image:
+    #      registry: registry.access.redhat.com/
+    #      repository: ubi7/
+    #      name: ubi-minimal
+    #      tag: 7.6
+    #      pullPolicy: IfNotPresent
+
+    # Apatche Web Server
+    #  httpd:
+    #    image:
+    #      registry:
+    #      repository: 'bitnami/'
+    #      name: apache
+    ##      name: httpd
+    #      tag: 2.4
+    #      pullPolicy: IfNotPresent
+
+    #securityContext:
+    #  allowPrivilegeEscalation: false
+    #  capabilities:
+    #    drop:
+    #      - ALL
+
+  # These settings are used for filebeat logging
+  filebeat:
+    output:
+      logstashEnabled: false
+      consoleEnabled: true
+
+    image:
+      registry: hyc-ca-container-docker-local.artifactory.swg-devops.com
+      repository: /ca-endor-k8s/
+      name: filebeat-secure
+      tag: 6.6.102
+      pullPolicy: IfNotPresent
+
+    resources:
+      limits:
+        cpu: "300m"
+        memory: "256Mi"
+      requests:
+        cpu: "100m"
+        memory: "100Mi"
+
+    securityContext:
+      allowPrivilegeEscalation: false
+      privileged: false
+      readOnlyRootFilesystem: false
+      capabilities:
+        drop:
+          - ALL
+
+  logstash:
+    ip: logstash.kube-system
+    port: 5044
+
+  pod:
+    hostOptions:
+      hostNetwork: false
+      hostPID: false
+      hostIPC: false
+    ibmuser:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+        supplementalGroups: [ 1000 ]
+    db2user:
+      securityContext:
+        runAsNonRoot: false
+        runAsUser: 0
+        fsGroup: 1000
+        supplementalGroups: [ 1000 ]
+
+  container:
+    ibmuser:
+      securityContext:
+        allowPrivilegeEscalation: false
+        privileged: false
+        readOnlyRootFilesystem: false
+        capabilities:
+          drop:
+            - ALL
+
+# Values for helm test command
+test:
+  smoke:
+    image: registry.local:5000/waca/test-perf-ca-all
+    tag: "20181105191523"
+    resources:
+      # We usually recommend not to specify default resources and to leave this as a conscious
+      # choice for the user. This also increases chances charts run on environments with little
+      # resources, such as Minikube. If you do want to specify resources, uncomment the following
+      # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+      # limits:
+      limits:
+        cpu: "1"
+        memory: "500Mi"
+      requests:
+        cpu: ".5"
+        memory: "300Mi"

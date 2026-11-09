@@ -1,0 +1,87 @@
+global:
+  authentication:
+    cem:
+      userInfoEndpoint: NA
+      releaseName: NA
+  license: not accepted
+  environmentSize: size0
+  image:
+    repository: ''
+    secret: ''
+    pullPolicy: Always
+    useTag: true
+  urlDelimiter: .
+  ingress:
+    tlsSecret: '{{ .Release.Name }}-netcool-tls-secret'
+    api:
+      enabled: false
+      prefix: nginx.ingress.kubernetes.io
+      class: nginx
+  integrations:
+    asm:
+      releaseName: asm
+      asmHostName: ''
+      asmPortName: '443'
+      asmUserName: asm
+      asmPassword: asm
+      asmCredentialsSecret: ''
+      useDefaultAsmCredentialsSecret: true
+      enabled: true
+      onPremSecureRemote:
+        enabled: false
+        remoteHost: ''
+        uiApiPort: '8443'
+    analyticsKafka:
+      releaseName: ''
+      hostname: ''
+      port: '9092'
+      zookeeperHostname: ''
+      zookeeperPort: '2181'
+    analyticsCassandra:
+      port: '9042'
+    users:
+      releaseName: ''
+      namespace: ''
+      config:
+        userInfoTenant: http://{{ .releaseName }}-ibm-cem-cem-users.{{ .namespace }}.svc:6002/users/api/usermgmt/v1/tenants/{tenantId}/userinfo
+probableCause:
+  enabled: false
+  groupsApiInitialCacheCheckDelaySeconds: '30'
+  groupsApiInvalidCacheCheckPeriodSeconds: '900'
+  groupsApiDeleteCacheOlderThanSeconds: '86400'
+enabled: true
+authentication:
+  enabled: true
+image:
+  repository: 
+  name: ea-asm-mime
+  tag: 5.0.228
+  digest: sha256:717b05fd384745cfd781dfd84ff6e63b6a78667ce88d09ad9be8b086bf8fc190
+kafkaImage:
+  repository: ''
+  name: kafka
+  tag: 1.1.0-201907311229-amd64
+  digest: sha256:31bc4f3efaac4474dffceb8fb8ad5cf258efae88a4395d3103a152ea5f093a98
+topics:
+  incomingEvents:
+    name: ea-asm-enriched-events
+  outgoingEvents:
+    name: ea-actions
+  subTopoEvents:
+    name: ea-asm-subTopo-events
+  subTopoPath:
+    name: ea-asm-subTopo-path
+  subTopoTopo:
+    name: ea-asm-subTopo-topo
+joinWindowSize: 15
+replicas: 3
+readiness:
+  initialDelaySeconds: 30
+  periodSeconds: 60
+  timeoutSeconds: 60
+  failureThreshold: 3
+liveness:
+  initialDelaySeconds: 60
+  periodSeconds: 60
+  timeoutSeconds: 60
+  failureThreshold: 3

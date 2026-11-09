@@ -1,0 +1,107 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wkc-permission-extensions
+  labels:
+    icpdata_addon: "true"
+    icpdata_addon_version: "3.5.3"
+    app: {{ .Chart.Name }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-10"
+    "helm.sh/hook-delete-policy": before-hook-creation
+data:
+  extensions: |
+    [
+      {
+        "extension_point_id": "zen_permissions",
+        "extension_name": "wkc_manage_governance_workflow_perm",
+        "display_name": "{{`{{.global_wkc_manage_governance_workflows}}`}}",
+        "match_permissions": "",
+        "match_instance_id": "",
+        "match_instance_role": "",
+        "meta": {},
+        "details": {
+          "key": "manage_governance_workflow",
+          "category": "{{`{{.global_data_governance_administration_category}}`}}",
+          "description": [
+            "{{`{{.global_manage_governance_workflows_description}}`}}",
+            "{{`{{.global_assign_workflow_tasks_to_users}}`}}"
+          ]
+        }
+      },
+      {
+        "extension_point_id": "zen_permissions",
+        "extension_name": "wkc_manage_categories_perm",
+        "display_name": "{{`{{.global_wkc_manage_governance_categories}}`}}",
+        "match_permissions": "",
+        "match_instance_id": "",
+        "match_instance_role": "",
+        "meta": {},
+        "details": {
+          "key": "manage_categories",
+          "category": "{{`{{.global_data_governance_administration_category}}`}}",
+          "description": [
+            "{{`{{.global_wkc_manage_governance_categories_description1}}`}}",
+            "{{`{{.global_wkc_manage_governance_categories_description2}}`}}"
+          ]
+        }
+      },
+      {
+        "extension_point_id": "zen_permissions",
+        "extension_name": "wkc_view_governance_artifacts_perm",
+        "display_name": "{{`{{.global_wkc_access_governance_artifacts}}`}}",
+        "match_permissions": "",
+        "match_instance_id": "",
+        "match_instance_role": "",
+        "meta": {},
+        "details": {
+          "key": "view_governance_artifacts",
+          "category": "{{`{{.global_data_governance_category}}`}}",
+          "description": [
+            "{{`{{.global_wkc_access_governance_artifacts_description1}}`}}",
+            "{{`{{.global_wkc_access_governance_artifacts_description2}}`}}",
+            "{{`{{.global_wkc_access_governance_artifacts_description3}}`}}"
+          ]
+        }
+      },
+      {
+        "extension_point_id": "zen_permissions",
+        "extension_name": "wkc_author_governance_artifacts_perm",
+        "display_name": "{{`{{.global_wkc_manage_data_protection_rules}}`}}",
+        "match_permissions": "",
+        "match_instance_id": "",
+        "match_instance_role": "",
+        "meta": {},
+        "details": {
+          "key": "author_governance_artifacts",
+          "category": "{{`{{.global_data_governance_category}}`}}",
+          "description": [
+            "{{`{{.global_wkc_protection_rules_description}}`}}"
+          ]
+        }
+      },
+      {
+        "extension_point_id": "zen_permissions",
+        "extension_name": "access_advanced_mapping_capabilities",
+        "display_name": "{{`{{.global_wkc_access_advanced_mappings_capabilities}}`}}",
+        "match_permissions": "",
+        "match_instance_id": "",
+        "match_instance_role": "",
+        "meta": {},
+        "details": {
+          "key": "access_advanced_mapping_capabilities",
+          "category": "{{`{{.global_data_governance_category}}`}}",
+          "description": [
+            "{{`{{.global_wkc_access_advanced_mappings_capabilities}}`}}"
+          ]
+        }
+      }
+    ]

@@ -1,0 +1,38 @@
+# © Copyright IBM Corporation 2018
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+{{ if and (.Values.tls.enabled) (ne .Values.tls.type  "provided") }}
+{{- $cn := include "minio.fullname" . -}}
+{{- $altName2 := printf "*.%s.%s.svc.%s" $cn .Release.Namespace  .Values.tls.clusterDomain }}
+{{- $altName3 := printf "*%s.%s.svc.%s" $cn .Release.Namespace  .Values.tls.clusterDomain }}
+
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: {{ template "minio.fullname" . }}
+  labels:
+    app: {{ template "minio.name" . }}
+    chart: {{ template "minio.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  secretName: {{ template "minio.fullname" . }}-tls-secret
+  issuerRef:
+    name: {{ .Values.tls.issuerRef.name }}
+    kind: {{ .Values.tls.issuerRef.kind }}
+  commonName:  "{{ $cn }}"
+  dnsNames:
+  -  "{{ $altName2 }}" 
+  -  "{{ $altName3 }}"
+{{ end }}

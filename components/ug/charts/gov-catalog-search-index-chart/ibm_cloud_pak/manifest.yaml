@@ -1,0 +1,10 @@
+images:
+- image: gov-catalog-search-index:b347_d9a37d545593
+  references:
+  - repository: gov-catalog-search-index:b347_d9a37d545593
+    pull-repository: ${DOCKER_REGISTRY}/gov-catalog-search-index:b347_d9a37d545593
+    pull-authorization:
+      username:
+        env: ARTIFACTORY_USERNAME
+      password:
+        env: ARTIFACTORY_PASSWORD

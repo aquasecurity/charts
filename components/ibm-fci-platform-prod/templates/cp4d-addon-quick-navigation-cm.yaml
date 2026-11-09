@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-homepage-quick-navigation-extensions
+  labels:
+    icpdata_addon: "true"
+{{- include "common.label.metadata" (list . (include "fci-core-services.name" .)  (include "fci-core-services.chart" .) .Release.Name .Release.Service ) | indent 4 }}
+data:
+  extensions: |
+    [
+      {
+        "extension_point_id": "homepage_quick_navigation",
+        "extension_name": "zen_homepage_quick_navigation_fci",
+        "match_permissions": "fci_role_analyst,fci_role_investigator,fci_role_supervisor,fci_role_admin,fci_role_data_scientist,fci_role_executive,fci_role_quality_assurance,fci_role_read_only,fci_role_confidential",
+        "order_hint": 100,
+        "details": {
+          "label": "{{`{{ .global_zen_homepage_quick_navigation_fci_label }}`}}",
+          "nav_link": "/fci/home"
+        }
+      }
+    ]

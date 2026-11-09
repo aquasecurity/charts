@@ -1,0 +1,32 @@
+global:
+  license: not accepted
+  environmentSize: size0
+  image:
+    repository: ''
+    secret: ''
+    pullPolicy: Always
+    useTag: true
+  hybrid:
+    disabled: true
+  integrations:
+    elasticsearch:
+      releaseName: null
+      config:
+        internalUrl: http://{{ .releaseName }}-elasticsearch.{{ .namespace }}.svc:9200
+image:
+  repository: 
+  name: common-elastic-curator
+  tag: 1.0.61-20201125161330GMT
+  digest: sha256:75fecf56905c5d4620f3b1a7cadea14f564bf8335f98ab97723bd50cfce12852
+readiness:
+  initialDelaySeconds: 30
+  periodSeconds: 60
+  timeoutSeconds: 60
+  failureThreshold: 3
+liveness:
+  initialDelaySeconds: 60
+  periodSeconds: 60
+  timeoutSeconds: 60
+  failureThreshold: 3
+esCurator:
+  patternIndiciesSchedule: 0 0 * * *

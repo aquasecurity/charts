@@ -1,0 +1,51 @@
+###############################################################################
+# Licensed Materials - Property of IBM.
+# Copyright IBM Corporation 2018. All Rights Reserved.
+# U.S. Government Users Restricted Rights - Use, duplication or disclosure
+# restricted by GSA ADP Schedule Contract with IBM Corp.
+#
+# Contributors:
+#  IBM Corporation - initial API and implementation
+###############################################################################
+charts:
+  - archive: file:../../ibm-redis-2.0.0.tgz
+    repository-keys:
+      - global.image.repository
+
+images:
+#redis
+  - image: opencontent-redis-5:2.0.6
+    references:
+    - repository: opencontent-redis-5:2.0.6-amd64
+      pull-repository: cp.icr.io/cp
+      platform:
+        os: linux
+        architecture: amd64
+    - repository: opencontent-redis-5:2.0.6-ppc64le
+      pull-repository: cp.icr.io/cp
+      platform:
+        os: linux
+        architecture: ppc64le
+    - repository: cp.icr.io/cp/opencontent-redis-5:2.0.6-s390x
+      pull-repository: cp.icr.io/cp
+      platform:
+        os: linux
+        architecture: s390x
+# Creds
+  - image: opencontent-common-utils:1.1.4
+    references:
+    - repository: opencontent-common-utils:1.1.4-amd64
+      pull-repository: docker.io/ibmcom
+      platform:
+        os: linux
+        architecture: amd64
+    - repository: opencontent-common-utils:1.1.4-ppc64le
+      pull-repository: docker.io/ibmcom
+      platform:
+        os: linux
+        architecture: ppc64le
+    - repository: opencontent-common-utils:1.1.2-s390x
+      pull-repository: docker.io/ibmcom
+      platform:
+        os: linux
+        architecture: s390x

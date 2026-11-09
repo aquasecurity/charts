@@ -1,0 +1,1786 @@
+NOTICE
+
+This document includes License Information documents below for multiple Programs. Each License Information document identifies the Program(s) to which it applies. Only those License Information documents for the Program(s) for which Licensee has acquired entitlements apply.
+
+
+==============================================
+
+
+IMPORTANT: READ CAREFULLY
+
+Two license agreements are presented below.
+
+1. IBM International License Agreement for Evaluation of Programs
+2. IBM International Program License Agreement
+
+If Licensee is obtaining the Program for purposes of productive use (other than evaluation, testing, trial "try or buy," or demonstration): By clicking on the "Accept" button below, Licensee accepts the IBM International Program License Agreement, without modification.
+
+If Licensee is obtaining the Program for the purpose of evaluation, testing, trial "try or buy," or demonstration (collectively, an "Evaluation"): By clicking on the "Accept" button below, Licensee accepts both (i) the IBM International License Agreement for Evaluation of Programs (the "Evaluation License"), without modification; and (ii) the IBM International Program License Agreement (the "IPLA"), without modification.
+
+The Evaluation License will apply during the term of Licensee's Evaluation.
+
+The IPLA will automatically apply if Licensee elects to retain the Program after the Evaluation (or obtain additional copies of the Program for use after the Evaluation) by entering into a procurement agreement (e.g., the IBM International Passport Advantage or the IBM Passport Advantage Express agreements).
+
+The Evaluation License and the IPLA are not in effect concurrently; neither modifies the other; and each is independent of the other.
+
+The complete text of each of these two license agreements follow.
+
+
+
+LICENSE INFORMATION
+
+The Programs listed below are licensed under the following License Information terms and conditions in addition to the Program license terms previously agreed to by Client and IBM. If Client does not have previously agreed to license terms in effect for the Program, the International License Agreement for Evaluation of Programs (Z125-5543-05) applies.
+
+Program Name (Program Number):
+IBM Cognos Analytics Administrator Extension for IBM Cloud Pak for Data 11.1.7 (Evaluation)
+
+The following standard terms apply to Licensee's use of the Program.
+
+Evaluation Period
+
+The evaluation period begins on the date that Licensee agrees to the terms of this Agreement and ends after 60 days.
+
+Prohibited Uses
+
+Licensee may not use or authorize others to use the Program if failure of the Program could lead to death, bodily injury, or property or environmental damage.
+
+License Terms delivered with Program Not Applicable
+
+The terms of this Agreement supersede and void any electronic "click through," "shrinkwrap," or other licensing terms and conditions included with or accompanying the Program(s).
+
+Supporting Programs
+
+Licensee is authorized to install and use the Supporting Programs identified below only to support Licensee's use of the Principal Program under this Agreement. The phrase "to support Licensee's use" would only include those uses that are necessary or otherwise directly related to a licensed use of the Principal Program or another Supporting Program. The Supporting Programs may not be used for any other purpose. A Supporting Program may be accompanied by license terms, and those terms, if any, apply to Licensee's use of that Supporting Program. In the event of conflict, the terms in this License Information document supersede the Supporting Program's terms. Licensee must obtain sufficient entitlements to the Program, as a whole, to cover Licensee's installation and use of all of the Supporting Programs, unless separate entitlements are provided within this License Information document. For example, if this Program were licensed on a VPC (Virtual Processor Core) basis and Licensee were to install the Principal Program or a Supporting Program on a 10 VPC machine and another Supporting Program on a second 10 VPC machine, Licensee would be required to obtain 20 VPC entitlements to the Program.
+
+Supporting Programs:
+- IBM Cognos Analytics for Jupyter Notebook
+- IBM Cognos Transformer
+- IBM Cloud Pak for Data Enterprise Edition 3.5
+- IBM Cognos Cube Designer
+- IBM Cognos Dynamic Query Analyzer
+- IBM Cognos for Microsoft Office
+- IBM Cognos Framework Manager
+- IBM Cognos Lifecycle Manager
+- IBM Planning Analytics for Microsoft Excel
+- IBM Tivoli Directory Integrator Identity Edition
+- IBM Cognos Software Development Kit
+- IBM Informix Server
+- IBM WebSphere Application Server Liberty Core V9.0
+- IBM HTTP Server for WebSphere Application Server V9
+- IBM DB2 Advanced Workgroup Server Edition 11.1.0
+
+Permitted Components
+
+Licensee is permitted to use only the following components or functions of the identified Bundled or Supporting Program:
+- Control Plane (of IBM Cloud Pak for Data Enterprise Edition)
+- Common Services (of IBM Cloud Pak for Data Enterprise Edition)
+- Portworx storage (of IBM Cloud Pak for Data Enterprise Edition)
+
+Prohibited Components
+
+Licensee is not authorized to use any of the following components or functions of the Program:
+- pureScale clustering technology (of IBM DB2 Advanced Workgroup Server Edition)
+- SQL Replication (of IBM DB2 Advanced Workgroup Server Edition)
+- Q Replication (of IBM DB2 Advanced Workgroup Server Edition)
+- DB2 Connect (of IBM DB2 Advanced Workgroup Server Edition)
+- SQL Warehousing Tool (SQW) (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM InfoSphere Data Architect 9.1.3 (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM InfoSphere Data Replication 11.3.3 (CDC component) (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM WebSphere Application Server 8.5.5 (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM WebSphere MQ 8.0 (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM Data Server Manager Enterprise Edition 2.1 (of IBM DB2 Advanced Workgroup Server Edition)
+
+Source Components and Sample Materials
+
+The Program includes components in source code form ("Source Components"), or other materials identified as Sample Materials or both. Licensee may copy and modify Source Components and Sample Materials for internal use only within the limits of the license rights under this Agreement; provided, however, that Licensee may not alter or delete any copyright information or notices contained in the Source Components or Sample Materials. IBM provides the Source Components and Sample Materials without obligation of support and "AS IS", WITH NO WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING THE WARRANTY OF TITLE, NON-INFRINGEMENT OR NON-INTERFERENCE AND THE IMPLIED WARRANTIES AND CONDITIONS OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
+
+
+LICENSE INFORMATION
+
+The Programs listed below are licensed under the following License Information terms and conditions in addition to the Program license terms previously agreed to by Client and IBM. If Client does not have previously agreed to license terms in effect for the Program, the International Program License Agreement (Z125-3301-14) applies.
+
+Program Name (Program Number):
+IBM Cognos Analytics Administrator Extension for IBM Cloud Pak for Data 11.1.7 (5900-ABL)
+
+The following standard terms apply to Licensee's use of the Program.
+
+Limited use right
+
+Licensee is not authorized to use the Program to provide commercial IT services to any third party, to provide commercial hosting or timesharing, or to sublicense, rent, or lease the Program unless expressly provided for in the applicable agreements under which Licensee obtains authorizations to use the Program.
+
+Prohibited Uses
+
+Licensee may not use or authorize others to use the Program if failure of the Program could lead to death, bodily injury, or property or environmental damage.
+
+License Terms delivered with Program Not Applicable
+
+The terms of this Agreement supersede and void any electronic "click through," "shrinkwrap," or other licensing terms and conditions included with or accompanying the Program(s).
+
+Supporting Programs
+
+Licensee is authorized to install and use the Supporting Programs identified below only to support Licensee's use of the Principal Program under this Agreement. The phrase "to support Licensee's use" would only include those uses that are necessary or otherwise directly related to a licensed use of the Principal Program or another Supporting Program. The Supporting Programs may not be used for any other purpose. A Supporting Program may be accompanied by license terms, and those terms, if any, apply to Licensee's use of that Supporting Program. In the event of conflict, the terms in this License Information document supersede the Supporting Program's terms. Licensee must obtain sufficient entitlements to the Program, as a whole, to cover Licensee's installation and use of all of the Supporting Programs, unless separate entitlements are provided within this License Information document. For example, if this Program were licensed on a VPC (Virtual Processor Core) basis and Licensee were to install the Principal Program or a Supporting Program on a 10 VPC machine and another Supporting Program on a second 10 VPC machine, Licensee would be required to obtain 20 VPC entitlements to the Program.
+
+Supporting Programs:
+- IBM Cognos Analytics for Jupyter Notebook
+- IBM Cognos Transformer
+- IBM Cloud Pak for Data Enterprise Edition 3.5
+- IBM Cognos Cube Designer
+- IBM Cognos Dynamic Query Analyzer
+- IBM Cognos for Microsoft Office
+- IBM Cognos Framework Manager
+- IBM Cognos Lifecycle Manager
+- IBM Planning Analytics for Microsoft Excel
+- IBM Tivoli Directory Integrator Identity Edition
+- IBM Cognos Software Development Kit
+- IBM Informix Server
+- IBM WebSphere Application Server Liberty Core V9.0
+- IBM HTTP Server for WebSphere Application Server V9
+- IBM DB2 Advanced Workgroup Server Edition 11.1.0
+
+Permitted Components
+
+Licensee is permitted to use only the following components or functions of the identified Bundled or Supporting Program:
+- Control Plane (of IBM Cloud Pak for Data Enterprise Edition)
+- Common Services (of IBM Cloud Pak for Data Enterprise Edition)
+- Portworx storage (of IBM Cloud Pak for Data Enterprise Edition)
+
+Prohibited Components
+
+Licensee is not authorized to use any of the following components or functions of the Program:
+- pureScale clustering technology (of IBM DB2 Advanced Workgroup Server Edition)
+- SQL Replication (of IBM DB2 Advanced Workgroup Server Edition)
+- Q Replication (of IBM DB2 Advanced Workgroup Server Edition)
+- DB2 Connect (of IBM DB2 Advanced Workgroup Server Edition)
+- SQL Warehousing Tool (SQW) (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM InfoSphere Data Architect 9.1.3 (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM InfoSphere Data Replication 11.3.3 (CDC component) (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM WebSphere Application Server 8.5.5 (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM WebSphere MQ 8.0 (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM Data Server Manager Enterprise Edition 2.1 (of IBM DB2 Advanced Workgroup Server Edition)
+
+Components Not Used for Establishing Required Entitlements
+
+Licensee may install and use the following Program components, under the license terms, but these components are not used to determine the number of entitlements required for the Program.
+- Content Manager
+- Gateway
+- Control Plane (of IBM Cloud Pak for Data Enterprise Edition)
+- Common Services (of IBM Cloud Pak for Data Enterprise Edition)
+- Portworx storage (of IBM Cloud Pak for Data Enterprise Edition)
+
+Source Components and Sample Materials
+
+The Program includes components in source code form ("Source Components"), or other materials identified as Sample Materials or both. Licensee may copy and modify Source Components and Sample Materials for internal use only within the limits of the license rights under this Agreement; provided, however, that Licensee may not alter or delete any copyright information or notices contained in the Source Components or Sample Materials. IBM provides the Source Components and Sample Materials without obligation of support and "AS IS", WITH NO WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING THE WARRANTY OF TITLE, NON-INFRINGEMENT OR NON-INTERFERENCE AND THE IMPLIED WARRANTIES AND CONDITIONS OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
+The following units of measure may apply to Licensee's use of the Program.
+
+Authorized User
+
+Authorized User is a unit of measure by which the Program can be licensed. An Authorized User is a unique person who is given access to the Program. The Program may be installed on any number of computers or servers and each Authorized User may have simultaneous access to any number of instances of the Program at one time. Licensee must obtain separate, dedicated entitlements for each Authorized User given access to the Program in any manner directly or indirectly (for example: via a multiplexing program, device, or application server) through any means. An entitlement for an Authorized User is unique to that Authorized User and may not be shared, nor may it be reassigned other than for the permanent transfer of the Authorized User entitlement to another person.
+
+Virtual Processor Core
+
+Virtual Processor Core is a unit of measure by which the Program can be licensed. A Physical Server is a physical computer that is comprised of processing units, memory, and input/output capabilities and that executes requested procedures, commands, or applications for one or more users or client devices. Where racks, blade enclosures, or other similar equipment is being employed, each separable physical device (for example, a blade or a rack-mounted device) that has the required components is considered itself a separate Physical Server. A Virtual Server is either a virtual computer created by partitioning the resources available to a Physical Server or an unpartitioned Physical Server. A Processor Core is a functional unit within a computing device that interprets and executes instructions. A Processor Core consists of at least one instruction control unit and one or more arithmetic or logic units. A Virtual Processor Core is a Processor Core in an unpartitioned Physical Server, or a virtual core assigned to a Virtual Server. Licensee must obtain entitlements for each Virtual Processor Core made available to the Program.
+
+Licensee can deploy the Program (if supported) using full capacity licensing, sub-capacity licensing (https://www.ibm.com/software/passportadvantage/subcaplicensing.html), or container licensing (https://www.ibm.com/software/passportadvantage/containerlicenses.html). See the linked websites for more information. 
+
+In addition to the above, the following terms apply to Licensee's use of the Program.
+
+1) Prerequisite Programs
+
+In addition to the entitlements required for the Program, Licensee must also obtain at least one entitlement to one of the following Named Programs:
+
+Named Programs:
+
+- IBM Cognos Analytics Explorer Extension for IBM Cloud Pak for Data
+- IBM Cognos Analytics User Extension for IBM Cloud Pak for Data
+- IBM Cognos Analytics Viewer Extension for IBM Cloud Pak for Data
+- IBM Cognos Analytics Authorized Explorer Extension for IBM Cloud Pak for Data 
+- IBM Cognos Analytics Authorized User Extension for IBM Cloud Pak for Data 
+- IBM Cognos Analytics Authorized Viewer Extension for IBM Cloud Pak for Data 
+
+2) Bursting Feature Requirement
+
+Each person who is provided an output(s) of the Program through the Bursting feature or who authenticates to the Program must be covered by an appropriate entitlement.
+
+3) Supporting Program Details
+
+3A) IBM DB2 Advanced Workgroup Server Edition (Entitlement 1)
+- Entitlement: No Metric
+- Use Limitations: Use by Principal Program
+
+"No Metric" means this Supporting Program may be installed on as many machines and used by as many persons as is reasonably necessary within the use limitations that apply to this Supporting Program.
+
+"Use by Principal Program" means that the Supporting Program is provided exclusively for use by the Principal Program. Neither Licensee nor any application, program or device is authorized to directly use or access the services of the Supporting Program except Licensee may access the Supporting Program to perform administrative functions for the Supporting Program such as backup, recovery and authorized configuration.
+
+Additional Supporting Program Details
+
+The Supporting Program may use a maximum of 16 processor cores and 128 GB of memory on each physical or virtual server; however, if the Supporting Program is used on a cluster of servers configured to work together using database partitioning or other permitted clustering technology, the Supporting Program may use a maximum of 16 processor cores and 128 GB of memory across all virtual or physical servers in that cluster.
+
+3B) IBM DB2 Advanced Workgroup Server Edition (Entitlement 2)
+- Entitlement: 0.02 Terabytes
+- Use Limitations: Unrestricted
+
+Terabyte is a unit of measure by which the Supporting Program can be licensed. A Terabyte is 2 to the 40th power bytes.
+
+Under the above Terabyte entitlement for DB2:
+
+a) The Terabyte entitlements for this Supporting Program must be sufficient to cover the Terabytes of user data, as reported by DB2. The number of required entitlements must be calculated separately for each database.
+
+b) Licensee may only use the Supporting Program for a data warehouse and run a data warehouse workload. A data warehouse is a subject-oriented, integrated, time-variant collection of data that integrates data from multiple data sources for historical ad hoc data reporting and querying. A data warehouse workload is a workload that typically scans thousands or millions of rows in a single query in order to support the analysis of data in a data warehouse.
+
+c) All user data must reside in column-organized tables.
+
+"Unrestricted" means that, notwithstanding the language in the Supporting Programs section of this License Information, Licensee's right to use the Supporting Program is not limited to use only in support of Licensee's use of the Principal Program. While the other restrictions on Licensee's use of the Supporting Program continue to apply, Licensee may use the Supporting Program for purposes independent of the licensed use of the Principal Program.
+
+4) Red Hat Products
+
+Red Hat Products (as listed below) are licensed separately and are supported by IBM only when used in support of the Program and only while Licensee has Software Subscription and Support in effect for the Program. In addition, Licensee agrees that its use of and support for the Red Hat Products are subject to the following terms (https://www.redhat.com/en/about/agreements).
+
+Red Hat Product:
+
+Red Hat Enterprise Linux
+- Additional Entitlement Ratio: 1 VPC/ 1 VPC
+
+Red Hat OpenShift Container Platform
+- Additional Entitlement Ratio: 1 VPC/ 1 VPC
+
+"Additional Entitlement Ratio n/m" means that Licensee receives some number ('n') entitlements of the indicated metric for the identified program for every specified number ('m') entitlements of the specified metric for the Program as a whole. The specified ratio does not apply to any entitlements for the Program that are not of the required metric type. The number of entitlements for the identified program is rounded up to a multiple of 'n'. For example, if a Program includes 100 PVUs for an identified program for every 500 PVUs obtained of the Principal Program and Licensee acquires 1,200 PVUs of the Program, Licensee may install the identified program and have processor cores available to or managed by it of up to 300 PVUs. Those PVUs would not need to be counted as part of the total PVU requirement for Licensee's installation of the Program on account of the installation of the identified program (although those PVUs might need to be counted for other reasons, such as the processor cores being made available to other components of the Program, as well).
+
+L/N:  L-LCOE-BU7LQA
+D/N:  L-LCOE-BU7LQA
+P/N:  L-LCOE-BU7LQA
+
+
+
+==============================================
+
+
+IMPORTANT: READ CAREFULLY
+
+Two license agreements are presented below.
+
+1. IBM International License Agreement for Evaluation of Programs
+2. IBM International Program License Agreement
+
+If Licensee is obtaining the Program for purposes of productive use (other than evaluation, testing, trial "try or buy," or demonstration): By clicking on the "Accept" button below, Licensee accepts the IBM International Program License Agreement, without modification.
+
+If Licensee is obtaining the Program for the purpose of evaluation, testing, trial "try or buy," or demonstration (collectively, an "Evaluation"): By clicking on the "Accept" button below, Licensee accepts both (i) the IBM International License Agreement for Evaluation of Programs (the "Evaluation License"), without modification; and (ii) the IBM International Program License Agreement (the "IPLA"), without modification.
+
+The Evaluation License will apply during the term of Licensee's Evaluation.
+
+The IPLA will automatically apply if Licensee elects to retain the Program after the Evaluation (or obtain additional copies of the Program for use after the Evaluation) by entering into a procurement agreement (e.g., the IBM International Passport Advantage or the IBM Passport Advantage Express agreements).
+
+The Evaluation License and the IPLA are not in effect concurrently; neither modifies the other; and each is independent of the other.
+
+The complete text of each of these two license agreements follow.
+
+
+
+LICENSE INFORMATION
+
+The Programs listed below are licensed under the following License Information terms and conditions in addition to the Program license terms previously agreed to by Client and IBM. If Client does not have previously agreed to license terms in effect for the Program, the International License Agreement for Evaluation of Programs (Z125-5543-05) applies.
+
+Program Name (Program Number):
+IBM Cognos Analytics Explorer Extension for IBM Cloud Pak for Data 11.1.7 (Evaluation)
+
+The following standard terms apply to Licensee's use of the Program.
+
+Evaluation Period
+
+The evaluation period begins on the date that Licensee agrees to the terms of this Agreement and ends after 60 days.
+
+Prohibited Uses
+
+Licensee may not use or authorize others to use the Program if failure of the Program could lead to death, bodily injury, or property or environmental damage.
+
+License Terms delivered with Program Not Applicable
+
+The terms of this Agreement supersede and void any electronic "click through," "shrinkwrap," or other licensing terms and conditions included with or accompanying the Program(s).
+
+Supporting Programs
+
+Licensee is authorized to install and use the Supporting Programs identified below only to support Licensee's use of the Principal Program under this Agreement. The phrase "to support Licensee's use" would only include those uses that are necessary or otherwise directly related to a licensed use of the Principal Program or another Supporting Program. The Supporting Programs may not be used for any other purpose. A Supporting Program may be accompanied by license terms, and those terms, if any, apply to Licensee's use of that Supporting Program. In the event of conflict, the terms in this License Information document supersede the Supporting Program's terms. Licensee must obtain sufficient entitlements to the Program, as a whole, to cover Licensee's installation and use of all of the Supporting Programs, unless separate entitlements are provided within this License Information document. For example, if this Program were licensed on a VPC (Virtual Processor Core) basis and Licensee were to install the Principal Program or a Supporting Program on a 10 VPC machine and another Supporting Program on a second 10 VPC machine, Licensee would be required to obtain 20 VPC entitlements to the Program.
+
+Supporting Programs:
+- IBM Cognos Transformer
+- IBM Cognos Cube Designer
+- IBM Cognos Dynamic Query Analyzer
+- IBM Cognos for Microsoft Office
+- IBM Cognos Framework Manager
+- IBM Cognos Lifecycle Manager
+- IBM Cognos Software Development Kit
+- IBM Cloud Pak for Data Enterprise Edition 3.5
+- IBM DB2 Advanced Workgroup Server Edition 11.1.0
+
+Permitted Components
+
+Licensee is permitted to use only the following components or functions of the identified Bundled or Supporting Program:
+- Control Plane (of IBM Cloud Pak for Data Enterprise Edition)
+- Common Services (of IBM Cloud Pak for Data Enterprise Edition)
+- Portworx storage (of IBM Cloud Pak for Data Enterprise Edition)
+
+Source Components and Sample Materials
+
+The Program includes components in source code form ("Source Components"), or other materials identified as Sample Materials or both. Licensee may copy and modify Source Components and Sample Materials for internal use only within the limits of the license rights under this Agreement; provided, however, that Licensee may not alter or delete any copyright information or notices contained in the Source Components or Sample Materials. IBM provides the Source Components and Sample Materials without obligation of support and "AS IS", WITH NO WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING THE WARRANTY OF TITLE, NON-INFRINGEMENT OR NON-INTERFERENCE AND THE IMPLIED WARRANTIES AND CONDITIONS OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
+
+
+LICENSE INFORMATION
+
+The Programs listed below are licensed under the following License Information terms and conditions in addition to the Program license terms previously agreed to by Client and IBM. If Client does not have previously agreed to license terms in effect for the Program, the International Program License Agreement (Z125-3301-14) applies.
+
+Program Name (Program Number):
+IBM Cognos Analytics Explorer Extension for IBM Cloud Pak for Data 11.1.7 (5900-ABL)
+
+The following standard terms apply to Licensee's use of the Program.
+
+Limited use right
+
+Licensee is not authorized to use the Program to provide commercial IT services to any third party, to provide commercial hosting or timesharing, or to sublicense, rent, or lease the Program unless expressly provided for in the applicable agreements under which Licensee obtains authorizations to use the Program.
+
+Prohibited Uses
+
+Licensee may not use or authorize others to use the Program if failure of the Program could lead to death, bodily injury, or property or environmental damage.
+
+License Terms delivered with Program Not Applicable
+
+The terms of this Agreement supersede and void any electronic "click through," "shrinkwrap," or other licensing terms and conditions included with or accompanying the Program(s).
+
+Supporting Programs
+
+Licensee is authorized to install and use the Supporting Programs identified below only to support Licensee's use of the Principal Program under this Agreement. The phrase "to support Licensee's use" would only include those uses that are necessary or otherwise directly related to a licensed use of the Principal Program or another Supporting Program. The Supporting Programs may not be used for any other purpose. A Supporting Program may be accompanied by license terms, and those terms, if any, apply to Licensee's use of that Supporting Program. In the event of conflict, the terms in this License Information document supersede the Supporting Program's terms. Licensee must obtain sufficient entitlements to the Program, as a whole, to cover Licensee's installation and use of all of the Supporting Programs, unless separate entitlements are provided within this License Information document. For example, if this Program were licensed on a VPC (Virtual Processor Core) basis and Licensee were to install the Principal Program or a Supporting Program on a 10 VPC machine and another Supporting Program on a second 10 VPC machine, Licensee would be required to obtain 20 VPC entitlements to the Program.
+
+Supporting Programs:
+- IBM Cognos Transformer
+- IBM Cognos Cube Designer
+- IBM Cognos Dynamic Query Analyzer
+- IBM Cognos for Microsoft Office
+- IBM Cognos Framework Manager
+- IBM Cognos Lifecycle Manager
+- IBM Cognos Software Development Kit
+- IBM Cloud Pak for Data Enterprise Edition 3.5
+- IBM DB2 Advanced Workgroup Server Edition 11.1.0
+
+Permitted Components
+
+Licensee is permitted to use only the following components or functions of the identified Bundled or Supporting Program:
+- Control Plane (of IBM Cloud Pak for Data Enterprise Edition)
+- Common Services (of IBM Cloud Pak for Data Enterprise Edition)
+- Portworx storage (of IBM Cloud Pak for Data Enterprise Edition)
+
+Components Not Used for Establishing Required Entitlements
+
+Licensee may install and use the following Program components, under the license terms, but these components are not used to determine the number of entitlements required for the Program.
+- Content Manager
+- Gateway
+- Control Plane (of IBM Cloud Pak for Data Enterprise Edition)
+- Common Services (of IBM Cloud Pak for Data Enterprise Edition)
+- Portworx storage (of IBM Cloud Pak for Data Enterprise Edition)
+
+Source Components and Sample Materials
+
+The Program includes components in source code form ("Source Components"), or other materials identified as Sample Materials or both. Licensee may copy and modify Source Components and Sample Materials for internal use only within the limits of the license rights under this Agreement; provided, however, that Licensee may not alter or delete any copyright information or notices contained in the Source Components or Sample Materials. IBM provides the Source Components and Sample Materials without obligation of support and "AS IS", WITH NO WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING THE WARRANTY OF TITLE, NON-INFRINGEMENT OR NON-INTERFERENCE AND THE IMPLIED WARRANTIES AND CONDITIONS OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
+The following units of measure may apply to Licensee's use of the Program.
+
+Virtual Processor Core
+
+Virtual Processor Core is a unit of measure by which the Program can be licensed. A Physical Server is a physical computer that is comprised of processing units, memory, and input/output capabilities and that executes requested procedures, commands, or applications for one or more users or client devices. Where racks, blade enclosures, or other similar equipment is being employed, each separable physical device (for example, a blade or a rack-mounted device) that has the required components is considered itself a separate Physical Server. A Virtual Server is either a virtual computer created by partitioning the resources available to a Physical Server or an unpartitioned Physical Server. A Processor Core is a functional unit within a computing device that interprets and executes instructions. A Processor Core consists of at least one instruction control unit and one or more arithmetic or logic units. A Virtual Processor Core is a Processor Core in an unpartitioned Physical Server, or a virtual core assigned to a Virtual Server. Licensee must obtain entitlements for each Virtual Processor Core made available to the Program.
+
+Licensee can deploy the Program (if supported) using full capacity licensing, sub-capacity licensing (https://www.ibm.com/software/passportadvantage/subcaplicensing.html), or container licensing (https://www.ibm.com/software/passportadvantage/containerlicenses.html). See the linked websites for more information. 
+
+In addition to the above, the following terms apply to Licensee's use of the Program.
+
+1) Prohibited Components
+
+Notwithstanding any provision in the Agreement, Licensee is not authorized to use any of the following components or functions of the Program:
+
+- IBM Cognos Administration, except Data Source Connections
+- Manage, except Data server connections
+- IBM Cognos Software Development Kit
+- pureScale clustering technology (of IBM DB2 Advanced Workgroup Server Edition)
+- SQL Replication (of IBM DB2 Advanced Workgroup Server Edition)
+- Q Replication (of IBM DB2 Advanced Workgroup Server Edition)
+- DB2 Connect (of IBM DB2 Advanced Workgroup Server Edition)
+- SQL Warehousing Tool (SQW) (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM InfoSphere Data Architect 9.1.3 (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM InfoSphere Data Replication 11.3.3 (CDC component) (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM WebSphere Application Server 8.5.5 (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM WebSphere MQ 8.0 (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM Data Server Manager Enterprise Edition 2.1 (of IBM DB2 Advanced Workgroup Server Edition)
+
+2) Prerequisite Programs
+
+In addition to the entitlements required for the Program, Licensee must also obtain at least one entitlement to IBM Cognos Analytics Administrator Extension for IBM Cloud Pak for Data.
+
+3) Supporting Program Details
+
+3A) IBM DB2 Advanced Workgroup Server Edition (Entitlement 1)
+- Entitlement: No Metric
+- Use Limitations: Use by Principal Program
+
+"No Metric" means this Supporting Program may be installed on as many machines and used by as many persons as is reasonably necessary within the use limitations that apply to this Supporting Program.
+
+"Use by Principal Program" means that the Supporting Program is provided exclusively for use by the Principal Program. Neither Licensee nor any application, program or device is authorized to directly use or access the services of the Supporting Program except Licensee may access the Supporting Program to perform administrative functions for the Supporting Program such as backup, recovery and authorized configuration.
+
+Additional Supporting Program Details
+
+The Supporting Program may use a maximum of 16 processor cores and 128 GB of memory on each physical or virtual server; however, if the Supporting Program is used on a cluster of servers configured to work together using database partitioning or other permitted clustering technology, the Supporting Program may use a maximum of 16 processor cores and 128 GB of memory across all virtual or physical servers in that cluster.
+
+3B) IBM DB2 Advanced Workgroup Server Edition (Entitlement 2)
+- Entitlement: 0.02 Terabytes
+- Use Limitations: Unrestricted
+
+Terabyte is a unit of measure by which the Supporting Program can be licensed. A Terabyte is 2 to the 40th power bytes.
+
+Under the above Terabyte entitlement for DB2:
+
+a) The Terabyte entitlements for this Supporting Program must be sufficient to cover the Terabytes of user data, as reported by DB2. The number of required entitlements must be calculated separately for each database.
+
+b) Licensee may only use the Supporting Program for a data warehouse and run a data warehouse workload. A data warehouse is a subject-oriented, integrated, time-variant collection of data that integrates data from multiple data sources for historical ad hoc data reporting and querying. A data warehouse workload is a workload that typically scans thousands or millions of rows in a single query in order to support the analysis of data in a data warehouse.
+
+c) All user data must reside in column-organized tables.
+
+"Unrestricted" means that, notwithstanding the language in the Supporting Programs section of this License Information, Licensee's right to use the Supporting Program is not limited to use only in support of Licensee's use of the Principal Program. While the other restrictions on Licensee's use of the Supporting Program continue to apply, Licensee may use the Supporting Program for purposes independent of the licensed use of the Principal Program.
+
+4) Red Hat Products
+
+Red Hat Products (as listed below) are licensed separately and are supported by IBM only when used in support of the Program and only while Licensee has Software Subscription and Support in effect for the Program. In addition, Licensee agrees that its use of and support for the Red Hat Products are subject to the following terms (https://www.redhat.com/en/about/agreements).
+
+Red Hat Product:
+
+Red Hat Enterprise Linux
+- Additional Entitlement Ratio: 1 VPC/ 1 VPC
+
+Red Hat OpenShift Container Platform
+- Additional Entitlement Ratio: 1 VPC/ 1 VPC
+
+"Additional Entitlement Ratio n/m" means that Licensee receives some number ('n') entitlements of the indicated metric for the identified program for every specified number ('m') entitlements of the specified metric for the Program as a whole. The specified ratio does not apply to any entitlements for the Program that are not of the required metric type. The number of entitlements for the identified program is rounded up to a multiple of 'n'. For example, if a Program includes 100 PVUs for an identified program for every 500 PVUs obtained of the Principal Program and Licensee acquires 1,200 PVUs of the Program, Licensee may install the identified program and have processor cores available to or managed by it of up to 300 PVUs. Those PVUs would not need to be counted as part of the total PVU requirement for Licensee's installation of the Program on account of the installation of the identified program (although those PVUs might need to be counted for other reasons, such as the processor cores being made available to other components of the Program, as well).
+
+L/N:  L-LCOE-BU7LR4
+D/N:  L-LCOE-BU7LR4
+P/N:  L-LCOE-BU7LR4
+
+
+
+==============================================
+
+
+IMPORTANT: READ CAREFULLY
+
+Two license agreements are presented below.
+
+1. IBM International License Agreement for Evaluation of Programs
+2. IBM International Program License Agreement
+
+If Licensee is obtaining the Program for purposes of productive use (other than evaluation, testing, trial "try or buy," or demonstration): By clicking on the "Accept" button below, Licensee accepts the IBM International Program License Agreement, without modification.
+
+If Licensee is obtaining the Program for the purpose of evaluation, testing, trial "try or buy," or demonstration (collectively, an "Evaluation"): By clicking on the "Accept" button below, Licensee accepts both (i) the IBM International License Agreement for Evaluation of Programs (the "Evaluation License"), without modification; and (ii) the IBM International Program License Agreement (the "IPLA"), without modification.
+
+The Evaluation License will apply during the term of Licensee's Evaluation.
+
+The IPLA will automatically apply if Licensee elects to retain the Program after the Evaluation (or obtain additional copies of the Program for use after the Evaluation) by entering into a procurement agreement (e.g., the IBM International Passport Advantage or the IBM Passport Advantage Express agreements).
+
+The Evaluation License and the IPLA are not in effect concurrently; neither modifies the other; and each is independent of the other.
+
+The complete text of each of these two license agreements follow.
+
+
+
+LICENSE INFORMATION
+
+The Programs listed below are licensed under the following License Information terms and conditions in addition to the Program license terms previously agreed to by Client and IBM. If Client does not have previously agreed to license terms in effect for the Program, the International License Agreement for Evaluation of Programs (Z125-5543-05) applies.
+
+Program Name (Program Number):
+IBM Cognos Analytics User Extension for IBM Cloud Pak for Data 11.1.7 (Evaluation)
+
+The following standard terms apply to Licensee's use of the Program.
+
+Evaluation Period
+
+The evaluation period begins on the date that Licensee agrees to the terms of this Agreement and ends after 60 days.
+
+Prohibited Uses
+
+Licensee may not use or authorize others to use the Program if failure of the Program could lead to death, bodily injury, or property or environmental damage.
+
+License Terms delivered with Program Not Applicable
+
+The terms of this Agreement supersede and void any electronic "click through," "shrinkwrap," or other licensing terms and conditions included with or accompanying the Program(s).
+
+Supporting Programs
+
+Licensee is authorized to install and use the Supporting Programs identified below only to support Licensee's use of the Principal Program under this Agreement. The phrase "to support Licensee's use" would only include those uses that are necessary or otherwise directly related to a licensed use of the Principal Program or another Supporting Program. The Supporting Programs may not be used for any other purpose. A Supporting Program may be accompanied by license terms, and those terms, if any, apply to Licensee's use of that Supporting Program. In the event of conflict, the terms in this License Information document supersede the Supporting Program's terms. Licensee must obtain sufficient entitlements to the Program, as a whole, to cover Licensee's installation and use of all of the Supporting Programs, unless separate entitlements are provided within this License Information document. For example, if this Program were licensed on a VPC (Virtual Processor Core) basis and Licensee were to install the Principal Program or a Supporting Program on a 10 VPC machine and another Supporting Program on a second 10 VPC machine, Licensee would be required to obtain 20 VPC entitlements to the Program.
+
+Supporting Programs:
+- IBM Cognos for Microsoft Office
+- IBM Cognos Analytics for Jupyter Notebook
+- IBM Cloud Pak for Data Enterprise Edition 3.5
+- IBM DB2 Advanced Workgroup Server Edition 11.1.0
+
+Permitted Components
+
+Licensee is permitted to use only the following components or functions of the identified Bundled or Supporting Program:
+- Control Plane (of IBM Cloud Pak for Data Enterprise Edition)
+- Common Services (of IBM Cloud Pak for Data Enterprise Edition)
+- Portworx storage (of IBM Cloud Pak for Data Enterprise Edition)
+
+Source Components and Sample Materials
+
+The Program includes components in source code form ("Source Components"), or other materials identified as Sample Materials or both. Licensee may copy and modify Source Components and Sample Materials for internal use only within the limits of the license rights under this Agreement; provided, however, that Licensee may not alter or delete any copyright information or notices contained in the Source Components or Sample Materials. IBM provides the Source Components and Sample Materials without obligation of support and "AS IS", WITH NO WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING THE WARRANTY OF TITLE, NON-INFRINGEMENT OR NON-INTERFERENCE AND THE IMPLIED WARRANTIES AND CONDITIONS OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
+
+
+LICENSE INFORMATION
+
+The Programs listed below are licensed under the following License Information terms and conditions in addition to the Program license terms previously agreed to by Client and IBM. If Client does not have previously agreed to license terms in effect for the Program, the International Program License Agreement (Z125-3301-14) applies.
+
+Program Name (Program Number):
+IBM Cognos Analytics User Extension for IBM Cloud Pak for Data 11.1.7 (5900-ABL)
+
+The following standard terms apply to Licensee's use of the Program.
+
+Limited use right
+
+Licensee is not authorized to use the Program to provide commercial IT services to any third party, to provide commercial hosting or timesharing, or to sublicense, rent, or lease the Program unless expressly provided for in the applicable agreements under which Licensee obtains authorizations to use the Program.
+
+Prohibited Uses
+
+Licensee may not use or authorize others to use the Program if failure of the Program could lead to death, bodily injury, or property or environmental damage.
+
+License Terms delivered with Program Not Applicable
+
+The terms of this Agreement supersede and void any electronic "click through," "shrinkwrap," or other licensing terms and conditions included with or accompanying the Program(s).
+
+Supporting Programs
+
+Licensee is authorized to install and use the Supporting Programs identified below only to support Licensee's use of the Principal Program under this Agreement. The phrase "to support Licensee's use" would only include those uses that are necessary or otherwise directly related to a licensed use of the Principal Program or another Supporting Program. The Supporting Programs may not be used for any other purpose. A Supporting Program may be accompanied by license terms, and those terms, if any, apply to Licensee's use of that Supporting Program. In the event of conflict, the terms in this License Information document supersede the Supporting Program's terms. Licensee must obtain sufficient entitlements to the Program, as a whole, to cover Licensee's installation and use of all of the Supporting Programs, unless separate entitlements are provided within this License Information document. For example, if this Program were licensed on a VPC (Virtual Processor Core) basis and Licensee were to install the Principal Program or a Supporting Program on a 10 VPC machine and another Supporting Program on a second 10 VPC machine, Licensee would be required to obtain 20 VPC entitlements to the Program.
+
+Supporting Programs:
+- IBM Cognos for Microsoft Office
+- IBM Cognos Analytics for Jupyter Notebook
+- IBM Cloud Pak for Data Enterprise Edition 3.5
+- IBM DB2 Advanced Workgroup Server Edition 11.1.0
+
+Permitted Components
+
+Licensee is permitted to use only the following components or functions of the identified Bundled or Supporting Program:
+- Control Plane (of IBM Cloud Pak for Data Enterprise Edition)
+- Common Services (of IBM Cloud Pak for Data Enterprise Edition)
+- Portworx storage (of IBM Cloud Pak for Data Enterprise Edition)
+
+Components Not Used for Establishing Required Entitlements
+
+Licensee may install and use the following Program components, under the license terms, but these components are not used to determine the number of entitlements required for the Program.
+- Content Manager
+- Gateway
+- Control Plane (of IBM Cloud Pak for Data Enterprise Edition)
+- Common Services (of IBM Cloud Pak for Data Enterprise Edition)
+- Portworx storage (of IBM Cloud Pak for Data Enterprise Edition)
+
+Source Components and Sample Materials
+
+The Program includes components in source code form ("Source Components"), or other materials identified as Sample Materials or both. Licensee may copy and modify Source Components and Sample Materials for internal use only within the limits of the license rights under this Agreement; provided, however, that Licensee may not alter or delete any copyright information or notices contained in the Source Components or Sample Materials. IBM provides the Source Components and Sample Materials without obligation of support and "AS IS", WITH NO WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING THE WARRANTY OF TITLE, NON-INFRINGEMENT OR NON-INTERFERENCE AND THE IMPLIED WARRANTIES AND CONDITIONS OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
+The following units of measure may apply to Licensee's use of the Program.
+
+Virtual Processor Core
+
+Virtual Processor Core is a unit of measure by which the Program can be licensed. A Physical Server is a physical computer that is comprised of processing units, memory, and input/output capabilities and that executes requested procedures, commands, or applications for one or more users or client devices. Where racks, blade enclosures, or other similar equipment is being employed, each separable physical device (for example, a blade or a rack-mounted device) that has the required components is considered itself a separate Physical Server. A Virtual Server is either a virtual computer created by partitioning the resources available to a Physical Server or an unpartitioned Physical Server. A Processor Core is a functional unit within a computing device that interprets and executes instructions. A Processor Core consists of at least one instruction control unit and one or more arithmetic or logic units. A Virtual Processor Core is a Processor Core in an unpartitioned Physical Server, or a virtual core assigned to a Virtual Server. Licensee must obtain entitlements for each Virtual Processor Core made available to the Program.
+
+Licensee can deploy the Program (if supported) using full capacity licensing, sub-capacity licensing (https://www.ibm.com/software/passportadvantage/subcaplicensing.html), or container licensing (https://www.ibm.com/software/passportadvantage/containerlicenses.html). See the linked websites for more information. 
+
+In addition to the above, the following terms apply to Licensee's use of the Program.
+
+1) Prohibited Components
+
+Notwithstanding any provision in the Agreement, Licensee is not authorized to use any of the following components or functions of the Program:
+
+- IBM Cognos Administration, except Data Source Connections
+- Notebook (of IBM Cognos Analytics for Jupyter Notebook)
+- Manage, except Data server connections
+- pureScale clustering technology (of IBM DB2 Advanced Workgroup Server Edition)
+- SQL Replication (of IBM DB2 Advanced Workgroup Server Edition)
+- Q Replication (of IBM DB2 Advanced Workgroup Server Edition)
+- DB2 Connect (of IBM DB2 Advanced Workgroup Server Edition)
+- SQL Warehousing Tool (SQW) (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM InfoSphere Data Architect 9.1.3 (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM InfoSphere Data Replication 11.3.3 (CDC component) (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM WebSphere Application Server 8.5.5 (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM WebSphere MQ 8.0 (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM Data Server Manager Enterprise Edition 2.1 (of IBM DB2 Advanced Workgroup Server Edition)
+
+2) Prerequisite Programs
+
+In addition to the entitlements required for the Program, Licensee must also obtain at least one entitlement to IBM Cognos Analytics Administrator Extension for IBM Cloud Pak for Data.
+
+3) Supporting Program Details
+
+3A) IBM DB2 Advanced Workgroup Server Edition (Entitlement 1)
+- Entitlement: No Metric
+- Use Limitations: Use by Principal Program
+
+"No Metric" means this Supporting Program may be installed on as many machines and used by as many persons as is reasonably necessary within the use limitations that apply to this Supporting Program.
+
+"Use by Principal Program" means that the Supporting Program is provided exclusively for use by the Principal Program. Neither Licensee nor any application, program or device is authorized to directly use or access the services of the Supporting Program except Licensee may access the Supporting Program to perform administrative functions for the Supporting Program such as backup, recovery and authorized configuration.
+
+Additional Supporting Program Details
+
+The Supporting Program may use a maximum of 16 processor cores and 128 GB of memory on each physical or virtual server; however, if the Supporting Program is used on a cluster of servers configured to work together using database partitioning or other permitted clustering technology, the Supporting Program may use a maximum of 16 processor cores and 128 GB of memory across all virtual or physical servers in that cluster.
+
+3B) IBM DB2 Advanced Workgroup Server Edition (Entitlement 2)
+- Entitlement: 0.02 Terabytes
+- Use Limitations: Unrestricted
+
+Terabyte is a unit of measure by which the Supporting Program can be licensed. A Terabyte is 2 to the 40th power bytes.
+
+Under the above Terabyte entitlement for DB2:
+
+a) The Terabyte entitlements for this Supporting Program must be sufficient to cover the Terabytes of user data, as reported by DB2. The number of required entitlements must be calculated separately for each database.
+
+b) Licensee may only use the Supporting Program for a data warehouse and run a data warehouse workload. A data warehouse is a subject-oriented, integrated, time-variant collection of data that integrates data from multiple data sources for historical ad hoc data reporting and querying. A data warehouse workload is a workload that typically scans thousands or millions of rows in a single query in order to support the analysis of data in a data warehouse.
+
+c) All user data must reside in column-organized tables.
+
+"Unrestricted" means that, notwithstanding the language in the Supporting Programs section of this License Information, Licensee's right to use the Supporting Program is not limited to use only in support of Licensee's use of the Principal Program. While the other restrictions on Licensee's use of the Supporting Program continue to apply, Licensee may use the Supporting Program for purposes independent of the licensed use of the Principal Program.
+
+4) Red Hat Products
+
+Red Hat Products (as listed below) are licensed separately and are supported by IBM only when used in support of the Program and only while Licensee has Software Subscription and Support in effect for the Program. In addition, Licensee agrees that its use of and support for the Red Hat Products are subject to the following terms (https://www.redhat.com/en/about/agreements).
+
+Red Hat Product:
+
+Red Hat Enterprise Linux
+- Additional Entitlement Ratio: 1 VPC/ 1 VPC
+
+Red Hat OpenShift Container Platform
+- Additional Entitlement Ratio: 1 VPC/ 1 VPC
+
+"Additional Entitlement Ratio n/m" means that Licensee receives some number ('n') entitlements of the indicated metric for the identified program for every specified number ('m') entitlements of the specified metric for the Program as a whole. The specified ratio does not apply to any entitlements for the Program that are not of the required metric type. The number of entitlements for the identified program is rounded up to a multiple of 'n'. For example, if a Program includes 100 PVUs for an identified program for every 500 PVUs obtained of the Principal Program and Licensee acquires 1,200 PVUs of the Program, Licensee may install the identified program and have processor cores available to or managed by it of up to 300 PVUs. Those PVUs would not need to be counted as part of the total PVU requirement for Licensee's installation of the Program on account of the installation of the identified program (although those PVUs might need to be counted for other reasons, such as the processor cores being made available to other components of the Program, as well).
+
+L/N:  L-LCOE-BU7LTQ
+D/N:  L-LCOE-BU7LTQ
+P/N:  L-LCOE-BU7LTQ
+
+
+
+==============================================
+
+
+IMPORTANT: READ CAREFULLY
+
+Two license agreements are presented below.
+
+1. IBM International License Agreement for Evaluation of Programs
+2. IBM International Program License Agreement
+
+If Licensee is obtaining the Program for purposes of productive use (other than evaluation, testing, trial "try or buy," or demonstration): By clicking on the "Accept" button below, Licensee accepts the IBM International Program License Agreement, without modification.
+
+If Licensee is obtaining the Program for the purpose of evaluation, testing, trial "try or buy," or demonstration (collectively, an "Evaluation"): By clicking on the "Accept" button below, Licensee accepts both (i) the IBM International License Agreement for Evaluation of Programs (the "Evaluation License"), without modification; and (ii) the IBM International Program License Agreement (the "IPLA"), without modification.
+
+The Evaluation License will apply during the term of Licensee's Evaluation.
+
+The IPLA will automatically apply if Licensee elects to retain the Program after the Evaluation (or obtain additional copies of the Program for use after the Evaluation) by entering into a procurement agreement (e.g., the IBM International Passport Advantage or the IBM Passport Advantage Express agreements).
+
+The Evaluation License and the IPLA are not in effect concurrently; neither modifies the other; and each is independent of the other.
+
+The complete text of each of these two license agreements follow.
+
+
+
+LICENSE INFORMATION
+
+The Programs listed below are licensed under the following License Information terms and conditions in addition to the Program license terms previously agreed to by Client and IBM. If Client does not have previously agreed to license terms in effect for the Program, the International License Agreement for Evaluation of Programs (Z125-5543-05) applies.
+
+Program Name (Program Number):
+IBM Cognos Analytics Viewer Extension for IBM Cloud Pak for Data 11.1.7 (Evaluation)
+
+The following standard terms apply to Licensee's use of the Program.
+
+Evaluation Period
+
+The evaluation period begins on the date that Licensee agrees to the terms of this Agreement and ends after 60 days.
+
+Prohibited Uses
+
+Licensee may not use or authorize others to use the Program if failure of the Program could lead to death, bodily injury, or property or environmental damage.
+
+License Terms delivered with Program Not Applicable
+
+The terms of this Agreement supersede and void any electronic "click through," "shrinkwrap," or other licensing terms and conditions included with or accompanying the Program(s).
+
+Supporting Programs
+
+Licensee is authorized to install and use the Supporting Programs identified below only to support Licensee's use of the Principal Program under this Agreement. The phrase "to support Licensee's use" would only include those uses that are necessary or otherwise directly related to a licensed use of the Principal Program or another Supporting Program. The Supporting Programs may not be used for any other purpose. A Supporting Program may be accompanied by license terms, and those terms, if any, apply to Licensee's use of that Supporting Program. In the event of conflict, the terms in this License Information document supersede the Supporting Program's terms. Licensee must obtain sufficient entitlements to the Program, as a whole, to cover Licensee's installation and use of all of the Supporting Programs, unless separate entitlements are provided within this License Information document. For example, if this Program were licensed on a VPC (Virtual Processor Core) basis and Licensee were to install the Principal Program or a Supporting Program on a 10 VPC machine and another Supporting Program on a second 10 VPC machine, Licensee would be required to obtain 20 VPC entitlements to the Program.
+
+Supporting Programs:
+- IBM Cloud Pak for Data Enterprise Edition 3.5
+- IBM DB2 Advanced Workgroup Server Edition 11.1.0
+
+Permitted Components
+
+Licensee is permitted to use only the following components or functions of the identified Bundled or Supporting Program:
+- Control Plane (of IBM Cloud Pak for Data Enterprise Edition)
+- Common Services (of IBM Cloud Pak for Data Enterprise Edition)
+- Portworx storage (of IBM Cloud Pak for Data Enterprise Edition)
+
+Prohibited Components
+
+Licensee is not authorized to use any of the following components or functions of the Program:
+- Administration
+- Run reports
+- Report
+- Story
+- Create/Edit Dashboard
+- Data module
+- Exploration
+- Upload files
+- IBM Cognos Analysis Studio
+- IBM Cognos Event Studio
+- IBM Cognos Query Studio
+- IBM Cognos Workspace
+- Control Plane (of IBM Cloud Pak for Data Enterprise Edition)
+- Common Services (of IBM Cloud Pak for Data Enterprise Edition)
+- Portworx storage (of IBM Cloud Pak for Data Enterprise Edition)
+- Data Virtualization (of IBM Cloud Pak for Data Enterprise Edition)
+- Transform Data (of IBM Cloud Pak for Data Enterprise Edition)
+- Db2 Warehouse (of IBM Cloud Pak for Data Enterprise Edition)
+- Governance Catalog & Data discovery (of IBM Cloud Pak for Data Enterprise Edition)
+- pureScale clustering technology (of IBM DB2 Advanced Workgroup Server Edition)
+- SQL Replication (of IBM DB2 Advanced Workgroup Server Edition)
+- Q Replication (of IBM DB2 Advanced Workgroup Server Edition)
+- DB2 Connect (of IBM DB2 Advanced Workgroup Server Edition)
+- SQL Warehousing Tool (SQW) (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM InfoSphere Data Architect 9.1.3 (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM InfoSphere Data Replication 11.3.3 (CDC component) (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM WebSphere Application Server 8.5.5 (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM WebSphere MQ 8.0 (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM Data Server Manager Enterprise Edition 2.1 (of IBM DB2 Advanced Workgroup Server Edition)
+
+Source Components and Sample Materials
+
+The Program includes components in source code form ("Source Components"), or other materials identified as Sample Materials or both. Licensee may copy and modify Source Components and Sample Materials for internal use only within the limits of the license rights under this Agreement; provided, however, that Licensee may not alter or delete any copyright information or notices contained in the Source Components or Sample Materials. IBM provides the Source Components and Sample Materials without obligation of support and "AS IS", WITH NO WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING THE WARRANTY OF TITLE, NON-INFRINGEMENT OR NON-INTERFERENCE AND THE IMPLIED WARRANTIES AND CONDITIONS OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
+
+
+LICENSE INFORMATION
+
+The Programs listed below are licensed under the following License Information terms and conditions in addition to the Program license terms previously agreed to by Client and IBM. If Client does not have previously agreed to license terms in effect for the Program, the International Program License Agreement (Z125-3301-14) applies.
+
+Program Name (Program Number):
+IBM Cognos Analytics Viewer Extension for IBM Cloud Pak for Data 11.1.7 (5900-ABL)
+
+The following standard terms apply to Licensee's use of the Program.
+
+Limited use right
+
+Licensee is not authorized to use the Program to provide commercial IT services to any third party, to provide commercial hosting or timesharing, or to sublicense, rent, or lease the Program unless expressly provided for in the applicable agreements under which Licensee obtains authorizations to use the Program.
+
+Prohibited Uses
+
+Licensee may not use or authorize others to use the Program if failure of the Program could lead to death, bodily injury, or property or environmental damage.
+
+License Terms delivered with Program Not Applicable
+
+The terms of this Agreement supersede and void any electronic "click through," "shrinkwrap," or other licensing terms and conditions included with or accompanying the Program(s).
+
+Supporting Programs
+
+Licensee is authorized to install and use the Supporting Programs identified below only to support Licensee's use of the Principal Program under this Agreement. The phrase "to support Licensee's use" would only include those uses that are necessary or otherwise directly related to a licensed use of the Principal Program or another Supporting Program. The Supporting Programs may not be used for any other purpose. A Supporting Program may be accompanied by license terms, and those terms, if any, apply to Licensee's use of that Supporting Program. In the event of conflict, the terms in this License Information document supersede the Supporting Program's terms. Licensee must obtain sufficient entitlements to the Program, as a whole, to cover Licensee's installation and use of all of the Supporting Programs, unless separate entitlements are provided within this License Information document. For example, if this Program were licensed on a VPC (Virtual Processor Core) basis and Licensee were to install the Principal Program or a Supporting Program on a 10 VPC machine and another Supporting Program on a second 10 VPC machine, Licensee would be required to obtain 20 VPC entitlements to the Program.
+
+Supporting Programs:
+- IBM Cloud Pak for Data Enterprise Edition 3.5
+- IBM DB2 Advanced Workgroup Server Edition 11.1.0
+
+Permitted Components
+
+Licensee is permitted to use only the following components or functions of the identified Bundled or Supporting Program:
+- Control Plane (of IBM Cloud Pak for Data Enterprise Edition)
+- Common Services (of IBM Cloud Pak for Data Enterprise Edition)
+- Portworx storage (of IBM Cloud Pak for Data Enterprise Edition)
+
+Prohibited Components
+
+Licensee is not authorized to use any of the following components or functions of the Program:
+- Administration
+- Run reports
+- Report
+- Story
+- Create/Edit Dashboard
+- Data module
+- Exploration
+- Upload files
+- IBM Cognos Analysis Studio
+- IBM Cognos Event Studio
+- IBM Cognos Query Studio
+- IBM Cognos Workspace
+- Control Plane (of IBM Cloud Pak for Data Enterprise Edition)
+- Common Services (of IBM Cloud Pak for Data Enterprise Edition)
+- Portworx storage (of IBM Cloud Pak for Data Enterprise Edition)
+- Data Virtualization (of IBM Cloud Pak for Data Enterprise Edition)
+- Transform Data (of IBM Cloud Pak for Data Enterprise Edition)
+- Db2 Warehouse (of IBM Cloud Pak for Data Enterprise Edition)
+- Governance Catalog & Data discovery (of IBM Cloud Pak for Data Enterprise Edition)
+- pureScale clustering technology (of IBM DB2 Advanced Workgroup Server Edition)
+- SQL Replication (of IBM DB2 Advanced Workgroup Server Edition)
+- Q Replication (of IBM DB2 Advanced Workgroup Server Edition)
+- DB2 Connect (of IBM DB2 Advanced Workgroup Server Edition)
+- SQL Warehousing Tool (SQW) (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM InfoSphere Data Architect 9.1.3 (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM InfoSphere Data Replication 11.3.3 (CDC component) (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM WebSphere Application Server 8.5.5 (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM WebSphere MQ 8.0 (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM Data Server Manager Enterprise Edition 2.1 (of IBM DB2 Advanced Workgroup Server Edition)
+
+Components Not Used for Establishing Required Entitlements
+
+Licensee may install and use the following Program components, under the license terms, but these components are not used to determine the number of entitlements required for the Program.
+- Content Manager
+- Gateway
+
+Source Components and Sample Materials
+
+The Program includes components in source code form ("Source Components"), or other materials identified as Sample Materials or both. Licensee may copy and modify Source Components and Sample Materials for internal use only within the limits of the license rights under this Agreement; provided, however, that Licensee may not alter or delete any copyright information or notices contained in the Source Components or Sample Materials. IBM provides the Source Components and Sample Materials without obligation of support and "AS IS", WITH NO WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING THE WARRANTY OF TITLE, NON-INFRINGEMENT OR NON-INTERFERENCE AND THE IMPLIED WARRANTIES AND CONDITIONS OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
+The following units of measure may apply to Licensee's use of the Program.
+
+Virtual Processor Core
+
+Virtual Processor Core is a unit of measure by which the Program can be licensed. A Physical Server is a physical computer that is comprised of processing units, memory, and input/output capabilities and that executes requested procedures, commands, or applications for one or more users or client devices. Where racks, blade enclosures, or other similar equipment is being employed, each separable physical device (for example, a blade or a rack-mounted device) that has the required components is considered itself a separate Physical Server. A Virtual Server is either a virtual computer created by partitioning the resources available to a Physical Server or an unpartitioned Physical Server. A Processor Core is a functional unit within a computing device that interprets and executes instructions. A Processor Core consists of at least one instruction control unit and one or more arithmetic or logic units. A Virtual Processor Core is a Processor Core in an unpartitioned Physical Server, or a virtual core assigned to a Virtual Server. Licensee must obtain entitlements for each Virtual Processor Core made available to the Program.
+
+Licensee can deploy the Program (if supported) using full capacity licensing, sub-capacity licensing (https://www.ibm.com/software/passportadvantage/subcaplicensing.html), or container licensing (https://www.ibm.com/software/passportadvantage/containerlicenses.html). See the linked websites for more information. 
+
+In addition to the above, the following terms apply to Licensee's use of the Program.
+
+1) Prerequisite Programs
+
+In addition to the entitlements required for the Program, Licensee must also obtain at least one entitlement to IBM Cognos Analytics Administrator Extension for IBM Cloud Pak for Data.
+
+2) Supporting Program Details
+
+2A) IBM DB2 Advanced Workgroup Server Edition (Entitlement 1)
+- Entitlement: No Metric
+- Use Limitations: Use by Principal Program
+
+"No Metric" means this Supporting Program may be installed on as many machines and used by as many persons as is reasonably necessary within the use limitations that apply to this Supporting Program.
+
+"Use by Principal Program" means that the Supporting Program is provided exclusively for use by the Principal Program. Neither Licensee nor any application, program or device is authorized to directly use or access the services of the Supporting Program except Licensee may access the Supporting Program to perform administrative functions for the Supporting Program such as backup, recovery and authorized configuration.
+
+Additional Supporting Program Details
+
+The Supporting Program may use a maximum of 16 processor cores and 128 GB of memory on each physical or virtual server; however, if the Supporting Program is used on a cluster of servers configured to work together using database partitioning or other permitted clustering technology, the Supporting Program may use a maximum of 16 processor cores and 128 GB of memory across all virtual or physical servers in that cluster.
+
+2B) IBM DB2 Advanced Workgroup Server Edition (Entitlement 2)
+- Entitlement: 0.02 Terabytes
+- Use Limitations: Unrestricted
+
+Terabyte is a unit of measure by which the Supporting Program can be licensed. A Terabyte is 2 to the 40th power bytes.
+
+Under the above Terabyte entitlement for DB2:
+
+a) The Terabyte entitlements for this Supporting Program must be sufficient to cover the Terabytes of user data, as reported by DB2. The number of required entitlements must be calculated separately for each database.
+
+b) Licensee may only use the Supporting Program for a data warehouse and run a data warehouse workload. A data warehouse is a subject-oriented, integrated, time-variant collection of data that integrates data from multiple data sources for historical ad hoc data reporting and querying. A data warehouse workload is a workload that typically scans thousands or millions of rows in a single query in order to support the analysis of data in a data warehouse.
+
+c) All user data must reside in column-organized tables.
+
+"Unrestricted" means that, notwithstanding the language in the Supporting Programs section of this License Information, Licensee's right to use the Supporting Program is not limited to use only in support of Licensee's use of the Principal Program. While the other restrictions on Licensee's use of the Supporting Program continue to apply, Licensee may use the Supporting Program for purposes independent of the licensed use of the Principal Program.
+
+3) Red Hat Products
+
+Red Hat Products (as listed below) are licensed separately and are supported by IBM only when used in support of the Program and only while Licensee has Software Subscription and Support in effect for the Program. In addition, Licensee agrees that its use of and support for the Red Hat Products are subject to the following terms (https://www.redhat.com/en/about/agreements).
+
+Red Hat Product:
+
+Red Hat Enterprise Linux
+- Additional Entitlement Ratio: 1 VPC/ 1 VPC
+
+Red Hat OpenShift Container Platform
+- Additional Entitlement Ratio: 1 VPC/ 1 VPC
+
+"Additional Entitlement Ratio n/m" means that Licensee receives some number ('n') entitlements of the indicated metric for the identified program for every specified number ('m') entitlements of the specified metric for the Program as a whole. The specified ratio does not apply to any entitlements for the Program that are not of the required metric type. The number of entitlements for the identified program is rounded up to a multiple of 'n'. For example, if a Program includes 100 PVUs for an identified program for every 500 PVUs obtained of the Principal Program and Licensee acquires 1,200 PVUs of the Program, Licensee may install the identified program and have processor cores available to or managed by it of up to 300 PVUs. Those PVUs would not need to be counted as part of the total PVU requirement for Licensee's installation of the Program on account of the installation of the identified program (although those PVUs might need to be counted for other reasons, such as the processor cores being made available to other components of the Program, as well).
+
+L/N:  L-LCOE-BU7LV2
+D/N:  L-LCOE-BU7LV2
+P/N:  L-LCOE-BU7LV2
+
+
+
+==============================================
+
+
+IMPORTANT: READ CAREFULLY
+
+Two license agreements are presented below.
+
+1. IBM International License Agreement for Evaluation of Programs
+2. IBM International Program License Agreement
+
+If Licensee is obtaining the Program for purposes of productive use (other than evaluation, testing, trial "try or buy," or demonstration): By clicking on the "Accept" button below, Licensee accepts the IBM International Program License Agreement, without modification.
+
+If Licensee is obtaining the Program for the purpose of evaluation, testing, trial "try or buy," or demonstration (collectively, an "Evaluation"): By clicking on the "Accept" button below, Licensee accepts both (i) the IBM International License Agreement for Evaluation of Programs (the "Evaluation License"), without modification; and (ii) the IBM International Program License Agreement (the "IPLA"), without modification.
+
+The Evaluation License will apply during the term of Licensee's Evaluation.
+
+The IPLA will automatically apply if Licensee elects to retain the Program after the Evaluation (or obtain additional copies of the Program for use after the Evaluation) by entering into a procurement agreement (e.g., the IBM International Passport Advantage or the IBM Passport Advantage Express agreements).
+
+The Evaluation License and the IPLA are not in effect concurrently; neither modifies the other; and each is independent of the other.
+
+The complete text of each of these two license agreements follow.
+
+
+
+LICENSE INFORMATION
+
+The Programs listed below are licensed under the following License Information terms and conditions in addition to the Program license terms previously agreed to by Client and IBM. If Client does not have previously agreed to license terms in effect for the Program, the International License Agreement for Evaluation of Programs (Z125-5543-05) applies.
+
+Program Name (Program Number):
+IBM Cognos Analytics Authorized Explorer Extension for IBM Cloud Pak for Data 11.1.7 (Evaluation)
+
+The following standard terms apply to Licensee's use of the Program.
+
+Evaluation Period
+
+The evaluation period begins on the date that Licensee agrees to the terms of this Agreement and ends after 60 days.
+
+Prohibited Uses
+
+Licensee may not use or authorize others to use the Program if failure of the Program could lead to death, bodily injury, or property or environmental damage.
+
+License Terms delivered with Program Not Applicable
+
+The terms of this Agreement supersede and void any electronic "click through," "shrinkwrap," or other licensing terms and conditions included with or accompanying the Program(s).
+
+Supporting Programs
+
+Licensee is authorized to install and use the Supporting Programs identified below only to support Licensee's use of the Principal Program under this Agreement. The phrase "to support Licensee's use" would only include those uses that are necessary or otherwise directly related to a licensed use of the Principal Program or another Supporting Program. The Supporting Programs may not be used for any other purpose. A Supporting Program may be accompanied by license terms, and those terms, if any, apply to Licensee's use of that Supporting Program. In the event of conflict, the terms in this License Information document supersede the Supporting Program's terms. Licensee must obtain sufficient entitlements to the Program, as a whole, to cover Licensee's installation and use of all of the Supporting Programs, unless separate entitlements are provided within this License Information document. For example, if this Program were licensed on a VPC (Virtual Processor Core) basis and Licensee were to install the Principal Program or a Supporting Program on a 10 VPC machine and another Supporting Program on a second 10 VPC machine, Licensee would be required to obtain 20 VPC entitlements to the Program.
+
+Supporting Programs:
+- IBM Cognos Transformer
+- IBM Cognos Cube Designer
+- IBM Cognos Dynamic Query Analyzer
+- IBM Cognos for Microsoft Office
+- IBM Cognos Framework Manager
+- IBM Cognos Lifecycle Manager
+- IBM Cognos Software Development Kit
+- IBM Cloud Pak for Data Enterprise Edition 3.5
+- IBM DB2 Advanced Workgroup Server Edition 11.1.0
+
+Permitted Components
+
+Licensee is permitted to use only the following components or functions of the identified Bundled or Supporting Program:
+- Control Plane (of IBM Cloud Pak for Data Enterprise Edition)
+- Common Services (of IBM Cloud Pak for Data Enterprise Edition)
+- Portworx storage (of IBM Cloud Pak for Data Enterprise Edition)
+
+Source Components and Sample Materials
+
+The Program includes components in source code form ("Source Components"), or other materials identified as Sample Materials or both. Licensee may copy and modify Source Components and Sample Materials for internal use only within the limits of the license rights under this Agreement; provided, however, that Licensee may not alter or delete any copyright information or notices contained in the Source Components or Sample Materials. IBM provides the Source Components and Sample Materials without obligation of support and "AS IS", WITH NO WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING THE WARRANTY OF TITLE, NON-INFRINGEMENT OR NON-INTERFERENCE AND THE IMPLIED WARRANTIES AND CONDITIONS OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
+
+
+LICENSE INFORMATION
+
+The Programs listed below are licensed under the following License Information terms and conditions in addition to the Program license terms previously agreed to by Client and IBM. If Client does not have previously agreed to license terms in effect for the Program, the International Program License Agreement (Z125-3301-14) applies.
+
+Program Name (Program Number):
+IBM Cognos Analytics Authorized Explorer Extension for IBM Cloud Pak for Data 11.1.7 (5900-ABL)
+
+The following standard terms apply to Licensee's use of the Program.
+
+Limited use right
+
+Licensee is not authorized to use the Program to provide commercial IT services to any third party, to provide commercial hosting or timesharing, or to sublicense, rent, or lease the Program unless expressly provided for in the applicable agreements under which Licensee obtains authorizations to use the Program.
+
+Prohibited Uses
+
+Licensee may not use or authorize others to use the Program if failure of the Program could lead to death, bodily injury, or property or environmental damage.
+
+License Terms delivered with Program Not Applicable
+
+The terms of this Agreement supersede and void any electronic "click through," "shrinkwrap," or other licensing terms and conditions included with or accompanying the Program(s).
+
+Supporting Programs
+
+Licensee is authorized to install and use the Supporting Programs identified below only to support Licensee's use of the Principal Program under this Agreement. The phrase "to support Licensee's use" would only include those uses that are necessary or otherwise directly related to a licensed use of the Principal Program or another Supporting Program. The Supporting Programs may not be used for any other purpose. A Supporting Program may be accompanied by license terms, and those terms, if any, apply to Licensee's use of that Supporting Program. In the event of conflict, the terms in this License Information document supersede the Supporting Program's terms. Licensee must obtain sufficient entitlements to the Program, as a whole, to cover Licensee's installation and use of all of the Supporting Programs, unless separate entitlements are provided within this License Information document. For example, if this Program were licensed on a VPC (Virtual Processor Core) basis and Licensee were to install the Principal Program or a Supporting Program on a 10 VPC machine and another Supporting Program on a second 10 VPC machine, Licensee would be required to obtain 20 VPC entitlements to the Program.
+
+Supporting Programs:
+- IBM Cognos Transformer
+- IBM Cognos Cube Designer
+- IBM Cognos Dynamic Query Analyzer
+- IBM Cognos for Microsoft Office
+- IBM Cognos Framework Manager
+- IBM Cognos Lifecycle Manager
+- IBM Cognos Software Development Kit
+- IBM Cloud Pak for Data Enterprise Edition 3.5
+- IBM DB2 Advanced Workgroup Server Edition 11.1.0
+
+Permitted Components
+
+Licensee is permitted to use only the following components or functions of the identified Bundled or Supporting Program:
+- Control Plane (of IBM Cloud Pak for Data Enterprise Edition)
+- Common Services (of IBM Cloud Pak for Data Enterprise Edition)
+- Portworx storage (of IBM Cloud Pak for Data Enterprise Edition)
+
+Source Components and Sample Materials
+
+The Program includes components in source code form ("Source Components"), or other materials identified as Sample Materials or both. Licensee may copy and modify Source Components and Sample Materials for internal use only within the limits of the license rights under this Agreement; provided, however, that Licensee may not alter or delete any copyright information or notices contained in the Source Components or Sample Materials. IBM provides the Source Components and Sample Materials without obligation of support and "AS IS", WITH NO WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING THE WARRANTY OF TITLE, NON-INFRINGEMENT OR NON-INTERFERENCE AND THE IMPLIED WARRANTIES AND CONDITIONS OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
+The following units of measure may apply to Licensee's use of the Program.
+
+Authorized User
+
+Authorized User is a unit of measure by which the Program can be licensed. An Authorized User is a unique person who is given access to the Program. The Program may be installed on any number of computers or servers and each Authorized User may have simultaneous access to any number of instances of the Program at one time. Licensee must obtain separate, dedicated entitlements for each Authorized User given access to the Program in any manner directly or indirectly (for example: via a multiplexing program, device, or application server) through any means. An entitlement for an Authorized User is unique to that Authorized User and may not be shared, nor may it be reassigned other than for the permanent transfer of the Authorized User entitlement to another person.
+
+In addition to the above, the following terms apply to Licensee's use of the Program.
+
+1) Prohibited Components
+
+Notwithstanding any provision in the Agreement, Licensee is not authorized to use any of the following components or functions of the Program:
+
+- IBM Cognos Administration, except Data Source Connections
+- Manage, except Data server connections
+- IBM Cognos Software Development Kit
+- pureScale clustering technology (of IBM DB2 Advanced Workgroup Server Edition)
+- SQL Replication (of IBM DB2 Advanced Workgroup Server Edition)
+- Q Replication (of IBM DB2 Advanced Workgroup Server Edition)
+- DB2 Connect (of IBM DB2 Advanced Workgroup Server Edition)
+- SQL Warehousing Tool (SQW) (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM InfoSphere Data Architect 9.1.3 (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM InfoSphere Data Replication 11.3.3 (CDC component) (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM WebSphere Application Server 8.5.5 (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM WebSphere MQ 8.0 (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM Data Server Manager Enterprise Edition 2.1 (of IBM DB2 Advanced Workgroup Server Edition)
+
+2) Prerequisite Programs
+
+In addition to the entitlements required for the Program, Licensee must also obtain at least one entitlement to IBM Cognos Analytics Administrator Extension for IBM Cloud Pak for Data.
+
+3) Bursting Feature Requirement
+
+Each person who is provided an output(s) of the Program through the Bursting feature or who authenticates to the Program must be covered by an appropriate entitlement.
+
+4) Supporting Program Details
+
+4A) IBM DB2 Advanced Workgroup Server Edition (Entitlement 1)
+- Entitlement: No Metric
+- Use Limitations: Use by Principal Program
+
+"No Metric" means this Supporting Program may be installed on as many machines and used by as many persons as is reasonably necessary within the use limitations that apply to this Supporting Program.
+
+"Use by Principal Program" means that the Supporting Program is provided exclusively for use by the Principal Program. Neither Licensee nor any application, program or device is authorized to directly use or access the services of the Supporting Program except Licensee may access the Supporting Program to perform administrative functions for the Supporting Program such as backup, recovery and authorized configuration.
+
+Additional Supporting Program Details
+
+The Supporting Program may use a maximum of 16 processor cores and 128 GB of memory on each physical or virtual server; however, if the Supporting Program is used on a cluster of servers configured to work together using database partitioning or other permitted clustering technology, the Supporting Program may use a maximum of 16 processor cores and 128 GB of memory across all virtual or physical servers in that cluster.
+
+4B) IBM DB2 Advanced Workgroup Server Edition (Entitlement 2)
+- Entitlement: 0.02 Terabytes
+- Use Limitations: Unrestricted
+
+Terabyte is a unit of measure by which the Supporting Program can be licensed. A Terabyte is 2 to the 40th power bytes.
+
+Under the above Terabyte entitlement for DB2:
+
+a) The Terabyte entitlements for this Supporting Program must be sufficient to cover the Terabytes of user data, as reported by DB2. The number of required entitlements must be calculated separately for each database.
+
+b) Licensee may only use the Supporting Program for a data warehouse and run a data warehouse workload. A data warehouse is a subject-oriented, integrated, time-variant collection of data that integrates data from multiple data sources for historical ad hoc data reporting and querying. A data warehouse workload is a workload that typically scans thousands or millions of rows in a single query in order to support the analysis of data in a data warehouse.
+
+c) All user data must reside in column-organized tables.
+
+"Unrestricted" means that, notwithstanding the language in the Supporting Programs section of this License Information, Licensee's right to use the Supporting Program is not limited to use only in support of Licensee's use of the Principal Program. While the other restrictions on Licensee's use of the Supporting Program continue to apply, Licensee may use the Supporting Program for purposes independent of the licensed use of the Principal Program.
+
+5) Red Hat Products
+
+Red Hat Products (as listed below) are licensed separately and are supported by IBM only when used in support of the Program and only while Licensee has Software Subscription and Support in effect for the Program. In addition, Licensee agrees that its use of and support for the Red Hat Products are subject to the following terms (https://www.redhat.com/en/about/agreements).
+
+Red Hat Product:
+
+Red Hat Enterprise Linux
+- Additional Entitlement Ratio: 1 VPC/ 1 VPC
+
+Red Hat OpenShift Container Platform
+- Additional Entitlement Ratio: 1 VPC/ 1 VPC
+
+"Additional Entitlement Ratio n/m" means that Licensee receives some number ('n') entitlements of the indicated metric for the identified program for every specified number ('m') entitlements of the specified metric for the Program as a whole. The specified ratio does not apply to any entitlements for the Program that are not of the required metric type. The number of entitlements for the identified program is rounded up to a multiple of 'n'. For example, if a Program includes 100 PVUs for an identified program for every 500 PVUs obtained of the Principal Program and Licensee acquires 1,200 PVUs of the Program, Licensee may install the identified program and have processor cores available to or managed by it of up to 300 PVUs. Those PVUs would not need to be counted as part of the total PVU requirement for Licensee's installation of the Program on account of the installation of the identified program (although those PVUs might need to be counted for other reasons, such as the processor cores being made available to other components of the Program, as well).
+
+L/N:  L-LCOE-BU7LW3
+D/N:  L-LCOE-BU7LW3
+P/N:  L-LCOE-BU7LW3
+
+
+
+==============================================
+
+
+IMPORTANT: READ CAREFULLY
+
+Two license agreements are presented below.
+
+1. IBM International License Agreement for Evaluation of Programs
+2. IBM International Program License Agreement
+
+If Licensee is obtaining the Program for purposes of productive use (other than evaluation, testing, trial "try or buy," or demonstration): By clicking on the "Accept" button below, Licensee accepts the IBM International Program License Agreement, without modification.
+
+If Licensee is obtaining the Program for the purpose of evaluation, testing, trial "try or buy," or demonstration (collectively, an "Evaluation"): By clicking on the "Accept" button below, Licensee accepts both (i) the IBM International License Agreement for Evaluation of Programs (the "Evaluation License"), without modification; and (ii) the IBM International Program License Agreement (the "IPLA"), without modification.
+
+The Evaluation License will apply during the term of Licensee's Evaluation.
+
+The IPLA will automatically apply if Licensee elects to retain the Program after the Evaluation (or obtain additional copies of the Program for use after the Evaluation) by entering into a procurement agreement (e.g., the IBM International Passport Advantage or the IBM Passport Advantage Express agreements).
+
+The Evaluation License and the IPLA are not in effect concurrently; neither modifies the other; and each is independent of the other.
+
+The complete text of each of these two license agreements follow.
+
+
+
+LICENSE INFORMATION
+
+The Programs listed below are licensed under the following License Information terms and conditions in addition to the Program license terms previously agreed to by Client and IBM. If Client does not have previously agreed to license terms in effect for the Program, the International License Agreement for Evaluation of Programs (Z125-5543-05) applies.
+
+Program Name (Program Number):
+IBM Cognos Analytics Authorized User Extension for IBM Cloud Pak for Data 11.1.7 (Evaluation)
+
+The following standard terms apply to Licensee's use of the Program.
+
+Evaluation Period
+
+The evaluation period begins on the date that Licensee agrees to the terms of this Agreement and ends after 60 days.
+
+Prohibited Uses
+
+Licensee may not use or authorize others to use the Program if failure of the Program could lead to death, bodily injury, or property or environmental damage.
+
+License Terms delivered with Program Not Applicable
+
+The terms of this Agreement supersede and void any electronic "click through," "shrinkwrap," or other licensing terms and conditions included with or accompanying the Program(s).
+
+Supporting Programs
+
+Licensee is authorized to install and use the Supporting Programs identified below only to support Licensee's use of the Principal Program under this Agreement. The phrase "to support Licensee's use" would only include those uses that are necessary or otherwise directly related to a licensed use of the Principal Program or another Supporting Program. The Supporting Programs may not be used for any other purpose. A Supporting Program may be accompanied by license terms, and those terms, if any, apply to Licensee's use of that Supporting Program. In the event of conflict, the terms in this License Information document supersede the Supporting Program's terms. Licensee must obtain sufficient entitlements to the Program, as a whole, to cover Licensee's installation and use of all of the Supporting Programs, unless separate entitlements are provided within this License Information document. For example, if this Program were licensed on a VPC (Virtual Processor Core) basis and Licensee were to install the Principal Program or a Supporting Program on a 10 VPC machine and another Supporting Program on a second 10 VPC machine, Licensee would be required to obtain 20 VPC entitlements to the Program.
+
+Supporting Programs:
+- IBM Cognos for Microsoft Office
+- IBM Cognos Analytics for Jupyter Notebook
+- IBM Cloud Pak for Data Enterprise Edition 3.5
+- IBM DB2 Advanced Workgroup Server Edition 11.1.0
+
+Permitted Components
+
+Licensee is permitted to use only the following components or functions of the identified Bundled or Supporting Program:
+- Control Plane (of IBM Cloud Pak for Data Enterprise Edition)
+- Common Services (of IBM Cloud Pak for Data Enterprise Edition)
+- Portworx storage (of IBM Cloud Pak for Data Enterprise Edition)
+
+Source Components and Sample Materials
+
+The Program includes components in source code form ("Source Components"), or other materials identified as Sample Materials or both. Licensee may copy and modify Source Components and Sample Materials for internal use only within the limits of the license rights under this Agreement; provided, however, that Licensee may not alter or delete any copyright information or notices contained in the Source Components or Sample Materials. IBM provides the Source Components and Sample Materials without obligation of support and "AS IS", WITH NO WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING THE WARRANTY OF TITLE, NON-INFRINGEMENT OR NON-INTERFERENCE AND THE IMPLIED WARRANTIES AND CONDITIONS OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
+
+
+LICENSE INFORMATION
+
+The Programs listed below are licensed under the following License Information terms and conditions in addition to the Program license terms previously agreed to by Client and IBM. If Client does not have previously agreed to license terms in effect for the Program, the International Program License Agreement (Z125-3301-14) applies.
+
+Program Name (Program Number):
+IBM Cognos Analytics Authorized User Extension for IBM Cloud Pak for Data 11.1.7 (5900-ABL)
+
+The following standard terms apply to Licensee's use of the Program.
+
+Limited use right
+
+Licensee is not authorized to use the Program to provide commercial IT services to any third party, to provide commercial hosting or timesharing, or to sublicense, rent, or lease the Program unless expressly provided for in the applicable agreements under which Licensee obtains authorizations to use the Program.
+
+Prohibited Uses
+
+Licensee may not use or authorize others to use the Program if failure of the Program could lead to death, bodily injury, or property or environmental damage.
+
+License Terms delivered with Program Not Applicable
+
+The terms of this Agreement supersede and void any electronic "click through," "shrinkwrap," or other licensing terms and conditions included with or accompanying the Program(s).
+
+Supporting Programs
+
+Licensee is authorized to install and use the Supporting Programs identified below only to support Licensee's use of the Principal Program under this Agreement. The phrase "to support Licensee's use" would only include those uses that are necessary or otherwise directly related to a licensed use of the Principal Program or another Supporting Program. The Supporting Programs may not be used for any other purpose. A Supporting Program may be accompanied by license terms, and those terms, if any, apply to Licensee's use of that Supporting Program. In the event of conflict, the terms in this License Information document supersede the Supporting Program's terms. Licensee must obtain sufficient entitlements to the Program, as a whole, to cover Licensee's installation and use of all of the Supporting Programs, unless separate entitlements are provided within this License Information document. For example, if this Program were licensed on a VPC (Virtual Processor Core) basis and Licensee were to install the Principal Program or a Supporting Program on a 10 VPC machine and another Supporting Program on a second 10 VPC machine, Licensee would be required to obtain 20 VPC entitlements to the Program.
+
+Supporting Programs:
+- IBM Cognos for Microsoft Office
+- IBM Cognos Analytics for Jupyter Notebook
+- IBM Cloud Pak for Data Enterprise Edition 3.5
+- IBM DB2 Advanced Workgroup Server Edition 11.1.0
+
+Permitted Components
+
+Licensee is permitted to use only the following components or functions of the identified Bundled or Supporting Program:
+- Control Plane (of IBM Cloud Pak for Data Enterprise Edition)
+- Common Services (of IBM Cloud Pak for Data Enterprise Edition)
+- Portworx storage (of IBM Cloud Pak for Data Enterprise Edition)
+
+Source Components and Sample Materials
+
+The Program includes components in source code form ("Source Components"), or other materials identified as Sample Materials or both. Licensee may copy and modify Source Components and Sample Materials for internal use only within the limits of the license rights under this Agreement; provided, however, that Licensee may not alter or delete any copyright information or notices contained in the Source Components or Sample Materials. IBM provides the Source Components and Sample Materials without obligation of support and "AS IS", WITH NO WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING THE WARRANTY OF TITLE, NON-INFRINGEMENT OR NON-INTERFERENCE AND THE IMPLIED WARRANTIES AND CONDITIONS OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
+The following units of measure may apply to Licensee's use of the Program.
+
+Authorized User
+
+Authorized User is a unit of measure by which the Program can be licensed. An Authorized User is a unique person who is given access to the Program. The Program may be installed on any number of computers or servers and each Authorized User may have simultaneous access to any number of instances of the Program at one time. Licensee must obtain separate, dedicated entitlements for each Authorized User given access to the Program in any manner directly or indirectly (for example: via a multiplexing program, device, or application server) through any means. An entitlement for an Authorized User is unique to that Authorized User and may not be shared, nor may it be reassigned other than for the permanent transfer of the Authorized User entitlement to another person.
+
+In addition to the above, the following terms apply to Licensee's use of the Program.
+
+1) Prohibited Components
+
+Notwithstanding any provision in the Agreement, Licensee is not authorized to use any of the following components or functions of the Program:
+
+- IBM Cognos Administration, except Data Source Connections
+- Notebook (of IBM Cognos Analytics for Jupyter Notebook)
+- Manage, except Data server connections
+- pureScale clustering technology (of IBM DB2 Advanced Workgroup Server Edition)
+- SQL Replication (of IBM DB2 Advanced Workgroup Server Edition)
+- Q Replication (of IBM DB2 Advanced Workgroup Server Edition)
+- DB2 Connect (of IBM DB2 Advanced Workgroup Server Edition)
+- SQL Warehousing Tool (SQW) (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM InfoSphere Data Architect 9.1.3 (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM InfoSphere Data Replication 11.3.3 (CDC component) (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM WebSphere Application Server 8.5.5 (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM WebSphere MQ 8.0 (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM Data Server Manager Enterprise Edition 2.1 (of IBM DB2 Advanced Workgroup Server Edition)
+
+2) Prerequisite Programs
+
+In addition to the entitlements required for the Program, Licensee must also obtain at least one entitlement to IBM Cognos Analytics Administrator Extension for IBM Cloud Pak for Data.
+
+3) Bursting Feature Requirement
+
+Each person who is provided an output(s) of the Program through the Bursting feature or who authenticates to the Program must be covered by an appropriate entitlement.
+
+4) Supporting Program Details
+
+4A) IBM DB2 Advanced Workgroup Server Edition (Entitlement 1)
+- Entitlement: No Metric
+- Use Limitations: Use by Principal Program
+
+"No Metric" means this Supporting Program may be installed on as many machines and used by as many persons as is reasonably necessary within the use limitations that apply to this Supporting Program.
+
+"Use by Principal Program" means that the Supporting Program is provided exclusively for use by the Principal Program. Neither Licensee nor any application, program or device is authorized to directly use or access the services of the Supporting Program except Licensee may access the Supporting Program to perform administrative functions for the Supporting Program such as backup, recovery and authorized configuration.
+
+Additional Supporting Program Details
+
+The Supporting Program may use a maximum of 16 processor cores and 128 GB of memory on each physical or virtual server; however, if the Supporting Program is used on a cluster of servers configured to work together using database partitioning or other permitted clustering technology, the Supporting Program may use a maximum of 16 processor cores and 128 GB of memory across all virtual or physical servers in that cluster.
+
+4B) IBM DB2 Advanced Workgroup Server Edition (Entitlement 2)
+- Entitlement: 0.02 Terabytes
+- Use Limitations: Unrestricted
+
+Terabyte is a unit of measure by which the Supporting Program can be licensed. A Terabyte is 2 to the 40th power bytes.
+
+Under the above Terabyte entitlement for DB2:
+
+a) The Terabyte entitlements for this Supporting Program must be sufficient to cover the Terabytes of user data, as reported by DB2. The number of required entitlements must be calculated separately for each database.
+
+b) Licensee may only use the Supporting Program for a data warehouse and run a data warehouse workload. A data warehouse is a subject-oriented, integrated, time-variant collection of data that integrates data from multiple data sources for historical ad hoc data reporting and querying. A data warehouse workload is a workload that typically scans thousands or millions of rows in a single query in order to support the analysis of data in a data warehouse.
+
+c) All user data must reside in column-organized tables.
+
+"Unrestricted" means that, notwithstanding the language in the Supporting Programs section of this License Information, Licensee's right to use the Supporting Program is not limited to use only in support of Licensee's use of the Principal Program. While the other restrictions on Licensee's use of the Supporting Program continue to apply, Licensee may use the Supporting Program for purposes independent of the licensed use of the Principal Program.
+
+5) Red Hat Products
+
+Red Hat Products (as listed below) are licensed separately and are supported by IBM only when used in support of the Program and only while Licensee has Software Subscription and Support in effect for the Program. In addition, Licensee agrees that its use of and support for the Red Hat Products are subject to the following terms (https://www.redhat.com/en/about/agreements).
+
+Red Hat Product:
+
+Red Hat Enterprise Linux
+- Additional Entitlement Ratio: 1 VPC/ 1 VPC
+
+Red Hat OpenShift Container Platform
+- Additional Entitlement Ratio: 1 VPC/ 1 VPC
+
+"Additional Entitlement Ratio n/m" means that Licensee receives some number ('n') entitlements of the indicated metric for the identified program for every specified number ('m') entitlements of the specified metric for the Program as a whole. The specified ratio does not apply to any entitlements for the Program that are not of the required metric type. The number of entitlements for the identified program is rounded up to a multiple of 'n'. For example, if a Program includes 100 PVUs for an identified program for every 500 PVUs obtained of the Principal Program and Licensee acquires 1,200 PVUs of the Program, Licensee may install the identified program and have processor cores available to or managed by it of up to 300 PVUs. Those PVUs would not need to be counted as part of the total PVU requirement for Licensee's installation of the Program on account of the installation of the identified program (although those PVUs might need to be counted for other reasons, such as the processor cores being made available to other components of the Program, as well).
+
+L/N:  L-LCOE-BU7LX2
+D/N:  L-LCOE-BU7LX2
+P/N:  L-LCOE-BU7LX2
+
+
+
+==============================================
+
+
+IMPORTANT: READ CAREFULLY
+
+Two license agreements are presented below.
+
+1. IBM International License Agreement for Evaluation of Programs
+2. IBM International Program License Agreement
+
+If Licensee is obtaining the Program for purposes of productive use (other than evaluation, testing, trial "try or buy," or demonstration): By clicking on the "Accept" button below, Licensee accepts the IBM International Program License Agreement, without modification.
+
+If Licensee is obtaining the Program for the purpose of evaluation, testing, trial "try or buy," or demonstration (collectively, an "Evaluation"): By clicking on the "Accept" button below, Licensee accepts both (i) the IBM International License Agreement for Evaluation of Programs (the "Evaluation License"), without modification; and (ii) the IBM International Program License Agreement (the "IPLA"), without modification.
+
+The Evaluation License will apply during the term of Licensee's Evaluation.
+
+The IPLA will automatically apply if Licensee elects to retain the Program after the Evaluation (or obtain additional copies of the Program for use after the Evaluation) by entering into a procurement agreement (e.g., the IBM International Passport Advantage or the IBM Passport Advantage Express agreements).
+
+The Evaluation License and the IPLA are not in effect concurrently; neither modifies the other; and each is independent of the other.
+
+The complete text of each of these two license agreements follow.
+
+
+
+LICENSE INFORMATION
+
+The Programs listed below are licensed under the following License Information terms and conditions in addition to the Program license terms previously agreed to by Client and IBM. If Client does not have previously agreed to license terms in effect for the Program, the International License Agreement for Evaluation of Programs (Z125-5543-05) applies.
+
+Program Name (Program Number):
+IBM Cognos Analytics Authorized Viewer Extension for IBM Cloud Pak for Data 11.1.7 (Evaluation)
+
+The following standard terms apply to Licensee's use of the Program.
+
+Evaluation Period
+
+The evaluation period begins on the date that Licensee agrees to the terms of this Agreement and ends after 60 days.
+
+Prohibited Uses
+
+Licensee may not use or authorize others to use the Program if failure of the Program could lead to death, bodily injury, or property or environmental damage.
+
+License Terms delivered with Program Not Applicable
+
+The terms of this Agreement supersede and void any electronic "click through," "shrinkwrap," or other licensing terms and conditions included with or accompanying the Program(s).
+
+Supporting Programs
+
+Licensee is authorized to install and use the Supporting Programs identified below only to support Licensee's use of the Principal Program under this Agreement. The phrase "to support Licensee's use" would only include those uses that are necessary or otherwise directly related to a licensed use of the Principal Program or another Supporting Program. The Supporting Programs may not be used for any other purpose. A Supporting Program may be accompanied by license terms, and those terms, if any, apply to Licensee's use of that Supporting Program. In the event of conflict, the terms in this License Information document supersede the Supporting Program's terms. Licensee must obtain sufficient entitlements to the Program, as a whole, to cover Licensee's installation and use of all of the Supporting Programs, unless separate entitlements are provided within this License Information document. For example, if this Program were licensed on a VPC (Virtual Processor Core) basis and Licensee were to install the Principal Program or a Supporting Program on a 10 VPC machine and another Supporting Program on a second 10 VPC machine, Licensee would be required to obtain 20 VPC entitlements to the Program.
+
+Supporting Programs:
+- IBM Cloud Pak for Data Enterprise Edition 3.5
+- IBM DB2 Advanced Workgroup Server Edition 11.1.0
+
+Permitted Components
+
+Licensee is permitted to use only the following components or functions of the identified Bundled or Supporting Program:
+- Control Plane (of IBM Cloud Pak for Data Enterprise Edition)
+- Common Services (of IBM Cloud Pak for Data Enterprise Edition)
+- Portworx storage (of IBM Cloud Pak for Data Enterprise Edition)
+
+Prohibited Components
+
+Licensee is not authorized to use any of the following components or functions of the Program:
+- Administration
+- Run reports
+- Report
+- Story
+- Create/Edit Dashboard
+- Data module
+- Exploration
+- Upload files
+- IBM Cognos Analysis Studio
+- IBM Cognos Event Studio
+- IBM Cognos Query Studio
+- IBM Cognos Workspace
+- pureScale clustering technology (of IBM DB2 Advanced Workgroup Server Edition)
+- SQL Replication (of IBM DB2 Advanced Workgroup Server Edition)
+- Q Replication (of IBM DB2 Advanced Workgroup Server Edition)
+- DB2 Connect (of IBM DB2 Advanced Workgroup Server Edition)
+- SQL Warehousing Tool (SQW) (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM InfoSphere Data Architect 9.1.3 (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM InfoSphere Data Replication 11.3.3 (CDC component) (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM WebSphere Application Server 8.5.5 (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM WebSphere MQ 8.0 (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM Data Server Manager Enterprise Edition 2.1 (of IBM DB2 Advanced Workgroup Server Edition)
+
+Source Components and Sample Materials
+
+The Program includes components in source code form ("Source Components"), or other materials identified as Sample Materials or both. Licensee may copy and modify Source Components and Sample Materials for internal use only within the limits of the license rights under this Agreement; provided, however, that Licensee may not alter or delete any copyright information or notices contained in the Source Components or Sample Materials. IBM provides the Source Components and Sample Materials without obligation of support and "AS IS", WITH NO WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING THE WARRANTY OF TITLE, NON-INFRINGEMENT OR NON-INTERFERENCE AND THE IMPLIED WARRANTIES AND CONDITIONS OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
+
+
+LICENSE INFORMATION
+
+The Programs listed below are licensed under the following License Information terms and conditions in addition to the Program license terms previously agreed to by Client and IBM. If Client does not have previously agreed to license terms in effect for the Program, the International Program License Agreement (Z125-3301-14) applies.
+
+Program Name (Program Number):
+IBM Cognos Analytics Authorized Viewer Extension for IBM Cloud Pak for Data 11.1.7 (5900-ABL)
+
+The following standard terms apply to Licensee's use of the Program.
+
+Limited use right
+
+Licensee is not authorized to use the Program to provide commercial IT services to any third party, to provide commercial hosting or timesharing, or to sublicense, rent, or lease the Program unless expressly provided for in the applicable agreements under which Licensee obtains authorizations to use the Program.
+
+Prohibited Uses
+
+Licensee may not use or authorize others to use the Program if failure of the Program could lead to death, bodily injury, or property or environmental damage.
+
+License Terms delivered with Program Not Applicable
+
+The terms of this Agreement supersede and void any electronic "click through," "shrinkwrap," or other licensing terms and conditions included with or accompanying the Program(s).
+
+Supporting Programs
+
+Licensee is authorized to install and use the Supporting Programs identified below only to support Licensee's use of the Principal Program under this Agreement. The phrase "to support Licensee's use" would only include those uses that are necessary or otherwise directly related to a licensed use of the Principal Program or another Supporting Program. The Supporting Programs may not be used for any other purpose. A Supporting Program may be accompanied by license terms, and those terms, if any, apply to Licensee's use of that Supporting Program. In the event of conflict, the terms in this License Information document supersede the Supporting Program's terms. Licensee must obtain sufficient entitlements to the Program, as a whole, to cover Licensee's installation and use of all of the Supporting Programs, unless separate entitlements are provided within this License Information document. For example, if this Program were licensed on a VPC (Virtual Processor Core) basis and Licensee were to install the Principal Program or a Supporting Program on a 10 VPC machine and another Supporting Program on a second 10 VPC machine, Licensee would be required to obtain 20 VPC entitlements to the Program.
+
+Supporting Programs:
+- IBM Cloud Pak for Data Enterprise Edition 3.5
+- IBM DB2 Advanced Workgroup Server Edition 11.1.0
+
+Permitted Components
+
+Licensee is permitted to use only the following components or functions of the identified Bundled or Supporting Program:
+- Control Plane (of IBM Cloud Pak for Data Enterprise Edition)
+- Common Services (of IBM Cloud Pak for Data Enterprise Edition)
+- Portworx storage (of IBM Cloud Pak for Data Enterprise Edition)
+
+Prohibited Components
+
+Licensee is not authorized to use any of the following components or functions of the Program:
+- Administration
+- Run reports
+- Report
+- Story
+- Create/Edit Dashboard
+- Data module
+- Exploration
+- Upload files
+- IBM Cognos Analysis Studio
+- IBM Cognos Event Studio
+- IBM Cognos Query Studio
+- IBM Cognos Workspace
+- pureScale clustering technology (of IBM DB2 Advanced Workgroup Server Edition)
+- SQL Replication (of IBM DB2 Advanced Workgroup Server Edition)
+- Q Replication (of IBM DB2 Advanced Workgroup Server Edition)
+- DB2 Connect (of IBM DB2 Advanced Workgroup Server Edition)
+- SQL Warehousing Tool (SQW) (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM InfoSphere Data Architect 9.1.3 (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM InfoSphere Data Replication 11.3.3 (CDC component) (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM WebSphere Application Server 8.5.5 (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM WebSphere MQ 8.0 (of IBM DB2 Advanced Workgroup Server Edition)
+- IBM Data Server Manager Enterprise Edition 2.1 (of IBM DB2 Advanced Workgroup Server Edition)
+
+Source Components and Sample Materials
+
+The Program includes components in source code form ("Source Components"), or other materials identified as Sample Materials or both. Licensee may copy and modify Source Components and Sample Materials for internal use only within the limits of the license rights under this Agreement; provided, however, that Licensee may not alter or delete any copyright information or notices contained in the Source Components or Sample Materials. IBM provides the Source Components and Sample Materials without obligation of support and "AS IS", WITH NO WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING THE WARRANTY OF TITLE, NON-INFRINGEMENT OR NON-INTERFERENCE AND THE IMPLIED WARRANTIES AND CONDITIONS OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
+The following units of measure may apply to Licensee's use of the Program.
+
+Authorized User
+
+Authorized User is a unit of measure by which the Program can be licensed. An Authorized User is a unique person who is given access to the Program. The Program may be installed on any number of computers or servers and each Authorized User may have simultaneous access to any number of instances of the Program at one time. Licensee must obtain separate, dedicated entitlements for each Authorized User given access to the Program in any manner directly or indirectly (for example: via a multiplexing program, device, or application server) through any means. An entitlement for an Authorized User is unique to that Authorized User and may not be shared, nor may it be reassigned other than for the permanent transfer of the Authorized User entitlement to another person.
+
+In addition to the above, the following terms apply to Licensee's use of the Program.
+
+1) Prerequisite Programs
+
+In addition to the entitlements required for the Program, Licensee must also obtain at least one entitlement to IBM Cognos Analytics Administrator Extension for IBM Cloud Pak for Data.
+
+2) Bursting Feature Requirement
+
+Each person who is provided an output(s) of the Program through the Bursting feature or who authenticates to the Program must be covered by an appropriate entitlement.
+
+3) Supporting Program Details
+
+3A) IBM DB2 Advanced Workgroup Server Edition (Entitlement 1)
+- Entitlement: No Metric
+- Use Limitations: Use by Principal Program
+
+"No Metric" means this Supporting Program may be installed on as many machines and used by as many persons as is reasonably necessary within the use limitations that apply to this Supporting Program.
+
+"Use by Principal Program" means that the Supporting Program is provided exclusively for use by the Principal Program. Neither Licensee nor any application, program or device is authorized to directly use or access the services of the Supporting Program except Licensee may access the Supporting Program to perform administrative functions for the Supporting Program such as backup, recovery and authorized configuration.
+
+Additional Supporting Program Details
+
+The Supporting Program may use a maximum of 16 processor cores and 128 GB of memory on each physical or virtual server; however, if the Supporting Program is used on a cluster of servers configured to work together using database partitioning or other permitted clustering technology, the Supporting Program may use a maximum of 16 processor cores and 128 GB of memory across all virtual or physical servers in that cluster.
+
+3B) IBM DB2 Advanced Workgroup Server Edition (Entitlement 2)
+- Entitlement: 0.02 Terabytes
+- Use Limitations: Unrestricted
+
+Terabyte is a unit of measure by which the Supporting Program can be licensed. A Terabyte is 2 to the 40th power bytes.
+
+Under the above Terabyte entitlement for DB2:
+
+a) The Terabyte entitlements for this Supporting Program must be sufficient to cover the Terabytes of user data, as reported by DB2. The number of required entitlements must be calculated separately for each database.
+
+b) Licensee may only use the Supporting Program for a data warehouse and run a data warehouse workload. A data warehouse is a subject-oriented, integrated, time-variant collection of data that integrates data from multiple data sources for historical ad hoc data reporting and querying. A data warehouse workload is a workload that typically scans thousands or millions of rows in a single query in order to support the analysis of data in a data warehouse.
+
+c) All user data must reside in column-organized tables.
+
+"Unrestricted" means that, notwithstanding the language in the Supporting Programs section of this License Information, Licensee's right to use the Supporting Program is not limited to use only in support of Licensee's use of the Principal Program. While the other restrictions on Licensee's use of the Supporting Program continue to apply, Licensee may use the Supporting Program for purposes independent of the licensed use of the Principal Program.
+
+4) Red Hat Products
+
+Red Hat Products (as listed below) are licensed separately and are supported by IBM only when used in support of the Program and only while Licensee has Software Subscription and Support in effect for the Program. In addition, Licensee agrees that its use of and support for the Red Hat Products are subject to the following terms (https://www.redhat.com/en/about/agreements).
+
+Red Hat Product:
+
+Red Hat Enterprise Linux
+- Additional Entitlement Ratio: 1 VPC/ 1 VPC
+
+Red Hat OpenShift Container Platform
+- Additional Entitlement Ratio: 1 VPC/ 1 VPC
+
+"Additional Entitlement Ratio n/m" means that Licensee receives some number ('n') entitlements of the indicated metric for the identified program for every specified number ('m') entitlements of the specified metric for the Program as a whole. The specified ratio does not apply to any entitlements for the Program that are not of the required metric type. The number of entitlements for the identified program is rounded up to a multiple of 'n'. For example, if a Program includes 100 PVUs for an identified program for every 500 PVUs obtained of the Principal Program and Licensee acquires 1,200 PVUs of the Program, Licensee may install the identified program and have processor cores available to or managed by it of up to 300 PVUs. Those PVUs would not need to be counted as part of the total PVU requirement for Licensee's installation of the Program on account of the installation of the identified program (although those PVUs might need to be counted for other reasons, such as the processor cores being made available to other components of the Program, as well).
+
+L/N:  L-LCOE-BU7LXX
+D/N:  L-LCOE-BU7LXX
+P/N:  L-LCOE-BU7LXX
+
+
+
+==============================================
+
+
+IMPORTANT: READ CAREFULLY
+
+Two license agreements are presented below.
+
+1. IBM International License Agreement for Evaluation of Programs
+2. IBM International Program License Agreement
+
+If Licensee is obtaining the Program for purposes of productive use (other than evaluation, testing, trial "try or buy," or demonstration): By clicking on the "Accept" button below, Licensee accepts the IBM International Program License Agreement, without modification.
+
+If Licensee is obtaining the Program for the purpose of evaluation, testing, trial "try or buy," or demonstration (collectively, an "Evaluation"): By clicking on the "Accept" button below, Licensee accepts both (i) the IBM International License Agreement for Evaluation of Programs (the "Evaluation License"), without modification; and (ii) the IBM International Program License Agreement (the "IPLA"), without modification.
+
+The Evaluation License will apply during the term of Licensee's Evaluation.
+
+The IPLA will automatically apply if Licensee elects to retain the Program after the Evaluation (or obtain additional copies of the Program for use after the Evaluation) by entering into a procurement agreement (e.g., the IBM International Passport Advantage or the IBM Passport Advantage Express agreements).
+
+The Evaluation License and the IPLA are not in effect concurrently; neither modifies the other; and each is independent of the other.
+
+The complete text of each of these two license agreements follow.
+
+
+
+LICENSE INFORMATION
+
+The Programs listed below are licensed under the following License Information terms and conditions in addition to the Program license terms previously agreed to by Client and IBM. If Client does not have previously agreed to license terms in effect for the Program, the International License Agreement for Evaluation of Programs (Z125-5543-05) applies.
+
+Program Name (Program Number):
+IBM Cognos Analytics Extension for IBM Cloud Pak for Data for Non-Production Environment 11.1.7 (Evaluation)
+
+The following standard terms apply to Licensee's use of the Program.
+
+Evaluation Period
+
+The evaluation period begins on the date that Licensee agrees to the terms of this Agreement and ends after 60 days.
+
+Prohibited Uses
+
+Licensee may not use or authorize others to use the Program if failure of the Program could lead to death, bodily injury, or property or environmental damage.
+
+License Terms delivered with Program Not Applicable
+
+The terms of this Agreement supersede and void any electronic "click through," "shrinkwrap," or other licensing terms and conditions included with or accompanying the Program(s).
+
+Supporting Programs
+
+Licensee is authorized to install and use the Supporting Programs identified below only to support Licensee's use of the Principal Program under this Agreement. The phrase "to support Licensee's use" would only include those uses that are necessary or otherwise directly related to a licensed use of the Principal Program or another Supporting Program. The Supporting Programs may not be used for any other purpose. A Supporting Program may be accompanied by license terms, and those terms, if any, apply to Licensee's use of that Supporting Program. In the event of conflict, the terms in this License Information document supersede the Supporting Program's terms. Licensee must obtain sufficient entitlements to the Program, as a whole, to cover Licensee's installation and use of all of the Supporting Programs, unless separate entitlements are provided within this License Information document. For example, if this Program were licensed on a VPC (Virtual Processor Core) basis and Licensee were to install the Principal Program or a Supporting Program on a 10 VPC machine and another Supporting Program on a second 10 VPC machine, Licensee would be required to obtain 20 VPC entitlements to the Program.
+
+Supporting Programs:
+- IBM Cognos Transformer
+- IBM Cognos Cube Designer
+- IBM Cognos Dynamic Query Analyzer
+- IBM Cognos for Microsoft Office
+- IBM Cognos Framework Manager
+- IBM Cognos Lifecycle Manager
+-IBM Cognos Analytics for Jupyter Notebook
+- IBM Planning Analytics for Microsoft Excel
+- IBM Informix Server
+- IBM WebSphere Application Server Liberty Core V9.0
+- IBM Cloud Pak for Data Enterprise Edition 3.5
+- IBM Tivoli Directory Integrator Identity Manager
+- IBM HTTP Server for WebSphere Application Sever V9
+- IBM DB2 Advanced Workgroup Server Edition 11.1.0
+
+Permitted Components
+
+Licensee is permitted to use only the following components or functions of the identified Bundled or Supporting Program:
+- Control Plane (of IBM Cloud Pak for Data Enterprise Edition)
+- Common Services (of IBM Cloud Pak for Data Enterprise Edition)
+- Portworx storage (of IBM Cloud Pak for Data Enterprise Edition)
+
+Prohibited Components
+
+Licensee is not authorized to use any of the following components or functions of the Program:
+- pureScale clustering technology (of IBM DB2 Advanced Workgroup Server Edition)
+
+- SQL Replication (of IBM DB2 Advanced Workgroup Server Edition)
+
+- Q Replication (of IBM DB2 Advanced Workgroup Server Edition)
+
+- DB2 Connect (of IBM DB2 Advanced Workgroup Server Edition)
+
+- SQL Warehousing Tool (SQW) (of IBM DB2 Advanced Workgroup Server Edition)
+
+- IBM InfoSphere Data Architect 9.1.3 (of IBM DB2 Advanced Workgroup Server Edition)
+
+- IBM InfoSphere Data Replication 11.3.3 (CDC component) (of IBM DB2 Advanced Workgroup Server Edition)
+
+- IBM WebSphere Application Server 8.5.5 (of IBM DB2 Advanced Workgroup Server Edition)
+
+- IBM WebSphere MQ 8.0 (of IBM DB2 Advanced Workgroup Server Edition)
+
+- IBM Data Server Manager Enterprise Edition 2.1 (of IBM DB2 Advanced Workgroup Server Edition)
+
+Source Components and Sample Materials
+
+The Program includes components in source code form ("Source Components"), or other materials identified as Sample Materials or both. Licensee may copy and modify Source Components and Sample Materials for internal use only within the limits of the license rights under this Agreement; provided, however, that Licensee may not alter or delete any copyright information or notices contained in the Source Components or Sample Materials. IBM provides the Source Components and Sample Materials without obligation of support and "AS IS", WITH NO WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING THE WARRANTY OF TITLE, NON-INFRINGEMENT OR NON-INTERFERENCE AND THE IMPLIED WARRANTIES AND CONDITIONS OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
+
+
+LICENSE INFORMATION
+
+The Programs listed below are licensed under the following License Information terms and conditions in addition to the Program license terms previously agreed to by Client and IBM. If Client does not have previously agreed to license terms in effect for the Program, the International Program License Agreement (Z125-3301-14) applies.
+
+Program Name (Program Number):
+IBM Cognos Analytics Extension for IBM Cloud Pak for Data for Non-Production Environment 11.1.7 (5900-ABL)
+
+The following standard terms apply to Licensee's use of the Program.
+
+Limited use right
+
+Licensee is not authorized to use the Program to provide commercial IT services to any third party, to provide commercial hosting or timesharing, or to sublicense, rent, or lease the Program unless expressly provided for in the applicable agreements under which Licensee obtains authorizations to use the Program.
+
+Prohibited Uses
+
+Licensee may not use or authorize others to use the Program if failure of the Program could lead to death, bodily injury, or property or environmental damage.
+
+License Terms delivered with Program Not Applicable
+
+The terms of this Agreement supersede and void any electronic "click through," "shrinkwrap," or other licensing terms and conditions included with or accompanying the Program(s).
+
+Supporting Programs
+
+Licensee is authorized to install and use the Supporting Programs identified below only to support Licensee's use of the Principal Program under this Agreement. The phrase "to support Licensee's use" would only include those uses that are necessary or otherwise directly related to a licensed use of the Principal Program or another Supporting Program. The Supporting Programs may not be used for any other purpose. A Supporting Program may be accompanied by license terms, and those terms, if any, apply to Licensee's use of that Supporting Program. In the event of conflict, the terms in this License Information document supersede the Supporting Program's terms. Licensee must obtain sufficient entitlements to the Program, as a whole, to cover Licensee's installation and use of all of the Supporting Programs, unless separate entitlements are provided within this License Information document. For example, if this Program were licensed on a VPC (Virtual Processor Core) basis and Licensee were to install the Principal Program or a Supporting Program on a 10 VPC machine and another Supporting Program on a second 10 VPC machine, Licensee would be required to obtain 20 VPC entitlements to the Program.
+
+Supporting Programs:
+- IBM Cognos Transformer
+- IBM Cognos Cube Designer
+- IBM Cognos Dynamic Query Analyzer
+- IBM Cognos for Microsoft Office
+- IBM Cognos Framework Manager
+- IBM Cognos Lifecycle Manager
+-IBM Cognos Analytics for Jupyter Notebook
+- IBM Planning Analytics for Microsoft Excel
+- IBM Informix Server
+- IBM WebSphere Application Server Liberty Core V9.0
+- IBM Cloud Pak for Data Enterprise Edition 3.5
+- IBM Tivoli Directory Integrator Identity Manager
+- IBM HTTP Server for WebSphere Application Sever V9
+- IBM DB2 Advanced Workgroup Server Edition 11.1.0
+
+Permitted Components
+
+Licensee is permitted to use only the following components or functions of the identified Bundled or Supporting Program:
+- Control Plane (of IBM Cloud Pak for Data Enterprise Edition)
+- Common Services (of IBM Cloud Pak for Data Enterprise Edition)
+- Portworx storage (of IBM Cloud Pak for Data Enterprise Edition)
+
+Prohibited Components
+
+Licensee is not authorized to use any of the following components or functions of the Program:
+- pureScale clustering technology (of IBM DB2 Advanced Workgroup Server Edition)
+
+- SQL Replication (of IBM DB2 Advanced Workgroup Server Edition)
+
+- Q Replication (of IBM DB2 Advanced Workgroup Server Edition)
+
+- DB2 Connect (of IBM DB2 Advanced Workgroup Server Edition)
+
+- SQL Warehousing Tool (SQW) (of IBM DB2 Advanced Workgroup Server Edition)
+
+- IBM InfoSphere Data Architect 9.1.3 (of IBM DB2 Advanced Workgroup Server Edition)
+
+- IBM InfoSphere Data Replication 11.3.3 (CDC component) (of IBM DB2 Advanced Workgroup Server Edition)
+
+- IBM WebSphere Application Server 8.5.5 (of IBM DB2 Advanced Workgroup Server Edition)
+
+- IBM WebSphere MQ 8.0 (of IBM DB2 Advanced Workgroup Server Edition)
+
+- IBM Data Server Manager Enterprise Edition 2.1 (of IBM DB2 Advanced Workgroup Server Edition)
+
+Non-Production Limitation
+
+If the Program is designated as "Non-Production", Licensee can only use the Program as part of Licensee's internal development and test environment for internal non-production activities.
+
+Components Not Used for Establishing Required Entitlements
+
+Licensee may install and use the following Program components, under the license terms, but these components are not used to determine the number of entitlements required for the Program.
+- Content Manager
+- Gateway
+- Control Plane (of IBM Cloud Pak for Data Enterprise Edition)
+- Common Services (of IBM Cloud Pak for Data Enterprise Edition)
+- Portworx storage (of IBM Cloud Pak for Data Enterprise Edition)
+
+Source Components and Sample Materials
+
+The Program includes components in source code form ("Source Components"), or other materials identified as Sample Materials or both. Licensee may copy and modify Source Components and Sample Materials for internal use only within the limits of the license rights under this Agreement; provided, however, that Licensee may not alter or delete any copyright information or notices contained in the Source Components or Sample Materials. IBM provides the Source Components and Sample Materials without obligation of support and "AS IS", WITH NO WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING THE WARRANTY OF TITLE, NON-INFRINGEMENT OR NON-INTERFERENCE AND THE IMPLIED WARRANTIES AND CONDITIONS OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
+The following units of measure may apply to Licensee's use of the Program.
+
+Virtual Processor Core
+
+Virtual Processor Core is a unit of measure by which the Program can be licensed. A Physical Server is a physical computer that is comprised of processing units, memory, and input/output capabilities and that executes requested procedures, commands, or applications for one or more users or client devices. Where racks, blade enclosures, or other similar equipment is being employed, each separable physical device (for example, a blade or a rack-mounted device) that has the required components is considered itself a separate Physical Server. A Virtual Server is either a virtual computer created by partitioning the resources available to a Physical Server or an unpartitioned Physical Server. A Processor Core is a functional unit within a computing device that interprets and executes instructions. A Processor Core consists of at least one instruction control unit and one or more arithmetic or logic units. A Virtual Processor Core is a Processor Core in an unpartitioned Physical Server, or a virtual core assigned to a Virtual Server. Licensee must obtain entitlements for each Virtual Processor Core made available to the Program.
+
+Licensee can deploy the Program (if supported) using full capacity licensing, sub-capacity licensing (https://www.ibm.com/software/passportadvantage/subcaplicensing.html), or container licensing (https://www.ibm.com/software/passportadvantage/containerlicenses.html). See the linked websites for more information. 
+
+In addition to the above, the following terms apply to Licensee's use of the Program.
+
+1) Prerequisite Programs
+
+In addition to the entitlements required for the Program, Licensee must also obtain at least one entitlement to IBM Cognos Analytics Administrator Extension for IBM Cloud Pak for Data.
+
+2) Supporting Program Details
+
+2A) IBM DB2 Advanced Workgroup Server Edition (Entitlement 1)
+- Entitlement: No Metric
+- Use Limitations: Use by Principal Program
+
+"No Metric" means this Supporting Program may be installed on as many machines and used by as many persons as is reasonably necessary within the use limitations that apply to this Supporting Program.
+
+"Use by Principal Program" means that the Supporting Program is provided exclusively for use by the Principal Program. Neither Licensee nor any application, program or device is authorized to directly use or access the services of the Supporting Program except Licensee may access the Supporting Program to perform administrative functions for the Supporting Program such as backup, recovery and authorized configuration.
+
+Additional Supporting Program Details
+
+The Supporting Program may use a maximum of 16 processor cores and 128 GB of memory on each physical or virtual server; however, if the Supporting Program is used on a cluster of servers configured to work together using database partitioning or other permitted clustering technology, the Supporting Program may use a maximum of 16 processor cores and 128 GB of memory across all virtual or physical servers in that cluster.
+
+2B) IBM DB2 Advanced Workgroup Server Edition (Entitlement 2)
+- Entitlement: 0.02 Terabytes
+- Use Limitations: Unrestricted
+
+Terabyte is a unit of measure by which the Supporting Program can be licensed. A Terabyte is 2 to the 40th power bytes.
+
+Under the above Terabyte entitlement for DB2:
+
+a) The Terabyte entitlements for this Supporting Program must be sufficient to cover the Terabytes of user data, as reported by DB2. The number of required entitlements must be calculated separately for each database.
+
+b) Licensee may only use the Supporting Program for a data warehouse and run a data warehouse workload. A data warehouse is a subject-oriented, integrated, time-variant collection of data that integrates data from multiple data sources for historical ad hoc data reporting and querying. A data warehouse workload is a workload that typically scans thousands or millions of rows in a single query in order to support the analysis of data in a data warehouse.
+
+c) All user data must reside in column-organized tables.
+
+"Unrestricted" means that, notwithstanding the language in the Supporting Programs section of this License Information, Licensee's right to use the Supporting Program is not limited to use only in support of Licensee's use of the Principal Program. While the other restrictions on Licensee's use of the Supporting Program continue to apply, Licensee may use the Supporting Program for purposes independent of the licensed use of the Principal Program.
+
+3) Red Hat Products
+
+Red Hat Products (as listed below) are licensed separately and are supported by IBM only when used in support of the Program and only while Licensee has Software Subscription and Support in effect for the Program. In addition, Licensee agrees that its use of and support for the Red Hat Products are subject to the following terms (https://www.redhat.com/en/about/agreements).
+
+Red Hat Product:
+
+Red Hat Enterprise Linux
+- Additional Entitlement Ratio: 1 VPC/ 1 VPC
+
+Red Hat OpenShift Container Platform
+- Additional Entitlement Ratio: 1 VPC/ 1 VPC
+
+"Additional Entitlement Ratio n/m" means that Licensee receives some number ('n') entitlements of the indicated metric for the identified program for every specified number ('m') entitlements of the specified metric for the Program as a whole. The specified ratio does not apply to any entitlements for the Program that are not of the required metric type. The number of entitlements for the identified program is rounded up to a multiple of 'n'. For example, if a Program includes 100 PVUs for an identified program for every 500 PVUs obtained of the Principal Program and Licensee acquires 1,200 PVUs of the Program, Licensee may install the identified program and have processor cores available to or managed by it of up to 300 PVUs. Those PVUs would not need to be counted as part of the total PVU requirement for Licensee's installation of the Program on account of the installation of the identified program (although those PVUs might need to be counted for other reasons, such as the processor cores being made available to other components of the Program, as well).
+
+L/N:  L-LCOE-BU7LYW
+D/N:  L-LCOE-BU7LYW
+P/N:  L-LCOE-BU7LYW
+
+
+
+
+
